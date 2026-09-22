@@ -3,185 +3,187 @@
 **Date:** 2026-09-21  
 **Status:** Revised draft — awaiting user re-review  
 **Repo (planned):** `https://github.com/fawkesdx/ARPESskill` (public)  
-**Related (out of scope for v1):** TensorSpec, ARPESeed — private bridge skill later
+**Companion code (your lab):** TensorSpec branch `TensorSpec_GUI` — headless modules the skill can call  
+**Not used for this bridge:** TensorSpec `HTML_einstein_app` / REST API
 
 ## 1. Purpose
 
 ARPESskill is a **general LLM agent skill** for working with ARPES data. It teaches agents how to load and analyze photoemission data using the known typical axes of ARPES measurements, units, and physics assumptions — without inventing any of those.
 
-It is intentionally **not tied to one analysis package**. The skill is a **bridge**: detect what the user already has (or can install), then drive that stack correctly. For v1 we start with **PyARPES** as the primary Python path (mature, common, good for conventional MAESTRO-style ARPES). If PyARPES is absent, fall back to **xarray + h5py/nexusformat**.
+It is intentionally **not tied to one analysis package**. The skill is a **bridge**: detect what the user already has, then drive that stack correctly.
 
-It is also **not** tied to TensorSpec or ARPESeed. Those integrations ship later as a separate private skill.
+**v1 stack order:**
+
+1. **PyARPES** — primary portable path (any lab).
+2. **TensorSpec_GUI modules** — when `tensorspec` from the `TensorSpec_GUI` branch is importable, the agent may call its **headless** loaders / data model / cut helpers (same code the GUI will use later). Not the Qt window; not the HTML web API.
+3. **xarray + h5py/nexusformat** — fallback if neither stack is present.
+
+ARPESeed / ML warehouse stay out of this skill.
 
 ### What “data reduction” means here
 
-In ARPES, **reduction** does **not** mean “compress the file.” It means turning a raw multidimensional scan into analysis products: energy/momentum cuts, EDC/MDC, Fermi-surface maps, spatial ROIs, etc. v1 covers only the **light** end of that — load, lock axes, one or two standard cuts/plots — not full publication pipelines or heavy many-body fitting.
+In ARPES, **reduction** does **not** mean “compress the file.” It means turning a raw multidimensional scan into analysis products: energy/momentum cuts, EDC/MDC, Fermi-surface maps, spatial ROIs, etc. v1 covers the **light** end — load, lock axes, one or two standard cuts/plots — not full publication pipelines or heavy many-body fitting.
 
 ## 2. Goals (v1)
 
 1. **Data literacy (primary):** formats, dimension names, units, angle↔momentum caveats.
 2. **Light analysis workflow (secondary):** load → inspect → cut → plot, with a safe-reduction checklist.
 3. **Failure-mode awareness:** classic agent mistakes (angle-as-k, hν/kz mixups, silent Γ claims, bogus labels).
-4. **Public, portable install:** clone GitHub; load into whatever agent host the user uses (see §8).
+4. **Dual callable paths:** PyARPES recipes **and** TensorSpec_GUI module recipes (headless).
+5. **Public, portable install:** clone GitHub; load into whatever agent host the user uses (see §8).
 
-Later goals (not v1): spatial XY / nanoARPES depth, in-operando axes (gate/bias/time), richer package routing (e.g. `peaks`).
+Later: richer spatial/`peaks` depth; angle→k conversion shared inside TensorSpec_GUI core so GUI + LLM share one implementation; in-operando dims.
 
 ### Success criteria
 
-Primary smoke test: **load typical ALS MAESTRO ARPES data and analyze it via the LLM agent** (same jobs usually done in a GUI), without inventing axes.
-
-Also required:
-
-1. State axes and units before any plot.
-2. Produce at least one FS- or EDC-style product with labeled axes.
-3. Follow (or explicitly skip with reason) the safe-reduction checklist.
-4. Avoid failure modes listed in `reference/failure-modes.md`.
+1. **Primary (portable):** load typical ALS MAESTRO data with **PyARPES** and analyze via LLM (GUI-replacement jobs), without inventing axes.
+2. **Secondary (your lab):** same MAESTRO file loadable via **TensorSpec_GUI headless modules** (`MaestroLoader` / `ARPESLoader` → `TensorData`), with axes stated and one cut/profile produced — callable from the agent without opening the Qt GUI.
+3. State axes and units before any plot; follow (or explicitly skip) safe-reduction checklist; avoid listed failure modes.
 
 ## 3. Non-goals (v1)
 
-- TensorSpec / ARPESeed APIs, model download, or inference wrappers
+- TensorSpec **HTML** / Einstein REST (`HTML_einstein_app`) as the bridge target
+- Launching or driving the Qt GUI as a required agent path (modules only; GUI consumes same modules later)
+- ARPESeed model download / inference
 - Training pipelines or synthetic corpus generation
 - Beamline DAQ / instrument control
-- MATLAB control (works for one lab, not general — out of public skill)
+- MATLAB control
 - Required dependency on heavy fitting stacks
-- CI package, pip-installable Python library, or large example datasets checked into git
-- Notebooks as a required deliverable (optional later)
-- Full nanoARPES / in-operando workflows (documented as future; package pointers only)
+- Large MAESTRO files checked into ARPESskill git
+- Full nanoARPES / in-operando depth (pointers only)
+- Merging TensorSpec into the public ARPESskill repo (bridge docs live here; TensorSpec code stays in TensorSpec)
 
 ## 4. Approach
 
-**Portable agent-skill pack:** thin `SKILL.md` entry + `reference/` + `examples/`. Content is markdown knowledge and workflow; packaging targets multiple hosts.
+**Portable agent-skill pack** in `ARPESskill` + **module work in TensorSpec_GUI** when gaps block headless LLM use.
 
-Rationale: ships fast on GitHub; progressive disclosure; package-agnostic bridge; same files usable beyond a single IDE.
+| Layer | Where | Role |
+|-------|--------|------|
+| Skill docs | `ARPESskill` (public) | Literacy, workflow, how to call PyARPES **and** TensorSpec_GUI modules |
+| General analysis | PyARPES (user env) | Default portable path |
+| Lab stack | TensorSpec `TensorSpec_GUI` | Headless load / `TensorData` / cuts; later same functions for GUI viewer |
+| Fallback | xarray + h5py | When neither stack installed |
 
-### Package strategy
+### Package routing
 
 | Situation | Prefer |
 |-----------|--------|
-| Conventional ARPES / MAESTRO (v1 default) | **PyARPES** |
-| PyARPES missing | **xarray + h5py/nexusformat** |
-| Spatially resolved XY / nanoARPES / large 4D (later) | **`peaks` (`peaks-arpes`)** — strong ROI / spatial / lazy 4D support |
-| In-operando extra axes (gate, current, time) | Same stacks as xarray datasets; skill must treat extra dims as first-class later — not v1 depth |
+| General / no TensorSpec | **PyARPES** |
+| User has TensorSpec_GUI env and asks for it / MAESTRO via TensorSpec | **`tensorspec` headless modules** |
+| Neither | **xarray + h5py/nexusformat** |
+| Heavy spatial 4D later | Document **`peaks`**; optional post-v1 |
 
-v1 implements the PyARPES (+ xarray fallback) path well. `peaks` is named in docs as the better spatial/nano route when those dims appear; deep `peaks` recipes = post-v1.
+**Hard rule:** agent always states which path it used. Do not require TensorSpec for public users.
 
 ## 5. Architecture
 
-### 5.1 Repository layout
+### 5.1 ARPESskill repo layout
 
 ```
 ARPESskill/
-├── README.md                 # install for multiple agent hosts + scope
-├── LICENSE                   # MIT
-├── SKILL.md                  # thin entry: triggers, hard rules, workflow, pointers
+├── README.md
+├── LICENSE
+├── SKILL.md
 ├── reference/
-│   ├── formats-and-axes.md   # include MAESTRO / NeXus notes
+│   ├── formats-and-axes.md
 │   ├── safe-reduction.md
-│   └── failure-modes.md
+│   ├── failure-modes.md
+│   └── tensorspec-gui-bridge.md   # how to import/call TensorSpec_GUI modules
 └── examples/
-    └── maestro_load_and_analyze.md
+    ├── maestro_pyarpes.md
+    └── maestro_tensorspec_gui.md
 ```
 
-### 5.2 File ownership
+### 5.2 TensorSpec_GUI work (companion, same effort track)
 
-| File | Responsibility |
-|------|----------------|
-| `SKILL.md` | When to invoke; hard rules; ordered workflow; package-bridge policy; pointers |
-| `reference/formats-and-axes.md` | File types, dim names, units, k-conversion; MAESTRO notes |
-| `reference/safe-reduction.md` | Load → inspect → cut → plot checklist |
-| `reference/failure-modes.md` | Anti-patterns agents invent |
-| `examples/maestro_load_and_analyze.md` | Worked MAESTRO path: PyARPES + xarray fallback |
-| `README.md` | Human install for Cursor, Claude Code, and generic agents |
+Today GUI branch already has: `MaestroLoader`, `ARPESLoader`, `TensorData`, viewer panel (Qt).
 
-**Constraint:** `SKILL.md` stays short (~100–200 lines). Detail lives in `reference/`.
+Likely gaps for LLM:
 
-### 5.3 Package bridge (hard policy)
+- Thin **headless** helpers (load path → `TensorData`; slice/profile → arrays/plots) so agent does not import PySide6 UI
+- Angle→k **conversion** in shared core (you called this out) — implement in TensorSpec_GUI codebase so GUI + skill both call it later
+- Document public function names the skill should use
 
-1. Detect what is available in the user’s environment / project.
-2. Prefer PyARPES for v1 MAESTRO workflows when present.
-3. Else xarray + h5py/nexusformat.
-4. Always state which path was used.
-5. Do not invent a new analysis framework; drive existing tools.
+Code lives in `/Users/sandyai/Documents/GitHub/TensorSpec` on `TensorSpec_GUI`. ARPESskill only documents and examples the call sites.
+
+**Not in scope:** porting or depending on `HTML_einstein_app` routers.
+
+### 5.3 Package bridge policy
+
+1. Detect env: `import arpes` / `import tensorspec` / raw h5py.
+2. Default portable analysis → PyARPES.
+3. If user wants TensorSpec path or project clearly TensorSpec-based → headless TensorSpec_GUI modules.
+4. Else xarray fallback.
+5. Never invent a third framework; never invent axes.
 
 ### 5.4 Agent workflow
 
-1. Identify artifact (MAESTRO/NeXus/HDF5/Igor/array; existing loaders in the project).
-2. Lock coordinates (axis names; units ° vs Å⁻¹, eV, hν; binding vs kinetic if relevant).
-3. Sanity print (shape, ranges, one mid-cut summary — no silent assumptions).
-4. Reduce (light cuts only) after steps 2–3; follow `safe-reduction.md`.
-5. Plot/report with labeled units; state assumptions (e.g. Γ location unknown).
-6. If unsure: read matching `reference/` file; ask one sharp question.
+1. Identify artifact (MAESTRO `.h5`, etc.).
+2. Choose stack (PyARPES vs TensorSpec_GUI vs fallback); say which.
+3. Lock coordinates (names + units).
+4. Sanity print (shape, ranges).
+5. Light reduce (cuts/profiles) per `safe-reduction.md`.
+6. Plot/report with labeled units; state assumptions.
+7. If unsure → read `reference/`; one sharp question.
 
 ### 5.5 Hard rules
 
 - Never invent axis names or units.
-- Never treat detector angle as momentum without stating conversion and geometry/inner-potential assumptions.
-- Never claim “Γ found” without stating method (manual / fit / model).
-- Bridge to available packages; do not require a single global install.
-- Do not pull TensorSpec/ARPESeed unless the user asks.
-- Prefer inspecting existing project loaders before writing new ones.
+- Never treat detector angle as k without stating conversion assumptions.
+- Never claim “Γ found” without method.
+- Prefer headless TensorSpec modules over launching the GUI.
+- Do not use HTML/Einstein REST for this bridge.
+- Prefer existing project loaders before writing new ones.
 
 ### 5.6 Error handling
 
-- Missing deps → suggest install; offer fallback path.
+- Missing deps → suggest install; offer other path (PyARPES ↔ TensorSpec ↔ xarray).
 - Ambiguous axes → stop and ask.
-- Corrupt/partial file → report what is readable; do not fabricate values.
+- Corrupt/partial file → report readable parts only.
 
-## 6. Trigger (SKILL.md frontmatter intent)
+## 6. Trigger
 
-Invoke when the task involves ARPES spectra, Fermi surfaces, EDC/MDC, photoemission maps, angle↔momentum conversion, MAESTRO/NeXus/HDF5/Igor ARPES files, PyARPES, or related analysis packages.
+Invoke for ARPES spectra, FS maps, EDC/MDC, MAESTRO/NeXus/HDF5, PyARPES, TensorSpec ARPES load/view/reduce, angle↔momentum.
 
 ## 7. Testing (v1)
 
-No CI package in v1.
+1. MAESTRO smoke via **PyARPES** (required for public skill).
+2. Same file smoke via **TensorSpec_GUI headless** modules (required for dual-path claim).
+3. Checklist vs hard rules.
+4. No large data in git.
 
-- **Primary:** manual smoke on a typical MAESTRO dataset (user-provided path; not committed to git if large).
-- Checklist review against hard rules in §5.5.
-- Optional later (v1.1): CI / tiny synthetic fixtures / `peaks` spatial example.
+## 8. Distribution
 
-## 8. Distribution & portability
+- Public: `fawkesdx/ARPESskill` — portable markdown skill; TensorSpec optional.
+- Install notes: Cursor, Claude Code, generic agents.
+- TensorSpec_GUI remains its own repo/branch; users who want path 2 need that env on `PYTHONPATH` / install.
+- MIT on ARPESskill.
 
-**Content is host-agnostic** (markdown skill + references). The `SKILL.md` + folder layout follows the emerging **Agent Skills** convention used by Cursor and compatible with other skill-loading agents.
+## 9. Implementation order
 
-| Host | How users load it |
-|------|-------------------|
-| Cursor | Clone/symlink → `~/.cursor/skills/arpes/` (or project `.cursor/skills/`) |
-| Claude Code | Install into that product’s skills directory (document exact path in README; same files) |
-| Other LLM agents | Point the agent at the repo / paste `SKILL.md` + needed `reference/` into context, or use that host’s “custom instructions / skill” mechanism |
-
-Public GitHub: `fawkesdx/ARPESskill`, branch `main`, MIT, tag `v1` when MAESTRO smoke passes.
-
-Dual-track: private TensorSpec/ARPESeed bridge = separate skill later.
-
-No model weights, large MAESTRO files, or Einstein hooks in this repo.
-
-## 9. Implementation order (after this revision is approved)
-
-1. Create public GitHub repo `fawkesdx/ARPESskill`.
-2. Author `SKILL.md` + three reference files + MAESTRO example + multi-host README + LICENSE.
-3. Local install smoke on at least one host (Cursor and/or Claude Code).
-4. Manual MAESTRO load + analyze pass against success criteria.
-5. Tag `v1` when criteria met.
+1. Land ARPESskill docs: literacy + PyARPES MAESTRO example + SKILL.md.
+2. In TensorSpec_GUI: expose/finish headless load + cut helpers (and conversion stubs/impl as needed) without Qt.
+3. Add `tensorspec-gui-bridge.md` + `maestro_tensorspec_gui.md` example to ARPESskill.
+4. Dual smoke on one MAESTRO file (PyARPES + TensorSpec_GUI).
+5. Publish GitHub + tag when both smokes pass (or tag `v0.1` after PyARPES-only if TensorSpec helpers slip — prefer both for “B”).
 
 ## 10. Decisions log
 
 | Decision | Choice |
 |----------|--------|
-| Scope | General ARPES LLM skill; package bridge, not package lock-in |
-| Wording | No Cursor-only purpose; Cursor is one install target |
-| Content focus | Data literacy + light data reduction (cuts/plots) |
-| Primary smoke | Typical MAESTRO data via agent (not GUI) |
-| Stack v1 | PyARPES preferred; xarray fallback |
-| Spatial / operando | Document `peaks` as better later path; not v1 depth |
-| MATLAB | Out of public general skill |
-| Distribution | Public skill repo; portable markdown; multi-host README |
-| Shape | Thin SKILL.md + references + examples |
-| License | MIT |
-| GitHub | `fawkesdx/ARPESskill` |
+| Scope | General skill + optional TensorSpec_GUI module bridge |
+| TensorSpec target | **`TensorSpec_GUI` headless modules**, not HTML/REST |
+| Order | PyARPES first, then ensure TensorSpec_GUI callable |
+| Viewer | Reuse TensorSpec data model/helpers; GUI later shares same core |
+| Conversion | Build in TensorSpec_GUI core when needed; skill calls it |
+| Spatial | PyARPES already has XY; `peaks` later for heavy 4D |
+| MATLAB | Out |
+| License / GitHub | MIT / `fawkesdx/ARPESskill` |
 
-## 11. Clarifications (from review)
+## 11. Clarifications
 
-1. **Why “Cursor” before?** Only because the brainstorm started in Cursor. Purpose is general LLM agents; Cursor is one loader.
-2. **“Lightly reduce”** = light ARPES data reduction (cuts/maps), not file compression.
-3. **Package philosophy** = bridge to user’s tools; start PyARPES; `peaks` suggested for spatial/nano later.
-4. **Other LLMs** = yes — same files; README documents install per host. Skill body is not Cursor API code.
+1. Purpose = general LLM skill; Cursor only one host.
+2. “Reduce” = ARPES cuts/maps, not file size.
+3. Package bridge = detect and drive user tools.
+4. Track B = PyARPES + TensorSpec_GUI modules (not HTML).
+5. “Call TensorSpec_GUI” = **import Python modules**, not click the desktop app.
