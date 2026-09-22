@@ -1,7 +1,7 @@
 # ARPESskill — Design Spec
 
 **Date:** 2026-09-21  
-**Status:** Revised draft — awaiting user re-review  
+**Status:** Approved (2026-09-21)  
 **Repo (planned):** `https://github.com/fawkesdx/ARPESskill` (public)
 
 ## 1. Purpose
