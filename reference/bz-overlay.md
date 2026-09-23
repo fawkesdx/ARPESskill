@@ -10,7 +10,8 @@ overlay only if user insists — state limitation.
 · `arpes.plotting.bz`
 
 **Optional dep:** `ase` (Atomic Simulation Environment). If `import ase` fails →
-say so; ask install into `.venv-arpes` **or** proceed with user-supplied cell
+say so; ask install into shared env (`pyarpes-env.md`) **or** proceed with
+user-supplied cell only.
 only (no `overplot_standard` / ASE vertices).
 
 Capabilities: `bz_plot`, `bz_overplot_standard`, `bz_annotate_path`,
