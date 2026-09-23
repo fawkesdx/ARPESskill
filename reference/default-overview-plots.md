@@ -17,6 +17,7 @@ integrated).
 | **Fermi map / angle sweep** | Deflection / polar scan dim (`psi`, `Slit_Defl`, …) with n>1 | **≥3 images** — [Fermi map trio](#fermi-map-trio-required) |
 | **Photon-energy / kz (EPH, hv stack)** | Scan dim is `hv` / `mono_eV` / beamline energy with n>1 | **≥3 images** — [hv / kz trio](#hv--kz-eph-trio-required) |
 | **XY / spatial map** | Scan motors `x`,`y` both n>1 | **Spatial set** — see `reference/spatial-xy-scans.md` (XY map with stated spectroscopic ROI \(R\), hot-spot spectrum, spatial mean, subtype extra). Subtypes: XY–E / XY–ARPES / XY–map / XY–hv. |
+| **Spin-ARPES / SARPES** | `up`/`down` or `intensity`+`polarization` (or spin dim) | Spin-EDC and/or spin-cut overviews — `reference/spin-arpes.md` (package spin plots; state Sherman). |
 
 **Kind rule:** classify from **loaded dims / sizes**. Measurement-log text
 (“Cut”, “EPH”, “Fermi Map”) is a **comment only** — if log disagrees with dims
