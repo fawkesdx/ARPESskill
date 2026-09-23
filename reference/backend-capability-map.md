@@ -65,6 +65,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `fd_broadened` | Resolution-broadened FD | package gap helper if present (check install); else ask | | `near-ef-gap.md` |
 | `symmetrize_edc` | Symmetrize about EF | `arpes.analysis.gap.symmetrize` | | `near-ef-gap.md` |
 | `gap_delta_fit` | Quantify gap Δ | package models only; **ask** if missing | | `near-ef-gap.md` |
+| `spin_detect` | Recognize SARPES channels | `up`/`down` or `intensity`+`polarization` / spin attrs | | `spin-arpes.md` |
+| `spin_to_IP` | up/down ↔ I+P | `arpes.analysis.sarpes.to_intensity_polarization` / `to_up_down` | | `spin-arpes.md` |
+| `spin_normalize_pc` | Match up/down photocurrent | `normalize_sarpes_photocurrent` — ask (alters counts) | | `spin-arpes.md` |
+| `spin_plot` | Spin-EDC / polarized plots | `arpes.plotting.spin.*` | | `spin-arpes.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
