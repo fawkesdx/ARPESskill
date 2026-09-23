@@ -20,6 +20,7 @@ cost, a one-line note + continue is enough.
 | Step | Why tokens spike | Lighter alternative |
 |------|------------------|---------------------|
 | Catalog **many** files in one reply | Metadata + shapes × N in chat | Build `analysis/manifest.json` (+ short `manifest.md`); chat = counts by kind only (`folder-manifest.md`) |
+| Folder catalog via full PyARPES loads | Heavy RAM/IO × N | **Header peek** only (astropy/h5py); `load_data` later (`folder-manifest.md`) |
 | Paste **full array / DataArray** into chat | Huge numeric dumps | Print shape, coords, min/max/mean; save `.nc` / plot PNG under `analysis/` |
 | Re-load whole **measurement log** repeatedly | Long CSV in context | Cache summary once; store `log_comment` on manifest rows |
 | Re-walk folder every follow-up turn | Wastes tokens | **Recall** `analysis/manifest.json`; refresh only if mtime/hash changed |
@@ -56,8 +57,9 @@ cost, a one-line note + continue is enough.
 
 1. Prefer **scripts under `analysis/`** that write reports/figures; summarize results in chat.
 2. Never paste raw intensity arrays into the conversation.
-3. Cap catalogs: default to a **sample** (e.g. 3–5 peek loads) before offering
-   full-folder Pass B; always write **manifest** rather than pasting rows in chat.
+3. Cap catalogs: default **header peek** (Pass B); sample if huge folder;
+   always write **manifest** rather than pasting rows in chat. Full
+   `load_data` = Pass C / chosen file only.
 4. After a long tool log, reply with a **short** status — do not echo the whole log.
 5. Keep PyARPES env path in one line; do not re-paste install recipes every turn.
 6. Follow-ups: open `analysis/manifest.json` first (`folder-manifest.md`).
@@ -65,8 +67,8 @@ cost, a one-line note + continue is enough.
 ## Example one-liners
 
 - Full folder catalog:  
-  *“Token note: I’ll build `analysis/manifest.json` (listing, then peek) and only
-  paste kind counts here — OK?”*
+  *“Token note: I’ll build `analysis/manifest.json` (listing + **header-only**
+  peek) and summarize counts — no full spectrum load yet — OK?”*
 
 - Broadcast MDC fits across a cut:  
   *“Token note: broadcast fits produce long reports. I’ll fit one MDC here, then run the rest in a script and save `widths.csv` — OK?”*
