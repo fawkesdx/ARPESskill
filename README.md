@@ -33,6 +33,7 @@ axes or physics**:
 | Decomposition | PCA / NMF / ICA / factor analysis (`*_along`); ask before large cubes |
 | Stack plots | Offset / flat stack; false-color; ToF±σ if errors exist |
 | Forward k | Point/pair angular → k-cut; `convert_coordinate_forward` |
+| Dichroism | CP+CM; null-ROI scale; diff + asym; red+/blue− clim tweak |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

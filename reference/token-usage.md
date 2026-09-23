@@ -39,6 +39,7 @@ cost, a one-line note + continue is enough.
 | **NMF/ICA/PCA** large hypercubes | Heavy sklearn + many maps | Ask; small ROI / fewer components first (`decomposition.md`) |
 | **Stack** many axes / huge max_stacks | Dense PNGs | One stack_axis; let package rebin (`stack-plots.md`) |
 | **Forward k** many probe points | Slow test-charge converts | One point/pair first (`forward-k.md`) |
+| **Dichroism** full cubes + many clim trials | Heavy maps | One energy/ROI; echo clim (`dichroism.md`) |
 | Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |

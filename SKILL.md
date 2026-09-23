@@ -12,15 +12,16 @@ description: >
   high-symmetry path overlays, axis prep (rebin / symmetrize / normalize /
   sort / condense), data masks (boolean / polygon), correlation alignment
   of spectra, sklearn-style decomposition (PCA / NMF / ICA / factor analysis),
-  specialized plots (stack / false-color / ToF±σ), and forward k cuts
-  through angular points/pairs via PyARPES or a confirmed user-project
-  capability map. Use when working with ARPES spectra, Fermi surfaces, EDC,
-  MDC, spin-ARPES, trARPES, pump-probe, in-operando, dosing, gated devices,
-  self-energy, curvature, minimum gradient, FS pocket, smooth, deconvolution,
-  resolution, background, Shirley, Brillouin zone, BZ overlay, rebin,
-  symmetrize, normalize_dim, mask, polygon mask, align, register, shift
-  spectra, PCA, NMF, ICA, stack plot, false color, ToF, forward k,
-  convert_through_angular, ANTARES, MAESTRO or NeXus/HDF5 ARPES files,
+  specialized plots (stack / false-color / ToF±σ), forward k cuts through
+  angular points/pairs, and CP/CM dichroism (null-ROI scale then diff/asym)
+  via PyARPES or a confirmed user-project capability map. Use when working
+  with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES,
+  pump-probe, in-operando, dosing, gated devices, self-energy, curvature,
+  minimum gradient, FS pocket, smooth, deconvolution, resolution, background,
+  Shirley, Brillouin zone, BZ overlay, rebin, symmetrize, normalize_dim, mask,
+  polygon mask, align, register, shift spectra, PCA, NMF, ICA, stack plot,
+  false color, ToF, forward k, convert_through_angular, dichroism, CP, CM,
+  circular dichroism, ANTARES, MAESTRO or NeXus/HDF5 ARPES files,
   angle-to-momentum conversion, hv/kz scans, spatial maps, nanoARPES,
   pseudogap, or PyARPES.
 ---
@@ -37,7 +38,8 @@ minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
 background subtraction, BZ / high-symmetry path overlay, axis prep (rebin /
 symmetrize / normalize), masks (boolean / polygon), spectrum alignment,
 PCA/NMF/ICA decomposition, stack / false-color / ToF±σ plots, forward-k
-point/pair cuts, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
+point/pair cuts, CP/CM dichroism, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES
+files, or PyARPES.
 
 ## What reduction means
 
@@ -96,6 +98,7 @@ volumes, etc.
 - **Spin-ARPES / SARPES:** if up/down or I+P channels exist →
   `reference/spin-arpes.md` (package `sarpes` + spin plots; ask Sherman;
   Spin-EDC and spin cuts; reuse fits on channels / total I).
+  Photon **CP/CM dichroism** (not spin) → `reference/dichroism.md`.
 - **In-operando / param scans:** external axis \(P\) (dose, gate V, sample I, B,
   T, …) → `reference/in-operando-param-scans.md` (confirm meaning/units; mid
   \(P^*\) or ask if stepped; reuse kind recipes; no invent coverage/transport math).
@@ -175,6 +178,8 @@ volumes, etc.
   prefer reload from cache when meta still matches.
 - **Forward k cuts (user-asked):** point/pair through angle → k-cut via
   `reference/forward-k.md` (complements full-volume convert).
+- **Dichroism (user-asked):** `reference/dichroism.md` (CP+CM; null-ROI scale
+  then D and A; red+/blue− plots; clim tweak OK if echoed).
 - **Core-as-2D:** cut-shaped file with swept + deep/core clues (soft: span ≳10 eV
   or deepest ≳5 eV below EF) → suspect core level saved as 2D image; quick
   report = detector×energy **and** angle-integrated EDC; no default valence k
@@ -272,8 +277,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/stack-plots.md`.
 27. If user asks k-cut through angle point/pair or forward coord → k —
     `reference/forward-k.md`.
-28. Plot/report with labeled units; **list overview / conversion assumptions**.
-29. Before expensive batch work — token note (`reference/token-usage.md`).
+28. If user asks dichroism / CP−CM / CD —
+    `reference/dichroism.md`.
+29. Plot/report with labeled units; **list overview / conversion assumptions**.
+30. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -300,6 +307,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/decomposition.md` — PCA / NMF / ICA / factor analysis
 - `reference/stack-plots.md` — stack / flat stack / false-color / ToF±σ
 - `reference/forward-k.md` — k-cut through angular point/pair; coord forward
+- `reference/dichroism.md` — CP/CM null-ROI scale; diff + asym; red/blue plot
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
@@ -332,6 +340,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/decomposition.md`
 - `examples/stack_plots.md`
 - `examples/forward_k.md`
+- `examples/dichroism.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -372,3 +381,4 @@ See `reference/` for recipes. Common entry points:
   `false_color_plot` / `plot_with_std` (`stack-plots.md`)
 - Forward k: `convert_through_angular_point` / `pair` /
   `convert_coordinate_forward` (`forward-k.md`)
+- Dichroism: CP/CM null-ROI scale → D and A; `RdBu_r` (`dichroism.md`)

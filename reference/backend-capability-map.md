@@ -120,6 +120,11 @@ with PyARPES versions — check installed package before claiming exact names.
 | `k_through_point` | k-cut through angle point | `convert_through_angular_point` | | `forward-k.md` |
 | `k_through_pair` | k-cut through angle pair | `convert_through_angular_pair` | | `forward-k.md` |
 | `k_coord_forward` | Angle point → k (volumetric-consistent) | `convert_coordinate_forward` | | `forward-k.md` |
+| `dichro_load` | Resolve CP + CM channels | load / data_vars / pol dim — echo labels | | `dichroism.md` |
+| `dichro_null_scale` | Match intensity on null-dichroism ROI | user ROI mean (or sum); scale one channel | | `dichroism.md` |
+| `dichro_diff` | Scaled difference | `CP′ − CM′` (xarray) | | `dichroism.md` |
+| `dichro_asym` | Asymmetry | `(CP′−CM′)/(CP′+CM′)` with denom floor | | `dichroism.md` |
+| `dichro_plot` | Diverging red+/blue− maps | matplotlib/`RdBu_r`; echo clim/offset | | `dichroism.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
