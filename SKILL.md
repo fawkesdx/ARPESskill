@@ -7,13 +7,14 @@ description: >
   spatial XY / nanoARPES scans, Spin-ARPES (SARPES), in-operando parameter
   scans, time-resolved / pump–probe ARPES (delay, t0, ΔI), single-band
   self-energy (Σ), band enhance (curvature / minimum gradient), and Fermi-surface
-  pocket analysis, smooth / deconvolution, and experimental resolution estimates
-  via PyARPES or a confirmed user-project capability map. Use when working with
-  ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe,
-  in-operando, dosing, gated devices, self-energy, curvature, minimum gradient,
-  FS pocket, smooth, deconvolution, resolution, ANTARES, MAESTRO or NeXus/HDF5
-  ARPES files, angle-to-momentum conversion, hv/kz scans, spatial maps,
-  nanoARPES, pseudogap, or PyARPES.
+  pocket analysis, smooth / deconvolution, experimental resolution estimates,
+  and background subtraction (Shirley / hull / incoherent) via PyARPES or a
+  confirmed user-project capability map. Use when working with ARPES spectra,
+  Fermi surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe, in-operando,
+  dosing, gated devices, self-energy, curvature, minimum gradient, FS pocket,
+  smooth, deconvolution, resolution, background, Shirley, ANTARES, MAESTRO or
+  NeXus/HDF5 ARPES files, angle-to-momentum conversion, hv/kz scans, spatial
+  maps, nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -25,7 +26,7 @@ k or kz conversion, spatial XY / nanoARPES maps, Spin-ARPES / SARPES,
 in-operando parameter scans (dose, gate, current, field, T), time-resolved /
 pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
 minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
-MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
+background subtraction, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -102,6 +103,8 @@ volumes, etc.
   (gaussian smooth = noise default; RL/ICE only on explicit ask + stated PSF).
 - **Resolution (user-asked / FD needs width):** `reference/resolution.md`
   (package estimates; ask if endstation tables missing — no invent).
+- **Backgrounds (user-asked):** `reference/backgrounds.md` (core→Shirley;
+  valence→hull; above-EF incoherent only if asked).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -226,8 +229,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/smooth-deconvolve.md`.
 19. If user asks resolution / broadening budget (or FD needs σ) —
     `reference/resolution.md`.
-20. Plot/report with labeled units; **list overview / conversion assumptions**.
-21. Before expensive batch work — token note (`reference/token-usage.md`).
+20. If user asks background subtraction —
+    `reference/backgrounds.md`.
+21. Plot/report with labeled units; **list overview / conversion assumptions**.
+22. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -246,6 +251,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/fs-pocket.md` — FS pocket center / curves / EDCs (path B center)
 - `reference/smooth-deconvolve.md` — gaussian smooth; RL/ICE deconvolve (ask + PSF)
 - `reference/resolution.md` — total / thermal / analyzer / beamline ΔE estimates
+- `reference/backgrounds.md` — Shirley (core) / hull (valence) / incoherent (ask)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
@@ -270,6 +276,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/fs_pocket.md`
 - `examples/smooth_deconvolve.md`
 - `examples/resolution.md`
+- `examples/backgrounds.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -297,3 +304,4 @@ See `reference/` for recipes. Common entry points:
 - Smooth / deconvolve: `gaussian_filter_arr`; `deconvolve_rl` + PSF if asked
   (`smooth-deconvolve.md`)
 - Resolution: `total_resolution_estimate` / parts (`resolution.md`)
+- Backgrounds: Shirley / hull / incoherent (`backgrounds.md`)
