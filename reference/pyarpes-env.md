@@ -1,4 +1,4 @@
-# PyARPES environment (Python 3.8 venv)
+# PyARPES environment (Python 3.8 — shared preferred)
 
 PyARPES (`arpes` on PyPI, v3.0.x) declares:
 
@@ -6,69 +6,93 @@ PyARPES (`arpes` on PyPI, v3.0.x) declares:
 python_requires = ">=3.8.0,<3.9"
 ```
 
-So it needs a **dedicated Python 3.8** environment. Do **not** install into the
-user’s default 3.10/3.11/3.12 system or project venv — that confuses new users
-and the install fails or breaks other work.
+Needs a **dedicated Python 3.8** environment. Do **not** install into the
+user’s default 3.10/3.11/3.12 system or generic project venv.
+
+## Location policy (reuse — avoid reinstall)
+
+**Prefer one shared env per machine** so every analysis project reuses it.
+
+| Priority | Location | When |
+|----------|----------|------|
+| 1 | **conda** env `arpes38` | Mac / conda available (best for Qt/HDF) |
+| 2 | **`~/arpes-py38-venv`** | Shared venv (no conda) |
+| 3 | Legacy names if present | `arpes_agent_test`, `~/arpes-py38-venv`, project `.venv-arpes` |
+| 4 | **Project `.venv-arpes`** | **Only if user asks** for per-project isolation |
+
+**Never** create a new project `.venv-arpes` by default when a shared env
+already works.
+
+Also accept user-stated path if they already have a working PyARPES 3.8 env.
+
+---
 
 ## Agent checklist (mandatory)
 
-1. Check whether `arpes` already imports **and** `sys.version_info` is 3.8.x.
-2. If missing or wrong Python — **STOP and ask** (see `SKILL.md` Stack policy).
-3. On yes: create a **new** venv named for this purpose (default
-   `.venv-arpes` in the project root, or `~/arpes-py38-venv` if user prefers).
-4. Install with that venv’s `pip` only.
-5. Re-verify import + version before any analysis.
-6. Run all later analysis commands with that interpreter
-   (`.venv-arpes/bin/python`), not bare `python3`.
+1. **Discover** existing env (below) → if `import arpes` + Python 3.8.x →
+   **use it**; state full interpreter path; stop.  
+2. If none / wrong Python — **STOP and ask** (`SKILL.md` Stack policy).  
+3. On yes to create: prefer **conda `arpes38`** (Mac) else **`~/arpes-py38-venv`**;
+   project `.venv-arpes` only if user requests.  
+4. Install with that env’s `pip` / conda only.  
+5. Re-verify import + version.  
+6. All later analysis uses that interpreter — not bare `python3`.
 
-## Find Python 3.8
+### Discover order (before create)
+
+```bash
+# 1) conda env arpes38 (or legacy arpes_agent_test)
+command -v conda && conda run -n arpes38 python -c "import arpes, sys; print(sys.executable, sys.version_info[:2])"
+# also try: conda run -n arpes_agent_test …
+
+# 2) shared home venv
+test -x "$HOME/arpes-py38-venv/bin/python" && \
+  "$HOME/arpes-py38-venv/bin/python" -c "import arpes, sys; print(sys.executable, sys.version_info[:2])"
+
+# 3) project-local (legacy / user-requested only)
+test -x .venv-arpes/bin/python && \
+  .venv-arpes/bin/python -c "import arpes, sys; print(sys.executable, sys.version_info[:2])"
+```
+
+First success with `(3, 8)` → reuse. Do not reinstall.
+
+---
+
+## Find Python 3.8 (for create)
 
 ```bash
 command -v python3.8
 python3.8 -V   # expect Python 3.8.x
 ```
 
-If `python3.8` is missing, tell the user and offer one of:
+If missing, tell user and offer Homebrew vs conda vs their 3.8 path.
+Do not invent install paths.
 
-**macOS (Homebrew)** — if available:
+**macOS Homebrew:**
 
 ```bash
 brew install python@3.8
-# then use: $(brew --prefix python@3.8)/bin/python3.8
+# $(brew --prefix python@3.8)/bin/python3.8
 ```
 
-**conda / mamba** (recommended on modern Macs — see full recipe below):
+---
 
-```bash
-conda create -n arpes_agent_test python=3.8 -y
-conda activate arpes_agent_test
-# then follow "Create env + install (recommended on Mac: conda)" below
-# (do NOT bare `pip install arpes` first — PyQt5/qmake trap)
-```
+## Create env + install (recommended on Mac: conda `arpes38`)
 
-Do not invent a Python 3.8 install path. If none exists, ask the user which
-route they want (Homebrew vs conda vs already-installed 3.8 path).
-
-## Create env + install (recommended on Mac: conda)
-
-Bare `pip install arpes` often **fails or hangs on PyQt5** (tries to compile
-from source; needs `qmake`). Prefer **conda for Qt/HDF stacks**, then install
-`arpes` without letting pip rebuild PyQt.
+Bare `pip install arpes` often **fails/hangs on PyQt5** (qmake). Prefer
+**conda for Qt/HDF**, then `arpes` with `--no-deps`.
 
 ```bash
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
-conda create -n arpes_agent_test python=3.8 -y
-conda activate arpes_agent_test
+conda create -n arpes38 python=3.8 -y
+conda activate arpes38
 
-# Qt + I/O libs as binaries (avoids qmake / source builds)
 conda install -c conda-forge "pyqt=5" pyqtgraph h5py netcdf4 xarray \
   matplotlib numpy scipy astropy -y
 
-# Wheel PyQt5 if needed (optional; conda pyqt often enough)
-pip install "PyQt5==5.15.10"
+pip install "PyQt5==5.15.10"   # optional if conda pyqt enough
 
-# Install arpes WITHOUT re-resolving pinned PyQt5==5.15 (source build trap)
 pip install "arpes==3.0.1" --no-deps
 pip install "pyqtgraph>=0.12.0,<0.13.0" colorcet pint pandas \
   "numpy>=1.20.0,<2.0.0" "scipy>=1.6.0,<2.0.0" "lmfit>=1.0.0,<2.0.0" \
@@ -76,61 +100,68 @@ pip install "pyqtgraph>=0.12.0,<0.13.0" colorcet pint pandas \
   "ipywidgets>=7.0.1,<8.0.0" packaging colorama imageio titlecase tqdm rx dill \
   "ase>=3.17.0,<3.22.0" "numba>=0.53.0,<1.0.0" netCDF4
 
-python -c "import arpes, h5py, astropy, sys; print('OK', sys.version)"
+python -c "import arpes, h5py, astropy, sys; print('OK', sys.executable, sys.version)"
 ```
 
-**Loader I/O packages (required for real files):**
+**Loader I/O packages:**
 
 | Package | Why |
 |---------|-----|
-| **h5py** | Read **`.h5` / HDF5** (modern MAESTRO) |
-| **astropy** | Read **`.fits`** (older MAESTRO / some beamlines) via `astropy.io.fits` |
-| **netCDF4** | NetCDF / some exported datasets |
+| **h5py** | `.h5` / HDF5 (modern MAESTRO) |
+| **astropy** | `.fits` via `astropy.io.fits` |
+| **netCDF4** | NetCDF / some exports |
 
-If the loader “complains about h5 and fits”, it usually means those file-type
-plugins need **h5py** and **astropy** — not peak-fitting. Install them in the
-same env, then retry `load_data`.
+---
 
-## Create venv + install (when `python3.8` exists, no conda)
-
-From the **analysis project root** (not inside the raw data folder):
+## Create shared venv (no conda): `~/arpes-py38-venv`
 
 ```bash
 PY38="$(command -v python3.8)"
-"$PY38" -V   # must print 3.8.x
+"$PY38" -V   # must be 3.8.x
 
-"$PY38" -m venv .venv-arpes
-source .venv-arpes/bin/activate   # Windows: .venv-arpes\Scripts\activate
+"$PY38" -m venv "$HOME/arpes-py38-venv"
+source "$HOME/arpes-py38-venv/bin/activate"   # Windows: Scripts\activate
 
-python -V    # must still be 3.8.x
+python -V
 python -m pip install --upgrade pip
-# Prefer binary wheels; if PyQt5 build fails (qmake), switch to conda recipe above
 python -m pip install "PyQt5==5.15.10" h5py astropy netCDF4
 python -m pip install "arpes==3.0.1" --no-deps
-# then install remaining arpes deps (same pip list as conda recipe, minus PyQt5)
+# remaining deps: same pip list as conda recipe (minus PyQt5 if already installed)
 
-python -c "import arpes, h5py, astropy, sys; print('arpes OK', sys.version)"
+python -c "import arpes, h5py, astropy, sys; print('arpes OK', sys.executable, sys.version)"
 ```
+
+Reuse: `"$HOME/arpes-py38-venv/bin/python"` from any project.
+
+---
+
+## Project-local `.venv-arpes` (only if user asks)
+
+```bash
+# from analysis project root
+"$PY38" -m venv .venv-arpes
+# then same pip steps as shared venv
+```
+
+---
 
 ## After install — Cursor / agent
 
-- Prefer running analysis with the env python, e.g.  
-  `/opt/homebrew/Caskroom/miniforge/base/envs/arpes_agent_test/bin/python`  
-  or `…/project/.venv-arpes/bin/python`
-- Tell the user once which interpreter is in use.
-- For MAESTRO `.h5`, pass an explicit `location=` (micro/nano) when known.
+- Run with absolute env python, e.g.  
+  `…/envs/arpes38/bin/python` or `$HOME/arpes-py38-venv/bin/python`  
+- State path once per session.  
+- MAESTRO `.h5`: pass `location=` (micro/nano) when known.
 
 ## Wrong Python — what to say
 
-If active Python is 3.9+:
+> PyARPES needs Python **3.8.x** only. Current interpreter is X.Y.  
+> I should reuse or create a **shared** env (`conda arpes38` or
+> `~/arpes-py38-venv`) and install there — OK?  
+> (Project `.venv-arpes` only if you want isolation.)
 
-> PyARPES requires Python **3.8.x** only (`>=3.8,<3.9`). Your current
-> interpreter is X.Y. I should create a separate conda env / `.venv-arpes`
-> with Python 3.8 and install there — OK?
-
-Do **not** run `pip install arpes` on 3.9+.
+Do **not** `pip install arpes` on 3.9+.
 
 ## Inspect-only fallback
 
-Only if the user declines the env/install: xarray + h5py load/inspect
-(see `formats-and-axes.md`). No fit / k / kz.
+Only if user declines env/install: xarray + h5py load/inspect
+(`formats-and-axes.md`). No fit / k / kz.

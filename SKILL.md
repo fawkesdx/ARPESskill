@@ -51,25 +51,26 @@ volumes, etc.
 ## Stack policy
 
 1. Prefer **PyARPES** for analysis (fit, k, kz).
-2. **At session start (and before any analysis):** check whether PyARPES
-   imports **and** that the interpreter is **Python 3.8.x**.
-   (`python -c "import arpes, sys; print(sys.version_info[:2])"`)
-   PyARPES (`arpes` on PyPI) requires `>=3.8,<3.9` — not 3.9+.
-3. **If PyARPES is missing or Python is not 3.8 — STOP and ask**
-   (do not silently fall back; do not `pip install arpes` into the current env):
-   - Explain: PyARPES needs a **dedicated Python 3.8 venv** so it does not
-     break the user’s normal Python / other projects.
-   - Ask: *Create a new `.venv-arpes` with Python 3.8 and install PyARPES there?*
+2. **At session start (and before any analysis):** discover a working PyARPES
+   **3.8** interpreter — prefer **shared** env (`reference/pyarpes-env.md`):
+   conda `arpes38` → `~/arpes-py38-venv` → legacy names → project `.venv-arpes`
+   only if already present. Verify:
+   `…/python -c "import arpes, sys; print(sys.executable, sys.version_info[:2])"`
+   PyARPES requires `>=3.8,<3.9` — not 3.9+.
+3. **If none / wrong Python — STOP and ask** (do not silently fall back; do not
+   `pip install arpes` into the current env):
+   - Explain: needs **dedicated Python 3.8**; prefer **one shared env** so
+     projects reuse it (not a new install per folder).
+   - Ask: *Reuse/create shared env — conda `arpes38` (Mac) or
+     `~/arpes-py38-venv` — and install PyARPES?* (Project `.venv-arpes` only
+     if you want isolation.)
    - Wait for yes/no.
-   - If **yes**: follow `reference/pyarpes-env.md` (find `python3.8` →
-     `python3.8 -m venv .venv-arpes` → `pip install arpes` in that venv →
-     re-check import). If `python3.8` is missing, ask Homebrew vs conda
-     (or a user-provided 3.8 path) before inventing installs.
-   - If **no**: enter **user-map** path — search project → propose capability →
-     callable map → **confirm** → use (`reference/backend-capability-map.md`).
-     Only if no mappable `load_spectrum` (etc.) → ask for **xarray + h5py
-     load/inspect only** (no fit / k / kz / gap). State path explicitly.
-4. After PyARPES setup, run with `.venv-arpes/bin/python` (state that path).
+   - If **yes**: follow `reference/pyarpes-env.md` (discover → create shared →
+     install → re-check). If `python3.8` missing, ask Homebrew vs conda
+     (or user 3.8 path) before inventing installs.
+   - If **no**: **user-map** path (`reference/backend-capability-map.md`);
+     only then xarray/h5py inspect-only. State path explicitly.
+4. After setup, run with that env’s **absolute** `…/bin/python` (state path).
 5. Always state backend: `pyarpes` | `user-map` | `inspect-only`.
 6. TensorSpec / TensorSpec_GUI: deferred named backend later (not wired).
 7. **Living list:** every new skill workflow ships PyARPES-first docs **and**
@@ -203,8 +204,9 @@ chat). Details: `reference/token-usage.md`.
 
 ## Error handling
 
-- Missing PyARPES / wrong Python — **ask to create `.venv-arpes` (Python 3.8)
-  and install** (`reference/pyarpes-env.md`); if declined → user-map path
+- Missing PyARPES / wrong Python — **ask shared env** (conda `arpes38` or
+  `~/arpes-py38-venv`; project `.venv-arpes` only if requested) —
+  `reference/pyarpes-env.md`; if declined → user-map path
   (`backend-capability-map.md`); only then inspect-only xarray/h5py.
 - Package load fails / feature missing — quote error; ask before custom code
   (`reference/package-first.md`).
@@ -311,7 +313,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
-- `reference/pyarpes-env.md` — Python 3.8 dedicated venv + install
+- `reference/pyarpes-env.md` — shared Python 3.8 env (conda / home venv) + install
 - `reference/token-usage.md` — when to warn about token cost
 - `reference/default-overview-plots.md` — cut / Fermi trio / hv–kz trio + assumptions
 - `reference/package-first.md` — use package APIs; ask before new code
@@ -347,8 +349,9 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 ## Requires (full analysis)
 
 - **Python 3.8.x only** for PyARPES (`>=3.8,<3.9` on PyPI)
-- Dedicated venv (recommended name: `.venv-arpes`) — see `reference/pyarpes-env.md`
-- `pip install arpes` **inside that venv**
+- Dedicated **shared** Python 3.8 env (conda `arpes38` or `~/arpes-py38-venv`;
+  project `.venv-arpes` only if asked) — see `reference/pyarpes-env.md`
+- `pip install arpes` **inside that env**
 - For load/inspect fallback only: `xarray`, `h5py` (any modern Python OK)
 
 ## Key PyARPES paths
