@@ -64,7 +64,8 @@ XY map intensity is **not** a mystery sum. It is integrate over a
 ### User override (preferred when they care)
 
 Accept explicit bounds, e.g. “E −0.1…0 eV, φ −5°…5°”, or “core peak −35…−31 eV”.
-Optional interactive mask/`qt_tool` **only if user asks**.
+Optional interactive mask/`qt_tool` **only if user asks** — full mask recipe:
+`reference/masks.md` (boolean / polygon).
 
 **Always echo \(R\)** in the report. Change \(R\) → **rebuild** XY map and
 recompute hot spot (do not reuse an old argmax).
