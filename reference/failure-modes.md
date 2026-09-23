@@ -30,6 +30,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Treat pump–probe `delay` as generic \(P\) only | Use `tr-arpes.md` (t0 + Δ maps), not only in-operando |
 | Invent t0 or mix fs/ps without stating | attrs/`find_t0`/ask; echo units |
 | ΔI without pre-t0 reference / buffer stated | `relative_change` / normalized; state t0 + buffer |
+| DIY Σ from FWHM / invent k-dependent Σ | Package `to_self_energy` / `fit_for_self_energy`; k-independent only (`self-energy.md`) |
+| Σ on multi-band without asking | Single-peak preflight; stop + ask |
+| Quote lifetime / mfp in default Σ report | Ask first; state formula + units |
+| Silent bare-band choice for ReΣ | Echo `ransac_linear` / `linear` / user |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
 | PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |
@@ -92,6 +96,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
   (`reference/folder-manifest.md`); recall instead of re-cataloging in chat.
 - **Fits:** every reported fit must name the lineshape and any background model. See
   `reference/edc-mdc-fitting.md`.
+- **Self-energy:** single-band; package `to_self_energy` / `fit_for_self_energy`;
+  state bare band; no default lifetime (`self-energy.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).
