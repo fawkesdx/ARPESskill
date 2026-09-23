@@ -26,6 +26,7 @@ cost, a one-line note + continue is enough.
 | **Broadcast fits** over full 2D/3D maps | Long fit reports × many curves | Fit one EDC/MDC first; then scripted broadcast → save params CSV |
 | **Spatial XY** full-volume plots / PCA / all-pixel fits | Huge cubes × many PNGs / fits | Hot-spot kind analysis first; stated ROI \(R\); broadcast only if asked (`spatial-xy-scans.md`) |
 | **In-operando** full stack along every \(P\) step | Many slices × fits | Mid \(P^*\) (or asked step) first; broadcast along \(P\) only if asked (`in-operando-param-scans.md`) |
+| **trARPES** full delay cube fits / k | Many delays × heavy steps | delay\* near t0 + Δ map first; convert/fit one delay if asked (`tr-arpes.md`) |
 | Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |

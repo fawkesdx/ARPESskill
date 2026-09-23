@@ -19,6 +19,7 @@ axes or physics**:
 | Spatial XY | ROI-integrated map, hot-spot kind reuse (cut / core / Fermi / hv), optional param maps |
 | Spin-ARPES | Up/down or I+P; package spin plots; Sherman ask; Spin-EDC + spin cuts |
 | In-operando | External \(P\) (dose/V/I/B/T); mid \(P^*\) or ask if stepped; reuse kind recipes |
+| trARPES | `delay`; t0; delay\* ≥ t0; package ΔI / ΔI/I; reuse kind at slice |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try
