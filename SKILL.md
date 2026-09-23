@@ -5,12 +5,13 @@ description: >
   EDC/MDC extraction, Gaussian/Lorentzian/Voigt peak fitting, k-space
   conversion, photon-energy to kz conversion, near-EF gap/pseudogap,
   spatial XY / nanoARPES scans, Spin-ARPES (SARPES), in-operando parameter
-  scans, time-resolved / pump–probe ARPES (delay, t0, ΔI), and single-band
-  self-energy (Σ) via PyARPES or a confirmed user-project capability map.
-  Use when working with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES,
-  trARPES, pump-probe, in-operando, dosing, gated devices, self-energy,
-  MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum conversion, hv/kz
-  scans, spatial maps, nanoARPES, pseudogap, or PyARPES.
+  scans, time-resolved / pump–probe ARPES (delay, t0, ΔI), single-band
+  self-energy (Σ), and band enhance (curvature / minimum gradient) via PyARPES
+  or a confirmed user-project capability map. Use when working with ARPES
+  spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe,
+  in-operando, dosing, gated devices, self-energy, curvature, minimum
+  gradient, MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum conversion,
+  hv/kz scans, spatial maps, nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -20,8 +21,8 @@ description: >
 User or task involves ARPES spectra, Fermi maps, EDC/MDC, peak fitting,
 k or kz conversion, spatial XY / nanoARPES maps, Spin-ARPES / SARPES,
 in-operando parameter scans (dose, gate, current, field, T), time-resolved /
-pump–probe ARPES (trARPES), self-energy / Σ, MAESTRO/NeXus/HDF5/Igor ARPES
-files, or PyARPES.
+pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
+minimum gradient), MAESTRO/NeXus/HDF5/Igor ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -89,6 +90,9 @@ volumes, etc.
 - **Self-energy / Σ (user-asked):** single-band cut → `reference/self-energy.md`
   (path C: reuse MDC broadcast if present, else `fit_for_self_energy`; bare band
   default `ransac_linear`; lifetime only if asked).
+- **Band enhance (user-asked):** 2D cut → `reference/band-enhance.md` (both
+  `curvature` + `minimum_gradient` side by side; not intensity; no centers/EF
+  from these alone).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -204,8 +208,10 @@ chat). Details: `reference/token-usage.md`.
 14. If `delay` dim / trARPES — `reference/tr-arpes.md`.
 15. If user asks self-energy / Σ / QP lifetime on a single-band cut —
     `reference/self-energy.md`.
-16. Plot/report with labeled units; **list overview / conversion assumptions**.
-17. Before expensive batch work — token note (`reference/token-usage.md`).
+16. If user asks band enhance / curvature / min-gradient —
+    `reference/band-enhance.md` (both maps).
+17. Plot/report with labeled units; **list overview / conversion assumptions**.
+18. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -220,6 +226,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/in-operando-param-scans.md` — dose / gate / I / B / T param scans
 - `reference/tr-arpes.md` — time-resolved / pump–probe (delay, t0, ΔI)
 - `reference/self-energy.md` — single-band Σ from MDC (path C; bare band; optional lifetime)
+- `reference/band-enhance.md` — curvature + minimum gradient (both; not intensity)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55° defaults; SLS soft X-ray postponed
 - `reference/failure-modes.md`
@@ -240,6 +247,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/in_operando_param_scan.md`
 - `examples/tr_arpes.md`
 - `examples/self_energy.md`
+- `examples/band_enhance.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -262,3 +270,4 @@ See `reference/` for recipes. Common entry points:
 - Near-EF / gap: metal `AffineBroadenedFD` → shift; optional broadened FD divide;
   `arpes.analysis.gap.symmetrize` for gap/pseudogap (`near-ef-gap.md`)
 - Self-energy: `fit_for_self_energy` / `to_self_energy` (`self-energy.md`)
+- Band enhance: `curvature` + `minimum_gradient` (`band-enhance.md`)

@@ -68,6 +68,7 @@ and `reference/formats-and-axes.md` for load/inspect details.
    - In-operando param axis \(P\): `reference/in-operando-param-scans.md`.
    - trARPES (`delay`): `reference/tr-arpes.md`.
    - Self-energy / Σ (user-asked, single-band): `reference/self-energy.md`.
+   - Band enhance (user-asked): `reference/band-enhance.md` (curvature + MG).
 
 Do not skip ahead to fit or k/kz on raw angle–energy data without completing
 inspection and at least one reduction product (cut, Fermi map, EDC, or MDC).
