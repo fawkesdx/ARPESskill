@@ -51,6 +51,7 @@ with PyARPES versions — check installed package before claiming exact names.
 | `load_spectrum` | Open cut / map / hv stack | `arpes.io.load_data` (+ `location=`) / project loader if already preferred | | `formats-and-axes.md` |
 | `state_axes` | Dims, units, energy convention | `.dims` / `.coords` / `.attrs` | | `formats-and-axes.md` |
 | `folder_manifest` | Multi-file inventory | thin glue → `analysis/manifest.json` | | `folder-manifest.md` |
+| `folder_header_peek` | Header/attrs only for catalog | `astropy.io.fits.getheader` / `h5py` shapes — **not** `load_data` | | `folder-manifest.md` |
 | `overview_plot` | Quick-report figures | matplotlib (+ package plot helpers if used); spatial → `spatial-xy-scans.md` set | | `default-overview-plots.md`, `spatial-xy-scans.md` |
 | `spatial_overview` | XY map + hot spot + mean | `sum`/`mean`/`sel` + optional `arpes.plotting.spatial`; hot spot = argmax of \(I_R\) | | `spatial-xy-scans.md` |
 | `spatial_roi_reduce` | Reduce x,y ROI → kind recipe | `sel` / `where` / mean over spatial dims | | `spatial-xy-scans.md` |

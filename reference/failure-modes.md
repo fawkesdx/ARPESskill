@@ -100,6 +100,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
 | Re-walk folder / paste full catalog every turn | Build `analysis/manifest.json`; recall later (`folder-manifest.md`) |
+| Folder map uses full `load_data` / spectrum | Header peek only (astropy/h5py); `load_data` at overview/analysis (`folder-manifest.md`) |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |
 | Treat log “Cut” as kind without dims/heuristics | Dims + core-as-2D rules; log → `log_comment` only |
 | Reimplement fit / k-conversion by hand | Use PyARPES APIs; ask if truly unavailable |
@@ -121,7 +122,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **k/kz:** analysis mode only; cache under `analysis/kspace/*.npz`. Quick
   report must not convert.
 - **Folder inventory:** multi-file work starts with `analysis/manifest.json`
-  (`reference/folder-manifest.md`); recall instead of re-cataloging in chat.
+  via **header peek** (`folder-manifest.md`); recall instead of re-cataloging;
+  no full `load_data` for first map.
 - **Fits:** every reported fit must name the lineshape and any background model. See
   `reference/edc-mdc-fitting.md`.
 - **Self-energy:** single-band; package `to_self_energy` / `fit_for_self_energy`;

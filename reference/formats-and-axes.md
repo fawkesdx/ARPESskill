@@ -85,7 +85,10 @@ ALS MAESTRO data is handled by PyARPES endstation plugins:
 scan — that is the path the stock MAESTRO plugins support best. Do not jump to a
 custom MH1 HDF5 parser while a sibling `.fits` is unused.
 
-**Load path (preferred):**
+**Folder first-map:** header-only peek (`astropy.io.fits.getheader` /
+`h5py` shapes) — **not** `load_data`. See `reference/folder-manifest.md`.
+
+**Load path (preferred for analysis / overview):**
 
 ```python
 from arpes.io import load_data

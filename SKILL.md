@@ -186,7 +186,8 @@ volumes, etc.
   report = detector×energy **and** angle-integrated EDC; no default valence k
   (`reference/default-overview-plots.md`).
 - **Folder first:** for multi-file folders, build/refresh `analysis/manifest.json`
-  before deep analysis; later **recall** from it (`reference/folder-manifest.md`).
+  with **header-only peek** (astropy/h5py — not full `load_data`); later
+  **recall** from it (`reference/folder-manifest.md`).
 
 ## Package-first (important)
 
@@ -217,9 +218,10 @@ chat). Details: `reference/token-usage.md`.
 ## Workflow
 
 1. If the user points at a **folder** / many files: build or refresh
-   `analysis/manifest.json` (+ optional `manifest.md`) **first** — see
-   `reference/folder-manifest.md`. Later turns **recall** from the manifest;
-   do not re-walk the folder into chat.
+   `analysis/manifest.json` (+ optional `manifest.md`) **first** — listing +
+   **header-only peek** (`folder-manifest.md`). Do **not** full-load every
+   spectrum. Later turns **recall** from the manifest; do not re-walk the
+   folder into chat.
 2. Identify artifact (file type, shape, **existing** package/project loaders);
    prefer rows from the manifest when present.
 3. Check PyARPES + Python 3.8; if missing/wrong, ask for dedicated venv
@@ -318,7 +320,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/default-overview-plots.md` — cut / Fermi trio / hv–kz trio + assumptions
 - `reference/package-first.md` — use package APIs; ask before new code
 - `reference/backend-capability-map.md` — capability IDs; PyARPES defaults; user-map; living list
-- `reference/folder-manifest.md` — folder inventory before analysis; recall later
+- `reference/folder-manifest.md` — folder inventory; header peek then recall
 
 ## Examples
 
