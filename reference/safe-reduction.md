@@ -67,6 +67,7 @@ and `reference/formats-and-axes.md` for load/inspect details.
    - Spin-ARPES: `reference/spin-arpes.md` when spin channels present.
    - In-operando param axis \(P\): `reference/in-operando-param-scans.md`.
    - trARPES (`delay`): `reference/tr-arpes.md`.
+   - Self-energy / Σ (user-asked, single-band): `reference/self-energy.md`.
 
 Do not skip ahead to fit or k/kz on raw angle–energy data without completing
 inspection and at least one reduction product (cut, Fermi map, EDC, or MDC).
