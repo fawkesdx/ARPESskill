@@ -31,6 +31,7 @@ axes or physics**:
 | Masks | Boolean `.where` or polygon `apply_mask`; GUI ask only |
 | Align | Correlation offset (`align`); ask before apply; not stitch |
 | Decomposition | PCA / NMF / ICA / factor analysis (`*_along`); ask before large cubes |
+| Stack plots | Offset / flat stack; false-color; ToF±σ if errors exist |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

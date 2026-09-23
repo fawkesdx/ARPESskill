@@ -77,6 +77,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY shapely / invent mask polygon | `apply_mask` / `.where` (`masks.md`) |
 | DIY np.correlate align / invent stitch | `align` / `align1d` / `align2d` (`align.md`) |
 | DIY sklearn PCA/NMF unwrap | `pca_along` / `nmf_along` / … (`decomposition.md`) |
+| DIY waterfall / invent ToF σ | `stack_dispersion_plot` / `plot_with_std` (`stack-plots.md`) |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
 | “PyARPES can’t do MH1” → immediately rewrite | Document limitation; ask before new loader |
