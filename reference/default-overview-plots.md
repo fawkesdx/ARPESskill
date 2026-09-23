@@ -18,7 +18,8 @@ integrated).
 | **Photon-energy / kz (EPH, hv stack)** | Scan dim is `hv` / `mono_eV` / beamline energy with n>1 | **≥3 images** — [hv / kz trio](#hv--kz-eph-trio-required) |
 | **XY / spatial map** | Scan motors `x`,`y` both n>1 | **Spatial set** — see `reference/spatial-xy-scans.md` (XY map with stated spectroscopic ROI \(R\), hot-spot spectrum, spatial mean, subtype extra). Subtypes: XY–E / XY–ARPES / XY–map / XY–hv. |
 | **Spin-ARPES / SARPES** | `up`/`down` or `intensity`+`polarization` (or spin dim) | Spin-EDC and/or spin-cut overviews — `reference/spin-arpes.md` (package spin plots; state Sherman). |
-| **In-operando / param scan** | Extra n>1 dim that is dose / V / I / B / T / … (not φ/ψ/`hv`/x,y) | Param set — `reference/in-operando-param-scans.md` (confirm \(P\) meaning; I vs \(P\); overview at mid \(P^*\) or ask if stepped). |
+| **In-operando / param scan** | Extra n>1 dim that is dose / V / I / B / T / … (not φ/ψ/`hv`/x,y/`delay`) | Param set — `reference/in-operando-param-scans.md` (confirm \(P\) meaning; I vs \(P\); overview at mid \(P^*\) or ask if stepped). |
+| **trARPES / pump–probe** | `delay` dim n>1 | Delay set — `reference/tr-arpes.md` (t0; I vs delay; overview at delay\* ≥ t0; ΔI / ΔI/I). |
 
 **Kind rule:** classify from **loaded dims / sizes**. Measurement-log text
 (“Cut”, “EPH”, “Fermi Map”) is a **comment only** — if log disagrees with dims

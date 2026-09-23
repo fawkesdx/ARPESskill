@@ -5,8 +5,9 @@ sample current, magnetic field, temperature, …) — not the usual spectroscopi
 or spatial dims.
 
 **\(P\) is not:** `eV`, detector angle (`phi` / `pixel`), deflection
-(`psi` / `Slit_Defl`), spatial `x`/`y`, or photon energy `hv` when that dim is
-the beamline mono energy (use hv/kz recipes). Those have their own references.
+(`psi` / `Slit_Defl`), spatial `x`/`y`, photon energy `hv` when that dim is
+the beamline mono energy (use hv/kz recipes), or pump–probe **`delay`** (use
+`tr-arpes.md` for t0 / ΔI).
 
 Package-first: load → discover coords → `sel`/`isel`/`sum`/`mean` along \(P\) →
 **reuse** existing kind recipes. No invent K-coverage, \(R(V)\), or magnetometry
