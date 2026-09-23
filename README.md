@@ -26,6 +26,7 @@ axes or physics**:
 | Smooth / deconvolve | Gaussian smooth for noise; RL/ICE only if asked + PSF |
 | Resolution | Package ΔE estimates; ask if endstation tables missing |
 | Backgrounds | Core→Shirley; valence→hull; above-EF incoherent ask |
+| BZ overlay | Prefer k-space; user cell wins; graphene/ws2/wse2 library; ase optional |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

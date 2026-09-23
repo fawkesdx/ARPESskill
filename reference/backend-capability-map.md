@@ -95,6 +95,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `bg_shirley` | Shirley bg (core) | `remove_shirley_background` | | `backgrounds.md`, `edc-mdc-fitting.md` |
 | `bg_hull` | Convex-hull bg (valence default) | `remove_background_hull` / `calculate_background_hull` | | `backgrounds.md` |
 | `bg_incoherent` | Above-EF incoherent bg | `remove_incoherent_background` — **ask** | | `backgrounds.md` |
+| `bz_plot` | Draw BZ from ASE cell | `arpes.plotting.bz.bz_plot` / `bz2d_plot` | | `bz-overlay.md` |
+| `bz_overplot_standard` | Named-material BZ overlay | `overplot_standard` (`graphene`/`ws2`/`wwe2` for WSe2) | | `bz-overlay.md` |
+| `bz_annotate_path` | High-symmetry path labels | `annotate_special_paths` | | `bz-overlay.md` |
+| `bz_data_on_zone` | Plot k-data onto 2D BZ | `plot_data_to_bz` (2D only; 3D N/I) | | `bz-overlay.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
