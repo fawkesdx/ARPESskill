@@ -106,7 +106,8 @@ Echo overview assumptions + \(R\) + (x*,y*).
 2. **Hot-spot first:** one full kind analysis (EDC/MDC, peak fit, Fermi lite, …).  
 3. **Parameter maps:** `broadcast_model` on `["x","y"]` (or loop) only after a
    test curve; token note; save param XY figures.  
-4. **PCA:** `pca_along(..., ["x","y"])` — optional; ask before large decompositions.  
+4. **PCA / NMF / ICA / factor analysis:** `reference/decomposition.md`
+   (`pca_along` etc.) — ask before large decompositions.  
 5. **k / kz / near-EF gap:** only on reduced ROI or spatial mean; follow those
    references; never silent full 5D/6D convert.
 
@@ -119,7 +120,7 @@ Echo overview assumptions + \(R\) + (x*,y*).
 | Detect spatial | Dims; `S.is_spatial` hint |
 | XY map / means | `sum` / `mean` / `sel` over stated dims |
 | Spatial plots | `arpes.plotting.spatial` helpers if useful; else matplotlib |
-| PCA | `arpes.analysis.decomposition.pca_along` |
+| PCA / NMF / ICA / FA | `reference/decomposition.md` (`pca_along`, …) |
 | Fits over XY | `broadcast_model` + models from `edc-mdc-fitting.md` |
 | Interactive box | `qt_tool` / mask tools — **ask first** |
 
