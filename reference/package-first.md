@@ -70,6 +70,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY Laplacian / Sobel “sharpen” | Package `curvature` + `minimum_gradient` (`band-enhance.md`) |
 | DIY pocket centroid / ellipse / kF | `pocket_parameters` / `curves_along_pocket` (`fs-pocket.md`) |
 | DIY Wiener / invent PSF / silent RL | `gaussian_filter_arr` or `deconvolve_rl` + stated PSF (`smooth-deconvolve.md`) |
+| DIY pass-energy / invent ΔE tables | `resolution.md` package helpers or **ask** |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
 | “PyARPES can’t do MH1” → immediately rewrite | Document limitation; ask before new loader |

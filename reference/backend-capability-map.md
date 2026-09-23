@@ -90,6 +90,8 @@ with PyARPES versions — check installed package before claiming exact names.
 | `smooth_other` | Boxcar / Savitzky–Golay | `boxcar_filter_arr` / `savitzky_golay` — **ask** | | `smooth-deconvolve.md` |
 | `deconvolve_psf` | Build / accept PSF | `make_psf1d` or user PSF — required before RL/ICE | | `smooth-deconvolve.md` |
 | `deconvolve_rl` | Richardson–Lucy / ICE | `deconvolve_rl` default; `deconvolve_ice` if asked — **never auto** | | `smooth-deconvolve.md` |
+| `resolution_total` | Quadrature total ΔE | `total_resolution_estimate` (thermal optional) | | `resolution.md` |
+| `resolution_parts` | Thermal / analyzer / beamline parts | `thermal_` / `analyzer_` / `beamline_resolution_estimate` — ask if tables missing | | `resolution.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user

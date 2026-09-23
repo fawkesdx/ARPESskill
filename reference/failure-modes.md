@@ -73,7 +73,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | hv npz with only scalar `ef_fit_eV` | Require `ef_fit_per_hv` (+ optional plot path) |
 | broadcast_model broken → mid-φ fallback | Loop **summed-φ** EDCs + `AffineBroadenedFD`; ask if still fails |
 | Slit offset from high-hv soft X-ray slice only | Prefer **lowest-hv** slice after EF align |
-| Invent photon-momentum / incidence angles | Use `beamline-geometry.md`; MAESTRO / ALBA LOREA **55°** default then ask; SLS soft X-ray postponed |
+| Invent photon-momentum / incidence angles | Use `beamline-geometry.md`; MAESTRO / ALBA **55°**; ANTARES **45°** + fixed H slit; ask; SLS postponed |
+| Assume ANTARES slit rotatable / vertical | Fixed **horizontal**, not rotatable |
+| Invent analyzer/beamline ΔE when tables missing | Package estimates or **ask** (`resolution.md`); no DIY pass-energy math |
+| Apply MERLIN resolution tables to ANTARES/MAESTRO | Endstation-specific; report failure |
 | Invent KE cube when `eV`+`hv` present | Use EF-aligned `eV` + `hv`; no invented matrix |
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
@@ -109,6 +112,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **FS pocket:** one sheet; user or package center; not auto-Γ (`fs-pocket.md`).
 - **Smooth / deconvolve:** gaussian for noise; RL only if asked + PSF
   (`smooth-deconvolve.md`).
+- **Resolution:** package estimates; ask if tables missing (`resolution.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).

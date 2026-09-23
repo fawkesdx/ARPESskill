@@ -7,12 +7,13 @@ description: >
   spatial XY / nanoARPES scans, Spin-ARPES (SARPES), in-operando parameter
   scans, time-resolved / pump–probe ARPES (delay, t0, ΔI), single-band
   self-energy (Σ), band enhance (curvature / minimum gradient), and Fermi-surface
-  pocket analysis, and smooth / deconvolution via PyARPES or a confirmed
-  user-project capability map. Use when working with ARPES spectra, Fermi
-  surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe, in-operando, dosing,
-  gated devices, self-energy, curvature, minimum gradient, FS pocket, smooth,
-  deconvolution, MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum
-  conversion, hv/kz scans, spatial maps, nanoARPES, pseudogap, or PyARPES.
+  pocket analysis, smooth / deconvolution, and experimental resolution estimates
+  via PyARPES or a confirmed user-project capability map. Use when working with
+  ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe,
+  in-operando, dosing, gated devices, self-energy, curvature, minimum gradient,
+  FS pocket, smooth, deconvolution, resolution, ANTARES, MAESTRO or NeXus/HDF5
+  ARPES files, angle-to-momentum conversion, hv/kz scans, spatial maps,
+  nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -23,8 +24,8 @@ User or task involves ARPES spectra, Fermi maps, EDC/MDC, peak fitting,
 k or kz conversion, spatial XY / nanoARPES maps, Spin-ARPES / SARPES,
 in-operando parameter scans (dose, gate, current, field, T), time-resolved /
 pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
-minimum gradient), FS pocket, smooth / deconvolution, MAESTRO/NeXus/HDF5/Igor
-ARPES files, or PyARPES.
+minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
+MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -99,6 +100,8 @@ volumes, etc.
   (center = user or `pocket_parameters` if clearly one pocket; curves; EDCs ask).
 - **Smooth / deconvolve (user-asked):** `reference/smooth-deconvolve.md`
   (gaussian smooth = noise default; RL/ICE only on explicit ask + stated PSF).
+- **Resolution (user-asked / FD needs width):** `reference/resolution.md`
+  (package estimates; ask if endstation tables missing — no invent).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -136,8 +139,9 @@ volumes, etc.
 - **hv → kz:** EF-align **per hv** on an **angle-integrated** near-EF edge
   (do not use mid-φ as default); QC + plot EF_fit vs hv; per-slice report; post-shift
   verify ≈0; slit offset from **lowest-hv** slice; state V₀; soft X-ray →
-  `reference/beamline-geometry.md` (MAESTRO 55°; ALBA LOREA 55° — ask; SLS soft
-  X-ray postponed) + **ask** about photon momentum / incidence; npz must store
+  `reference/beamline-geometry.md` (MAESTRO 55°; ALBA LOREA 55°; SOLEIL ANTARES
+  **45°** + fixed horizontal slit — ask; SLS soft X-ray postponed) + **ask**
+  about photon momentum / incidence; npz must store
   `ef_fit_per_hv` (`reference/k-and-kz-conversion.md`).
 - After k/kz conversion: save `analysis/kspace/*.npz` with required meta;
   prefer reload from cache when meta still matches.
@@ -220,8 +224,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/fs-pocket.md`.
 18. If user asks smooth / denoise / deconvolve —
     `reference/smooth-deconvolve.md`.
-19. Plot/report with labeled units; **list overview / conversion assumptions**.
-20. Before expensive batch work — token note (`reference/token-usage.md`).
+19. If user asks resolution / broadening budget (or FD needs σ) —
+    `reference/resolution.md`.
+20. Plot/report with labeled units; **list overview / conversion assumptions**.
+21. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -239,8 +245,9 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/band-enhance.md` — curvature + minimum gradient (both; not intensity)
 - `reference/fs-pocket.md` — FS pocket center / curves / EDCs (path B center)
 - `reference/smooth-deconvolve.md` — gaussian smooth; RL/ICE deconvolve (ask + PSF)
+- `reference/resolution.md` — total / thermal / analyzer / beamline ΔE estimates
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
-- `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55° defaults; SLS soft X-ray postponed
+- `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
 - `reference/pyarpes-env.md` — Python 3.8 dedicated venv + install
 - `reference/token-usage.md` — when to warn about token cost
@@ -262,6 +269,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/band_enhance.md`
 - `examples/fs_pocket.md`
 - `examples/smooth_deconvolve.md`
+- `examples/resolution.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -288,3 +296,4 @@ See `reference/` for recipes. Common entry points:
 - FS pocket: `pocket_parameters` / `curves_along_pocket` (`fs-pocket.md`)
 - Smooth / deconvolve: `gaussian_filter_arr`; `deconvolve_rl` + PSF if asked
   (`smooth-deconvolve.md`)
+- Resolution: `total_resolution_estimate` / parts (`resolution.md`)
