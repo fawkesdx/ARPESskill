@@ -99,6 +99,11 @@ with PyARPES versions — check installed package before claiming exact names.
 | `bz_overplot_standard` | Named-material BZ overlay | `overplot_standard` (`graphene`/`ws2`/`wwe2` for WSe2) | | `bz-overlay.md` |
 | `bz_annotate_path` | High-symmetry path labels | `annotate_special_paths` | | `bz-overlay.md` |
 | `bz_data_on_zone` | Plot k-data onto 2D BZ | `plot_data_to_bz` (2D only; 3D N/I) | | `bz-overlay.md` |
+| `rebin` | Downsample by chunk integrate | `arpes.analysis.general.rebin` | | `axis-prep.md` |
+| `symmetrize_axis` | Mirror+combine about axis | `symmetrize_axis` | | `axis-prep.md` |
+| `normalize_dim` | Equalize intensity along dim(s) | `arpes.preparation.normalize_dim` | | `axis-prep.md` |
+| `sort_axis` | Sort coords along axis | `arpes.preparation.sort_axis` | | `axis-prep.md` |
+| `condense` | Clip low-weight margins | `arpes.analysis.general.condense` | | `axis-prep.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
