@@ -74,6 +74,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY polynomial bg / wrong Shirley on valence | Shirley / hull / incoherent per `backgrounds.md` |
 | DIY hexagon / invent lattice for BZ | `bz_plot` / `overplot_standard` / user cell (`bz-overlay.md`) |
 | DIY reshape rebin / silent intensity normalize | `rebin` / `normalize_dim` (`axis-prep.md`) |
+| DIY shapely / invent mask polygon | `apply_mask` / `.where` (`masks.md`) |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
 | “PyARPES can’t do MH1” → immediately rewrite | Document limitation; ask before new loader |

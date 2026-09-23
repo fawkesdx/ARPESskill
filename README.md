@@ -28,6 +28,7 @@ axes or physics**:
 | Backgrounds | Core→Shirley; valence→hull; above-EF incoherent ask |
 | BZ overlay | Prefer k-space; user cell wins; graphene/ws2/wse2 library; ase optional |
 | Axis prep | Rebin / symmetrize / normalize_dim / sort / condense (user-asked) |
+| Masks | Boolean `.where` or polygon `apply_mask`; GUI ask only |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try
