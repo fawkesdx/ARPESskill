@@ -24,6 +24,7 @@ cost, a one-line note + continue is enough.
 | Re-load whole **measurement log** repeatedly | Long CSV in context | Cache summary once; store `log_comment` on manifest rows |
 | Re-walk folder every follow-up turn | Wastes tokens | **Recall** `analysis/manifest.json`; refresh only if mtime/hash changed |
 | **Broadcast fits** over full 2D/3D maps | Long fit reports × many curves | Fit one EDC/MDC first; then scripted broadcast → save params CSV |
+| **Spatial XY** full-volume plots / PCA / all-pixel fits | Huge cubes × many PNGs / fits | Hot-spot kind analysis first; stated ROI \(R\); broadcast only if asked (`spatial-xy-scans.md`) |
 | Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |
