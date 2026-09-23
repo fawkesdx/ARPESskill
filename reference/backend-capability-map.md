@@ -72,6 +72,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `param_scan_detect` | Find external \(P\) dims | Dims minus spectroscopic/spatial/`hv`; **ask** meaning/units if unclear | | `in-operando-param-scans.md` |
 | `param_overview` | I vs \(P\) + slice at \(P^*\) | `sel`/`sum`/`mean`; mid \(P^*\) or ask if stepped | | `in-operando-param-scans.md` |
 | `param_slice_reduce` | Reduce to one \(P\) → kind recipe | `sel` / `isel` along \(P\) | | `in-operando-param-scans.md` |
+| `tr_detect` | Recognize pump–probe delay | `delay` dim / loader alias; confirm units | | `tr-arpes.md` |
+| `tr_find_t0` | Resolve pump–probe t0 | user / attrs / `S.t0` / `find_t0` / ask | | `tr-arpes.md` |
+| `tr_relative_change` | ΔI or ΔI/I vs delay | `relative_change` / `normalized_relative_change` | | `tr-arpes.md` |
+| `tr_overview` | Delay-set quick report | I vs delay + slice at delay\* ≥ t0 + Δ map | | `tr-arpes.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user

@@ -27,6 +27,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Call ring `beam_current` sample transport I | Confirm meaning; ring ≠ sample (`in-operando-param-scans.md`) |
 | Assume `volts` = gate / invent dose coverage math | Ask units/meaning; no DIY calibration formulas |
 | Param series overview with no \(P\) meaning stated | Confirm \(P\); mid \(P^*\) or ask if stepped plateaus |
+| Treat pump–probe `delay` as generic \(P\) only | Use `tr-arpes.md` (t0 + Δ maps), not only in-operando |
+| Invent t0 or mix fs/ps without stating | attrs/`find_t0`/ask; echo units |
+| ΔI without pre-t0 reference / buffer stated | `relative_change` / normalized; state t0 + buffer |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
 | PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |
