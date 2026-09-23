@@ -18,9 +18,9 @@ API) may sit on top of this manifest without replacing it as the source of truth
 | New files added / mtimes changed / user says refresh | Rebuild or patch changed rows |
 | Single known file path | Manifest optional; still OK to add one row |
 
-Give a **token note** before a full-folder deep load (`reference/token-usage.md`).
-Prefer: list cheap metadata first; deep-load shapes only as needed (or sample
-3–5 files, then offer full pass).
+Give a **token note** before a full-folder **spectrum** load
+(`reference/token-usage.md`). Prefer: list + **header-only peek** first;
+`load_data` / overview only when user asks or for a chosen file.
 
 ## Where
 
@@ -66,13 +66,14 @@ Top level:
 | `kind` | string | yes | See kind enum below |
 | `kind_confidence` | string | no | `high` \| `medium` \| `low` |
 | `kind_clues` | string[] | no | e.g. `["swept","span_12eV"]` |
-| `shape` | int[] \| null | no | After successful peek load |
-| `dims` | string[] \| null | no | |
-| `hv_eV` | number \| null | no | Scalar hv if known |
-| `energy_span_eV` | number \| null | no | \|Emax−Emin\| if known |
+| `shape` | int[] \| null | no | After header peek (NAXIS* / dataset shape) |
+| `dims` | string[] \| null | no | Best-effort from header cards / HDF5 names — may be provisional |
+| `hv_eV` | number \| null | no | Scalar hv if in header/attrs |
+| `energy_span_eV` | number \| null | no | \|Emax−Emin\| if recoverable from header |
 | `energy_axis` | string \| null | no | `Ek` \| `Eb` \| `E-EF` \| `ambiguous` |
-| `load_ok` | bool \| null | no | null = not peeked yet |
-| `load_error` | string \| null | no | |
+| `peek_ok` | bool \| null | no | null = not peeked; prefer over legacy `load_ok` |
+| `load_ok` | bool \| null | no | Legacy alias of `peek_ok` (header peek, not full load) |
+| `load_error` | string \| null | no | Peek failure message |
 | `overview_paths` | string[] | no | Relative paths to PNG(s) under `analysis/` |
 | `product_paths` | string[] | no | e.g. `analysis/kspace/<stem>_k.npz` |
 | `notes` | string \| null | no | Short free text |
@@ -92,12 +93,44 @@ only (`reference/default-overview-plots.md`).
    exists — record both; set `path` to preferred).
 2. Match measurement log by stem if a log is available → `log_comment`.
 3. Cheap row: stem, paths, ext, size, mtime (and hash if enabled).
-4. Optional peek load (PyARPES): fill shape, dims, hv, energy_span, energy_axis,
-   kind guess, `load_ok` / `load_error`.
+4. **Header-only peek** (default Pass B) — fill shape / hv / energy clues /
+   kind guess. **Do not** call `arpes.io.load_data` here.
 5. Write `manifest.json`; write `manifest.md` summary table (stem, kind, hv,
-   shape, load_ok, comment).
+   shape, peek_ok, comment).
 6. Chat: **short summary only** (counts by kind + path to manifest) — not the
    full JSON.
+
+### Pass B — header peek (required method)
+
+Already in the shared env (`astropy`, `h5py` — `pyarpes-env.md`). No new
+download.
+
+| Ext | How (no spectrum array) |
+|-----|-------------------------|
+| `.fits` / `.fit` | `astropy.io.fits.getheader(path)` and/or `fits.open(..., memmap=True)` → read **headers** / column names / `NAXIS*`; **do not** load table `.data` / Fixed_Spectra columns |
+| `.h5` / `.hdf5` / NeXus-like | `h5py.File(path, "r")` → attrs + dataset `.shape` / names; **do not** `[:]` full arrays |
+| Other | File size + ext only; mark `kind=unknown` / ask |
+
+Extract when present: shape, motor/hv cards (e.g. `mono_eV`, `SF_HV`,
+`LMOTOR*`), energy start/delta/n if in header, provisional kind. Echo that
+dims/kind from header are **provisional** until a later full load.
+
+```python
+from astropy.io import fits
+
+hdr0 = fits.getheader(path, 0)          # primary
+# optional: hdr1 = fits.getheader(path, 1)  # table HDU — still header only
+# shape clues: NAXIS*, NAXIS1, … or defer until overview load
+
+# MH1 / HDF5
+import h5py
+with h5py.File(path, "r") as f:
+    # walk groups; record dataset shapes + attrs; no f[…][:]
+    pass
+```
+
+**Full `load_data`:** only Pass **C** (overview) or when user picks a file for
+analysis — not for first folder mapping.
 
 ### Invalidation
 
@@ -126,19 +159,21 @@ Do **not** re-paste the full catalog into chat when the manifest is enough.
 | Pass | What | Cost |
 |------|------|------|
 | **A — listing** | Paths, size, mtime, log comment, preferred ext | Low |
-| **B — peek** | Load header/spectrum briefly → shape, kind, hv | Medium |
-| **C — overview** | Write PNGs per `default-overview-plots.md`; set `overview_paths` | Higher |
+| **B — header peek** | Astropy FITS header / h5py attrs+shapes → shape, hv, kind guess | Low–medium |
+| **C — overview** | `load_data` + PNGs per `default-overview-plots.md`; set `overview_paths` | Higher |
 
-Default for a new folder: **A**, then **B** (or sample **B** then offer full).
-**C** when user wants a quick report / catalog with figures.
+Default for a new folder: **A**, then **B** (header only). Sample or full **B**
+OK. **C** / PyARPES load only when user wants quick-report figures or picks a
+file to analyze.
 
 ## Agent rules
 
 1. Manifest before multi-file analysis when a folder is in scope.
 2. Prefer recall from manifest over rediscovering the folder.
 3. Never dump full intensity arrays into the manifest or into chat.
-4. Update `overview_paths` / `product_paths` when those artifacts are written.
-5. Keep schema_version bumped if fields change incompatibly.
+4. Folder first-map = **header peek only** — no `load_data` / no spectrum.
+5. Update `overview_paths` / `product_paths` when those artifacts are written.
+6. Keep schema_version bumped if fields change incompatibly.
 
 ## Failure modes
 
