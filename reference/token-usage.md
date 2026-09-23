@@ -36,6 +36,7 @@ cost, a one-line note + continue is enough.
 | **Rebin / normalize** whole volumes silently | Hidden intensity change | Echo factors; one cut first (`axis-prep.md`) |
 | **Mask** huge cubes without stated ROI | Waste + wrong mean | Echo condition; reduce after mask (`masks.md`) |
 | **Align** many pairs / full volumes | Many correlations | One ROI pair first (`align.md`) |
+| **NMF/ICA/PCA** large hypercubes | Heavy sklearn + many maps | Ask; small ROI / fewer components first (`decomposition.md`) |
 | Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |

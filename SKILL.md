@@ -11,14 +11,15 @@ description: >
   background subtraction (Shirley / hull / incoherent), Brillouin-zone /
   high-symmetry path overlays, axis prep (rebin / symmetrize / normalize /
   sort / condense), data masks (boolean / polygon), and correlation alignment
-  of spectra via PyARPES or a confirmed user-project capability map. Use when
+  of spectra, and sklearn-style decomposition (PCA / NMF / ICA / factor
+  analysis) via PyARPES or a confirmed user-project capability map. Use when
   working with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES,
   pump-probe, in-operando, dosing, gated devices, self-energy, curvature,
   minimum gradient, FS pocket, smooth, deconvolution, resolution, background,
   Shirley, Brillouin zone, BZ overlay, rebin, symmetrize, normalize_dim, mask,
-  polygon mask, align, register, shift spectra, ANTARES, MAESTRO or
-  NeXus/HDF5 ARPES files, angle-to-momentum conversion, hv/kz scans, spatial
-  maps, nanoARPES, pseudogap, or PyARPES.
+  polygon mask, align, register, shift spectra, PCA, NMF, ICA, ANTARES,
+  MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum conversion, hv/kz scans,
+  spatial maps, nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -32,7 +33,8 @@ pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
 minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
 background subtraction, BZ / high-symmetry path overlay, axis prep (rebin /
 symmetrize / normalize), masks (boolean / polygon), spectrum alignment,
-MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
+PCA/NMF/ICA decomposition, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or
+PyARPES.
 
 ## What reduction means
 
@@ -121,6 +123,8 @@ volumes, etc.
   polygon `apply_mask`; GUI ask only; echo condition/vertices).
 - **Align (user-asked):** `reference/align.md` (correlation `align` → unitful
   offset; ask before apply; not stitch).
+- **Decomposition (user-asked):** `reference/decomposition.md` (PCA / NMF / ICA /
+  factor analysis via `*_along`; echo axes + n_components; NMF non-neg).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -255,8 +259,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/masks.md`.
 24. If user asks align / register / spectral shift between datasets —
     `reference/align.md`.
-25. Plot/report with labeled units; **list overview / conversion assumptions**.
-26. Before expensive batch work — token note (`reference/token-usage.md`).
+25. If user asks PCA / NMF / ICA / factor analysis —
+    `reference/decomposition.md`.
+26. Plot/report with labeled units; **list overview / conversion assumptions**.
+27. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -280,6 +286,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/axis-prep.md` — rebin / symmetrize / normalize_dim / sort / condense
 - `reference/masks.md` — boolean / polygon masks (`apply_mask`)
 - `reference/align.md` — correlation align offset (ask before apply)
+- `reference/decomposition.md` — PCA / NMF / ICA / factor analysis
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
@@ -309,6 +316,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/axis_prep.md`
 - `examples/masks.md`
 - `examples/align.md`
+- `examples/decomposition.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -343,3 +351,5 @@ See `reference/` for recipes. Common entry points:
   `condense` (`axis-prep.md`)
 - Masks: `.where` / `apply_mask` (`masks.md`)
 - Align: `align` / `align1d` / `align2d` (`align.md`)
+- Decomposition: `pca_along` / `nmf_along` / `ica_along` /
+  `factor_analysis_along` (`decomposition.md`)
