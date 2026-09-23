@@ -104,6 +104,9 @@ with PyARPES versions — check installed package before claiming exact names.
 | `normalize_dim` | Equalize intensity along dim(s) | `arpes.preparation.normalize_dim` | | `axis-prep.md` |
 | `sort_axis` | Sort coords along axis | `arpes.preparation.sort_axis` | | `axis-prep.md` |
 | `condense` | Clip low-weight margins | `arpes.analysis.general.condense` | | `axis-prep.md` |
+| `mask_boolean` | Boolean / threshold keep-region | `DataArray.where` (+ logical ops) | | `masks.md` |
+| `mask_polygon` | Polygon → mask def | `raw_poly_to_mask` / `polys_to_mask` | | `masks.md` |
+| `mask_apply` | Apply polygon mask to data | `apply_mask` / `apply_mask_to_coords` | | `masks.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
