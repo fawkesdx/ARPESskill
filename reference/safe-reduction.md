@@ -71,6 +71,7 @@ and `reference/formats-and-axes.md` for load/inspect details.
    - Band enhance (user-asked): `reference/band-enhance.md` (curvature + MG).
    - FS pocket (user-asked): `reference/fs-pocket.md`.
    - Smooth / deconvolve (user-asked): `reference/smooth-deconvolve.md`.
+   - Resolution estimates (user-asked / FD σ): `reference/resolution.md`.
 
 Do not skip ahead to fit or k/kz on raw angle–energy data without completing
 inspection and at least one reduction product (cut, Fermi map, EDC, or MDC).

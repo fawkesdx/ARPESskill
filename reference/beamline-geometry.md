@@ -47,6 +47,21 @@ Record the chosen value in the project manifest / npz `assumptions`.
 | Photon-momentum in stock PyARPES | Not a documented one-click switch — still **ask** before any custom correction |
 | Skill default action | At soft X-ray hv: propose **55°** incidence default; **ask** accept / edit / ignore |
 
+### SOLEIL ANTARES — nanoARPES
+
+| Field | Value |
+|-------|--------|
+| Facility | SOLEIL Synchrotron |
+| Endstation | ANTARES (nanoARPES) |
+| Photon incidence (normal emission) | **45°** (skill default — user-confirmed; still **ask** before use) |
+| Analyzer slit | **Horizontal**, **not rotatable** (fixed orientation) |
+| PyARPES plugin | `arpes.endstations.plugin.ANTARES.ANTARESEndstation` |
+| Source | User-confirmed skill default (prefer staff / experiment notes if they disagree) |
+| Photon-momentum in stock PyARPES | Not a documented one-click switch — still **ask** before any custom correction |
+| Skill default action | At soft X-ray hv: propose **45°**; echo **fixed horizontal slit**; **ask** accept / edit / ignore |
+
+Do **not** invent slit rotation or vertical-slit geometry for ANTARES.
+
 ## Postponed
 
 ### SLS soft X-ray ARPES

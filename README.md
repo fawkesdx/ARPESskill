@@ -24,6 +24,7 @@ axes or physics**:
 | Band enhance | Curvature + min-gradient side by side (not intensity) |
 | FS pocket | One closed sheet; center = user or `pocket_parameters`; curves; EDCs ask |
 | Smooth / deconvolve | Gaussian smooth for noise; RL/ICE only if asked + PSF |
+| Resolution | Package ΔE estimates; ask if endstation tables missing |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try
@@ -71,7 +72,8 @@ Point the agent at this repo, or inject `SKILL.md` plus needed files under
 ## Related tools
 
 - [PyARPES](https://arpes.readthedocs.io) / [GitHub mirror](https://github.com/chstan/arpes)
-- Beamline notes in-skill: MAESTRO, ALBA LOREA (incidence defaults); more welcome via PR
+- Beamline notes in-skill: MAESTRO, ALBA LOREA (55°); SOLEIL ANTARES (45°, fixed
+  horizontal slit); more welcome via PR
 
 ## Skill layout
 

@@ -55,6 +55,7 @@ removed).
   `arpes.analysis.gap.determine_broadened_fermi_distribution` — **check** the
   installed version before claiming the name).
 - State **temperature T** and **resolution width** (σ or FWHM — say which).
+  Prefer package / user estimate from `reference/resolution.md` when available.
   Prefer values from the metal-edge fit when available; else ask.
 - Build the broadened FD on the **same energy grid** as the data; divide
   intensity by that curve (thin glue OK). Avoid dividing where the FD is
