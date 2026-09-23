@@ -83,6 +83,9 @@ with PyARPES versions — check installed package before claiming exact names.
 | `band_curvature` | Curvature band enhance | `arpes.analysis.derivative.curvature` | | `band-enhance.md` |
 | `band_min_gradient` | Minimum-gradient enhance | `arpes.analysis.derivative.minimum_gradient` | | `band-enhance.md` |
 | `band_derivative` | 1st/2nd deriv along axis | `d1_along_axis` / `d2_along_axis` / `dn_along_axis` — **ask** | | `band-enhance.md` |
+| `pocket_params` | Pocket center / anisotropy | `pocket_parameters` (user center wins; else one clear pocket) | | `fs-pocket.md` |
+| `pocket_curves` | Radial cuts around pocket | `curves_along_pocket` | | `fs-pocket.md` |
+| `pocket_edcs` | EDCs around / along pocket ray | `edcs_along_pocket` / `radial_edcs_along_pocket` — **ask** | | `fs-pocket.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user

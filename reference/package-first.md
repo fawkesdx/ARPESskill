@@ -68,6 +68,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY symmetrize / bare FD / custom gap Δ | `gap.symmetrize` + resolution-broadened FD; ask if missing |
 | DIY Σ from linewidth / invent k-dependent Σ | `to_self_energy` / `fit_for_self_energy`; k-independent only |
 | DIY Laplacian / Sobel “sharpen” | Package `curvature` + `minimum_gradient` (`band-enhance.md`) |
+| DIY pocket centroid / ellipse / kF | `pocket_parameters` / `curves_along_pocket` (`fs-pocket.md`) |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
 | “PyARPES can’t do MH1” → immediately rewrite | Document limitation; ask before new loader |
