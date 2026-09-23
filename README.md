@@ -22,6 +22,7 @@ axes or physics**:
 | trARPES | `delay`; t0; delay\* ≥ t0; package ΔI / ΔI/I; reuse kind at slice |
 | Self-energy | Single-band MDC → Σ (reuse fits or `fit_for_self_energy`); bare band; lifetime ask |
 | Band enhance | Curvature + min-gradient side by side (not intensity) |
+| FS pocket | One closed sheet; center = user or `pocket_parameters`; curves; EDCs ask |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

@@ -95,6 +95,7 @@ Order:
 3. Else, if the isoenergy is clearly a **single pocket**, may call
    **`arpes.analysis.pocket.pocket_parameters`** (package only) and propose its
    center as offsets — label *package:pocket_parameters*; **ask before applying**.
+   Full pocket / radial-EDC workflow: `reference/fs-pocket.md` (separate from Γ).
 4. Else offer interactive **`arpes.plotting.qt_ktool.ktool`** / `widgets.kspace_tool`
    if the user wants GUI — **ask first** (skill prefers scripted path).
 5. Else **STOP and ask** for Γ / normal-emission angles (or a clickable point).
