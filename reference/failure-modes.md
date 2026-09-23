@@ -34,6 +34,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Σ on multi-band without asking | Single-peak preflight; stop + ask |
 | Quote lifetime / mfp in default Σ report | Ask first; state formula + units |
 | Silent bare-band choice for ReΣ | Echo `ransac_linear` / `linear` / user |
+| Replace intensity with curvature / claim peaks from MG | Both maps; state derived; fits elsewhere (`band-enhance.md`) |
+| Enhance full 3D volume by default | Reduce to 2D cut first |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
 | PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |
@@ -98,6 +100,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
   `reference/edc-mdc-fitting.md`.
 - **Self-energy:** single-band; package `to_self_energy` / `fit_for_self_energy`;
   state bare band; no default lifetime (`self-energy.md`).
+- **Band enhance:** both curvature + min-gradient; not intensity; no EF/centers
+  from these alone (`band-enhance.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).

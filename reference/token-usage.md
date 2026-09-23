@@ -28,6 +28,7 @@ cost, a one-line note + continue is enough.
 | **In-operando** full stack along every \(P\) step | Many slices × fits | Mid \(P^*\) (or asked step) first; broadcast along \(P\) only if asked (`in-operando-param-scans.md`) |
 | **trARPES** full delay cube fits / k | Many delays × heavy steps | delay\* near t0 + Δ map first; convert/fit one delay if asked (`tr-arpes.md`) |
 | **Self-energy** full-cut MDC broadcast + Σ | Long fit reports × many energies | One energy/window first; then scripted `fit_for_self_energy` → save Σ (`self-energy.md`) |
+| **Band enhance** many slices / 3D volume | Many derived PNGs | One 2D cut first; both maps only (`band-enhance.md`) |
 | Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |
