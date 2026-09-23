@@ -139,7 +139,7 @@ figure captions.
 | Kind | From **dims/sizes**; log text is comment only; cut-shaped + core-as-2D heuristics → `core_level_2d` |
 | Core-as-2D detect | Primary: **swept** + deep/core clues; soft: span ≳10 eV or deepest ≳5 eV below EF |
 | Core-as-2D plots | Detector×energy **and** angle-integrated EDC |
-| Slice pick | **Center**, not peak-find: nearest **0°** deflection if in range else mid index; **mid hv**; **mid detector** (`n//2`). **Exception — spatial XY:** hot spot = **argmax** of ROI-integrated XY map (`spatial-xy-scans.md`). **Exception — in-operando \(P\):** mid \(P^*`; **ask** if series looks stepped (`in-operando-param-scans.md`) |
+| Slice pick | **Center**, not peak-find: nearest **0°** deflection if in range else mid index; **mid hv**; **mid detector** (`n//2`). **Exception — spatial XY:** hot spot = **argmax** of ROI-integrated XY map (`spatial-xy-scans.md`). **Exception — in-operando P:** mid P*; **ask** if series looks stepped (`in-operando-param-scans.md`). **Exception — trARPES:** delay* = nearest delay **≥ t0** (`tr-arpes.md`) |
 | Extra dims | Squeeze at mid index if needed |
 | Energy axis | Use loaded `eV` as-is — **no** silent EF / work-function / analyzer recalibration |
 | Isoenergy E | ≈0 if in range (optional ±25 meV mean); else ¼-from-top |
