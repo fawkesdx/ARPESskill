@@ -92,6 +92,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | DIY sklearn decomp / silent NMF on negatives | Package `*_along`; NMF non-neg warn (`decomposition.md`) |
 | DIY waterfall / invent σ for ToF plots | Package stack / `plot_with_std` (`stack-plots.md`) |
 | DIY k-path / invent angular high-sym for forward cut | Package `convert_through_angular_*` (`forward-k.md`) |
+| Subtract CP−CM without null-ROI scale / invent null | Scale first; user ROI (`dichroism.md`) |
+| Dichroism via SARPES polarization helpers | Different physics; use `dichroism.md` |
+| Sequential / jet cmap for dichroism | Red+/blue− diverging; echo clim (`dichroism.md`) |
 | Invent KE cube when `eV`+`hv` present | Use EF-aligned `eV` + `hv`; no invented matrix |
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
@@ -140,6 +143,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **Stack plots:** package helpers; no invent σ (`stack-plots.md`).
 - **Forward k:** package through-point/pair / coord_forward; user points
   (`forward-k.md`).
+- **Dichroism:** null-ROI scale then D+A; red+/blue−; not SARPES (`dichroism.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).
