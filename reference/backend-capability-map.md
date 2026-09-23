@@ -28,7 +28,9 @@ Later users (or sessions) map their own replacements into the user column /
 ## Stack resolution order
 
 1. Check `import arpes` + Python **3.8** (`pyarpes-env.md`).
-2. If missing/wrong → **offer** `.venv-arpes` + install; wait for yes/no.
+2. If missing/wrong → **discover** shared env then **offer** create
+   (conda `arpes38` / `~/arpes-py38-venv`; project `.venv-arpes` only if asked);
+   wait for yes/no. See `pyarpes-env.md`.
 3. If user **declines** (or chooses project code) → **project map path**
    ([Discovery](#discovery--confirm)).
 4. If neither PyARPES nor a confirmed `load_spectrum` (etc.) → **xarray/h5py

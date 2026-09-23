@@ -41,11 +41,12 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Auto-deconvolve / invent PSF | Smooth ≠ deconvolve; PSF required (`smooth-deconvolve.md`) |
 | Silent swap raw → smoothed for fits | Echo which array; opt-in |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
-| PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
+| PyARPES missing → silent xarray fallback | **STOP**; discover/offer shared env; if declined → user-map then inspect-only |
+| New `.venv-arpes` every project when shared exists | Reuse conda `arpes38` / `~/arpes-py38-venv` (`pyarpes-env.md`) |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |
 | New skill workflow without capability row | Same-change update to `backend-capability-map.md` |
 | Install PyARPES without asking | Ask first; install only if the user says yes |
-| `pip install arpes` on Python 3.9+ / default env | Refuse; create dedicated 3.8 venv (`reference/pyarpes-env.md`) |
+| `pip install arpes` on Python 3.9+ / default env | Refuse; shared 3.8 env (`reference/pyarpes-env.md`) |
 | Bare `pip install arpes` hangs on PyQt / qmake | Use conda `pyqt=5` first, then `pip install arpes --no-deps` |
 | Loader complains about **h5** / **fits** | Install **h5py** (HDF5 `.h5`) and **astropy** (FITS `.fits`) — not peak-fitting |
 | Dump full arrays / whole beamtime into chat | Warn (token note); write scripts + files under `analysis/` instead |

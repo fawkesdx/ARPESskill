@@ -68,8 +68,9 @@ Point the agent at this repo, or inject `SKILL.md` plus needed files under
 ## Requires (full analysis)
 
 - **Python 3.8.x** only (PyARPES: `>=3.8,<3.9`)
-- Dedicated venv (e.g. `.venv-arpes`) + `pip install arpes` inside it  
-  See `reference/pyarpes-env.md` — agent asks before creating it
+- Dedicated **shared** Python 3.8 env (conda `arpes38` or `~/arpes-py38-venv`;
+  project `.venv-arpes` only if asked) + `pip install arpes` inside it  
+  See `reference/pyarpes-env.md` — agent discovers existing env before creating
 - Load/inspect fallback only: `xarray`, `h5py`
 
 ## What this is not
