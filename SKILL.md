@@ -3,10 +3,10 @@ name: arpes
 description: >
   Load and analyze ARPES photoemission data with correct axes, units,
   EDC/MDC extraction, Gaussian/Lorentzian/Voigt peak fitting, k-space
-  conversion, photon-energy to kz conversion, near-EF gap/pseudogap
-  analysis, and spatial XY / nanoARPES scans (3D–5D+ including hv) via
-  PyARPES or a confirmed user-project capability map. Use when working
-  with ARPES spectra, Fermi surfaces, EDC, MDC, MAESTRO or NeXus/HDF5
+  conversion, photon-energy to kz conversion, near-EF gap/pseudogap,
+  spatial XY / nanoARPES scans, and Spin-ARPES (SARPES) via PyARPES or a
+  confirmed user-project capability map. Use when working with ARPES
+  spectra, Fermi surfaces, EDC, MDC, spin-ARPES, MAESTRO or NeXus/HDF5
   ARPES files, angle-to-momentum conversion, hv/kz scans, spatial maps,
   nanoARPES, pseudogap, or PyARPES.
 ---
@@ -16,8 +16,8 @@ description: >
 ## When to use
 
 User or task involves ARPES spectra, Fermi maps, EDC/MDC, peak fitting,
-k or kz conversion, spatial XY / nanoARPES maps, MAESTRO/NeXus/HDF5/Igor
-ARPES files, or PyARPES.
+k or kz conversion, spatial XY / nanoARPES maps, Spin-ARPES / SARPES,
+MAESTRO/NeXus/HDF5/Igor ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -73,6 +73,9 @@ volumes, etc.
   spectroscopic ROI \(R\) for the XY map (user box or stated default); hot spot =
   argmax of \(I_R\); quick-report spatial set; then **reuse** cut / core / Fermi /
   hv recipes at hot spot or ROI; pixel broadcast only if asked.
+- **Spin-ARPES / SARPES:** if up/down or I+P channels exist →
+  `reference/spin-arpes.md` (package `sarpes` + spin plots; ask Sherman;
+  Spin-EDC and spin cuts; reuse fits on channels / total I).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -182,8 +185,9 @@ chat). Details: `reference/token-usage.md`.
 11. If user asks near-EF / metal EF / FD / **gap** / **pseudogap** on a cut —
     `reference/near-ef-gap.md` (metal fit → shift; optional resolution-broadened
     FD divide; symmetrize when gap/pseudogap).
-12. Plot/report with labeled units; **list overview / conversion assumptions**.
-13. Before expensive batch work — token note (`reference/token-usage.md`).
+12. If spin channels present / user asks SARPES — `reference/spin-arpes.md`.
+13. Plot/report with labeled units; **list overview / conversion assumptions**.
+14. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -194,6 +198,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/edc-mdc-fitting.md` — peak fitting: core, then EDC/MDC (PyARPES only)
 - `reference/near-ef-gap.md` — metal EF, resolution-broadened FD divide, symmetrize (gap/pseudogap)
 - `reference/spatial-xy-scans.md` — XY / nano spatial scans (ROI map, hot spot, kind reuse)
+- `reference/spin-arpes.md` — Spin-ARPES / SARPES (EDC + cuts; package sarpes/plots)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55° defaults; SLS soft X-ray postponed
 - `reference/failure-modes.md`
@@ -210,6 +215,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/fit_edc_mdc.md`
 - `examples/near_ef_gap.md`
 - `examples/spatial_xy_scan.md`
+- `examples/spin_arpes.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 

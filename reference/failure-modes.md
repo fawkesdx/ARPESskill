@@ -21,6 +21,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Auto broadcast fit every XY pixel | Hot-spot kind analysis first; broadcast only if asked + token note |
 | k/kz whole spatial hypercube by default | Reduce ROI / hot spot / spatial mean first |
 | Treat hot spot as Γ or EF | Anti-claim; run EF/Γ workflows separately if needed |
+| Treat polarization as ordinary intensity for fits/k | State channel; usually fit up/down or total I (`spin-arpes.md`) |
+| Invent Sherman function / DIY P formula | Package `to_intensity_polarization`; **ask** if Sherman missing |
+| Claim SARPES live-tested with no user file | No spin `example_data`; say untested until user provides data |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
 | PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |

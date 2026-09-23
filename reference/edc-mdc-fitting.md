@@ -98,7 +98,9 @@ print(result.fit_report())
 
 - Element / edge name if known (user or log) — do not invent assignments.  
 - Shirley (or other) background: **on/off** and ROI.  
-- Spin–orbit pair constraints only if user/package params set them — state them.  
+- Spin–orbit pair constraints only if user/package params set them — state them.
+  Full **Spin-ARPES / SARPES** (up/down channels, polarization plots) →
+  `spin-arpes.md`.  
 - Link to core-as-2D overview PNGs / manifest row when present.
 
 ### Do not

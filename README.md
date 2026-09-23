@@ -17,6 +17,7 @@ axes or physics**:
 | k / kz | EF finder + QC; `convert_to_kspace`; hv EF = angle-summed edge + per-hv QC |
 | Near-EF | Metal EF, resolution-broadened FD, symmetrize (gap/pseudogap) when asked |
 | Spatial XY | ROI-integrated map, hot-spot kind reuse (cut / core / Fermi / hv), optional param maps |
+| Spin-ARPES | Up/down or I+P; package spin plots; Sherman ask; Spin-EDC + spin cuts |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try
