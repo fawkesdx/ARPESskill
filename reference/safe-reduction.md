@@ -50,13 +50,16 @@ and `reference/formats-and-axes.md` for load/inspect details.
      **valence cut** → full detector×energy;
      **suspected core-as-2D** (swept + deep/core clues; soft: span ≳10 eV or
      deepest ≳5 eV below EF) → detector×energy **and** angle-integrated EDC;
-     **Fermi map** → trio; **hv/kz** → trio.
+     **Fermi map** → trio; **hv/kz** → trio; **spatial XY** → set in
+     `spatial-xy-scans.md` (ROI \(R\), hot spot, mean, subtype extra).
    - After step 2: if cut-shaped but core-as-2D heuristics fire, **tell the user**
      and do not treat as valence dispersion for k conversion by default.
 
 7. **Only then fit or convert to k/kz**
    - Fitting: see `reference/edc-mdc-fitting.md` (**core** then EDC/MDC);
      name lineshape and background; PyARPES only.
+   - Spatial: classify kind at hot spot / ROI → reuse matching recipe
+     (`spatial-xy-scans.md`); broadcast over XY only if asked.
    - k conversion: see `reference/k-and-kz-conversion.md`; state geometry.
    - kz from hv: state inner potential V₀ (or mark as unknown/relative).
    - Near-EF / gap / pseudogap (user-asked): `reference/near-ef-gap.md` — metal

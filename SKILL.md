@@ -3,12 +3,12 @@ name: arpes
 description: >
   Load and analyze ARPES photoemission data with correct axes, units,
   EDC/MDC extraction, Gaussian/Lorentzian/Voigt peak fitting, k-space
-  conversion, photon-energy to kz conversion, and near-EF gap/pseudogap
-  analysis (metal EF, resolution-broadened FD divide, symmetrize) via
+  conversion, photon-energy to kz conversion, near-EF gap/pseudogap
+  analysis, and spatial XY / nanoARPES scans (3D–5D+ including hv) via
   PyARPES or a confirmed user-project capability map. Use when working
   with ARPES spectra, Fermi surfaces, EDC, MDC, MAESTRO or NeXus/HDF5
-  ARPES files, angle-to-momentum conversion, hv/kz scans, pseudogap,
-  or PyARPES.
+  ARPES files, angle-to-momentum conversion, hv/kz scans, spatial maps,
+  nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -16,7 +16,8 @@ description: >
 ## When to use
 
 User or task involves ARPES spectra, Fermi maps, EDC/MDC, peak fitting,
-k or kz conversion, MAESTRO/NeXus/HDF5/Igor ARPES files, or PyARPES.
+k or kz conversion, spatial XY / nanoARPES maps, MAESTRO/NeXus/HDF5/Igor
+ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -68,6 +69,10 @@ volumes, etc.
   if gap/pseudogap → symmetrize EDC about E=0 (`arpes.analysis.gap.symmetrize`);
   state p–h symmetry; ask before inventing a Δ fitter
   (`reference/near-ef-gap.md`).
+- **Spatial XY scans (`x` & `y` n>1):** follow `reference/spatial-xy-scans.md` —
+  spectroscopic ROI \(R\) for the XY map (user box or stated default); hot spot =
+  argmax of \(I_R\); quick-report spatial set; then **reuse** cut / core / Fermi /
+  hv recipes at hot spot or ROI; pixel broadcast only if asked.
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -162,15 +167,18 @@ chat). Details: `reference/token-usage.md`.
 7. Reduce — cut / FS / EDC / MDC (see `reference/safe-reduction.md`).
 8. **Quick report:** stop at angle-space overviews
    (`default-overview-plots.md`). **Do not** convert to k/kz here.
-   Update manifest `overview_paths` when PNGs are written.
+   If spatial (`x`,`y` n>1) → `spatial-xy-scans.md` set. Update manifest
+   `overview_paths` when PNGs are written.
 9. **Analysis / user-requested momentum:** convert to k / kz
    (`reference/k-and-kz-conversion.md`) — state energy axis; EF finder +
    report EF_fit/deviation (charging warn if >50 meV on E−EF/Eb); for **hv
    stacks**: angle-summed edge + per-hv QC + post-shift verify + `ef_fit_per_hv`
    in npz; Γ per cut vs Fermi rules; stated V₀ for kz; save
    `analysis/kspace/*.npz`; link `product_paths` on the manifest row.
+   Spatial hypercubes: reduce ROI / hot spot first (`spatial-xy-scans.md`).
 10. If line / core analysis — fit (`reference/edc-mdc-fitting.md`: **core first**,
-   then EDC/MDC; package models only).
+   then EDC/MDC; package models only). At a spatial hot spot / ROI, pick the
+   recipe that matches the spectroscopic kind.
 11. If user asks near-EF / metal EF / FD / **gap** / **pseudogap** on a cut —
     `reference/near-ef-gap.md` (metal fit → shift; optional resolution-broadened
     FD divide; symmetrize when gap/pseudogap).
@@ -185,6 +193,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/safe-reduction.md`
 - `reference/edc-mdc-fitting.md` — peak fitting: core, then EDC/MDC (PyARPES only)
 - `reference/near-ef-gap.md` — metal EF, resolution-broadened FD divide, symmetrize (gap/pseudogap)
+- `reference/spatial-xy-scans.md` — XY / nano spatial scans (ROI map, hot spot, kind reuse)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55° defaults; SLS soft X-ray postponed
 - `reference/failure-modes.md`
@@ -200,6 +209,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/maestro_pyarpes.md`
 - `examples/fit_edc_mdc.md`
 - `examples/near_ef_gap.md`
+- `examples/spatial_xy_scan.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 

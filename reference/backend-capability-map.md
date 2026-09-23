@@ -49,7 +49,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `load_spectrum` | Open cut / map / hv stack | `arpes.io.load_data` (+ `location=`) / project loader if already preferred | | `formats-and-axes.md` |
 | `state_axes` | Dims, units, energy convention | `.dims` / `.coords` / `.attrs` | | `formats-and-axes.md` |
 | `folder_manifest` | Multi-file inventory | thin glue → `analysis/manifest.json` | | `folder-manifest.md` |
-| `overview_plot` | Quick-report figures | matplotlib (+ package plot helpers if used) | | `default-overview-plots.md` |
+| `overview_plot` | Quick-report figures | matplotlib (+ package plot helpers if used); spatial → `spatial-xy-scans.md` set | | `default-overview-plots.md`, `spatial-xy-scans.md` |
+| `spatial_overview` | XY map + hot spot + mean | `sum`/`mean`/`sel` + optional `arpes.plotting.spatial`; hot spot = argmax of \(I_R\) | | `spatial-xy-scans.md` |
+| `spatial_roi_reduce` | Reduce x,y ROI → kind recipe | `sel` / `where` / mean over spatial dims | | `spatial-xy-scans.md` |
+| `pca_spatial` | PCA along x,y (optional) | `arpes.analysis.decomposition.pca_along` — ask before large runs | | `spatial-xy-scans.md` |
 | `fit_fermi_edge` | Metal / EF edge fit | `AffineBroadenedFD` / FD models + `guess_fit` / `broadcast_model`; **hv stacks:** angle-summed near-EF then vs `hv` + QC (`k-and-kz-conversion.md`) | | `k-and-kz-conversion.md`, `near-ef-gap.md` |
 | `shift_energy` | Align EF → 0 | `G.shift_by` (hv: `shift_by(centers, shift_axis="eV", shift_coords=True)` + post-shift verify) | | `k-and-kz-conversion.md`, `near-ef-gap.md` |
 | `extract_edc_mdc` | EDC / MDC extraction | `sel` / `isel` / package helpers | | `safe-reduction.md`, `edc-mdc-fitting.md` |
