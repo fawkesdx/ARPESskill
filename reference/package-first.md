@@ -78,7 +78,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY np.correlate align / invent stitch | `align` / `align1d` / `align2d` (`align.md`) |
 | DIY sklearn PCA/NMF unwrap | `pca_along` / `nmf_along` / … (`decomposition.md`) |
 | DIY waterfall / invent ToF σ | `stack_dispersion_plot` / `plot_with_std` (`stack-plots.md`) |
-| DIY FITS header browser when cataloging | `astropy.io.fits.getheader` (`folder-manifest.md`) — still no invent axes |
+| Full `load_data` for every file when mapping a folder | Header peek first (`folder-manifest.md`); spectrum load later |
 | DIY dichroism without null-ROI scale | Pattern in `dichroism.md` (not a package module) |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
