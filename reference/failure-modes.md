@@ -87,6 +87,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Confuse axis symmetrize with gap EDC symmetrize | `symmetrize_axis` vs `gap.symmetrize` (`axis-prep.md`, `near-ef-gap.md`) |
 | Invent polygon / silent full-frame mask | User vertices or boolean; echo; package `apply_mask` (`masks.md`) |
 | Confuse spatial spectroscopic ROI with polygon mask | ROI = `spatial-xy-scans.md`; polygon = `masks.md` |
+| DIY correlate / silent apply align offset | Package `align`; ask before apply (`align.md`) |
+| Invent mosaic stitch from align | Offset only; no invent stitch (`align.md`) |
 | Invent KE cube when `eV`+`hv` present | Use EF-aligned `eV` + `hv`; no invented matrix |
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
@@ -129,6 +131,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **Axis prep:** package rebin/symmetrize/normalize/sort/condense; echo dims;
   no silent normalize (`axis-prep.md`).
 - **Masks:** boolean or package polygon; GUI ask; no invent outline (`masks.md`).
+- **Align:** package correlation offset; ask before apply; not stitch (`align.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).

@@ -107,6 +107,8 @@ with PyARPES versions — check installed package before claiming exact names.
 | `mask_boolean` | Boolean / threshold keep-region | `DataArray.where` (+ logical ops) | | `masks.md` |
 | `mask_polygon` | Polygon → mask def | `raw_poly_to_mask` / `polys_to_mask` | | `masks.md` |
 | `mask_apply` | Apply polygon mask to data | `apply_mask` / `apply_mask_to_coords` | | `masks.md` |
+| `align_offset` | Unitful offset b in a | `arpes.analysis.align.align` / `align1d` / `align2d` | | `align.md` |
+| `align_apply` | Apply measured offset | package `shift_by` / coord shift — **ask** before permanent | | `align.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
