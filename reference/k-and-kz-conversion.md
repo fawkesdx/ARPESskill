@@ -97,6 +97,7 @@ Order:
    center as offsets — label *package:pocket_parameters*; **ask before applying**.
    Full pocket / radial-EDC workflow: `reference/fs-pocket.md` (separate from Γ).
    BZ overlay after k: `reference/bz-overlay.md` (does not replace Γ policy).
+   Forward point/pair k-cuts: `reference/forward-k.md`.
 4. Else offer interactive **`arpes.plotting.qt_ktool.ktool`** / `widgets.kspace_tool`
    if the user wants GUI — **ask first** (skill prefers scripted path).
 5. Else **STOP and ask** for Γ / normal-emission angles (or a clickable point).
@@ -425,6 +426,8 @@ Quick report never requires npz. Prefer **read analysis npz** over raw when cach
 is valid.
 
 ## Rules summary
+
+Point/pair forward cuts (not full volume): `reference/forward-k.md`.
 
 | Rule | Detail |
 |------|--------|
