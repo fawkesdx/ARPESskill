@@ -161,7 +161,8 @@ np.savez_compressed(
 - npz: store `ef_fit_per_hv` (scalar alone insufficient).
 - Slit offset from **lowest hv**; user override wins.
 - Print **V₀** and source; absolute kz scales with V₀.
-- Soft X-ray: `beamline-geometry.md` — MAESTRO / ALBA LOREA propose **55°**
+- Soft X-ray: `beamline-geometry.md` — MAESTRO / ALBA LOREA **55°**; ANTARES
+  **45°** + fixed horizontal slit; ask accept/edit/ignore
   (ask); SLS soft X-ray postponed.
 - Prefer periodicity check vs hv when data allow.
 - If user changes Γ / V₀ / grid → recompute and overwrite npz.

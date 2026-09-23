@@ -326,7 +326,8 @@ Treat full photon-momentum correction as a **known gap**:
 
 1. Warn the user when hv is in soft X-ray / high-hv range.  
 2. Load curated defaults from `reference/beamline-geometry.md` (**ALS MAESTRO**
-   and **ALBA LOREA**: default incidence **55°** — ask before use; **SLS** soft
+   and **ALBA LOREA**: default incidence **55°**; **SOLEIL ANTARES**: **45°** +
+   fixed horizontal slit — ask before use; **SLS** soft
    X-ray ARPES postponed / dark time).  
 3. **Ask:** accept default geometry notes / edit numbers / ignore photon
    momentum for this run.
@@ -344,7 +345,8 @@ load hv stack → state energy axis (expect Eb / E−EF + hv)
   → slit/Γ offset from lowest-hv slice (cut-like; ask if unclear)
   → state V₀
   → soft X-ray? → beamline geometry default + ask (photon momentum)
-      (ALS MAESTRO 55°; ALBA LOREA 55° — ask; SLS soft X-ray postponed)
+      (ALS MAESTRO 55°; ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit — ask;
+      SLS soft X-ray postponed)
   → isoenergy / convert_to_kspace only if EF QC + post-shift passed
   → analysis/kspace/<stem>_kz.npz (include ef_fit_per_hv)
 ```
