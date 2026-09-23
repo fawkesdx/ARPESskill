@@ -10,17 +10,19 @@ description: >
   pocket analysis, smooth / deconvolution, experimental resolution estimates,
   background subtraction (Shirley / hull / incoherent), Brillouin-zone /
   high-symmetry path overlays, axis prep (rebin / symmetrize / normalize /
-  sort / condense), data masks (boolean / polygon), and correlation alignment
-  of spectra, and sklearn-style decomposition (PCA / NMF / ICA / factor
-  analysis), and specialized plots (stack / false-color / ToF±σ) via PyARPES or
-  a confirmed user-project capability map. Use when working with ARPES spectra,
-  Fermi surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe, in-operando,
-  dosing, gated devices, self-energy, curvature, minimum gradient, FS pocket,
-  smooth, deconvolution, resolution, background, Shirley, Brillouin zone,
-  BZ overlay, rebin, symmetrize, normalize_dim, mask, polygon mask, align,
-  register, shift spectra, PCA, NMF, ICA, stack plot, false color, ToF,
-  ANTARES, MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum conversion,
-  hv/kz scans, spatial maps, nanoARPES, pseudogap, or PyARPES.
+  sort / condense), data masks (boolean / polygon), correlation alignment
+  of spectra, sklearn-style decomposition (PCA / NMF / ICA / factor analysis),
+  specialized plots (stack / false-color / ToF±σ), and forward k cuts
+  through angular points/pairs via PyARPES or a confirmed user-project
+  capability map. Use when working with ARPES spectra, Fermi surfaces, EDC,
+  MDC, spin-ARPES, trARPES, pump-probe, in-operando, dosing, gated devices,
+  self-energy, curvature, minimum gradient, FS pocket, smooth, deconvolution,
+  resolution, background, Shirley, Brillouin zone, BZ overlay, rebin,
+  symmetrize, normalize_dim, mask, polygon mask, align, register, shift
+  spectra, PCA, NMF, ICA, stack plot, false color, ToF, forward k,
+  convert_through_angular, ANTARES, MAESTRO or NeXus/HDF5 ARPES files,
+  angle-to-momentum conversion, hv/kz scans, spatial maps, nanoARPES,
+  pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -34,8 +36,8 @@ pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
 minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
 background subtraction, BZ / high-symmetry path overlay, axis prep (rebin /
 symmetrize / normalize), masks (boolean / polygon), spectrum alignment,
-PCA/NMF/ICA decomposition, stack / false-color / ToF±σ plots,
-MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
+PCA/NMF/ICA decomposition, stack / false-color / ToF±σ plots, forward-k
+point/pair cuts, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -171,6 +173,8 @@ volumes, etc.
   `ef_fit_per_hv` (`reference/k-and-kz-conversion.md`).
 - After k/kz conversion: save `analysis/kspace/*.npz` with required meta;
   prefer reload from cache when meta still matches.
+- **Forward k cuts (user-asked):** point/pair through angle → k-cut via
+  `reference/forward-k.md` (complements full-volume convert).
 - **Core-as-2D:** cut-shaped file with swept + deep/core clues (soft: span ≳10 eV
   or deepest ≳5 eV below EF) → suspect core level saved as 2D image; quick
   report = detector×energy **and** angle-integrated EDC; no default valence k
@@ -266,8 +270,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/decomposition.md`.
 26. If user asks stack / waterfall / false-color / ToF±σ plot —
     `reference/stack-plots.md`.
-27. Plot/report with labeled units; **list overview / conversion assumptions**.
-28. Before expensive batch work — token note (`reference/token-usage.md`).
+27. If user asks k-cut through angle point/pair or forward coord → k —
+    `reference/forward-k.md`.
+28. Plot/report with labeled units; **list overview / conversion assumptions**.
+29. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -293,6 +299,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/align.md` — correlation align offset (ask before apply)
 - `reference/decomposition.md` — PCA / NMF / ICA / factor analysis
 - `reference/stack-plots.md` — stack / flat stack / false-color / ToF±σ
+- `reference/forward-k.md` — k-cut through angular point/pair; coord forward
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
@@ -324,6 +331,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/align.md`
 - `examples/decomposition.md`
 - `examples/stack_plots.md`
+- `examples/forward_k.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -362,3 +370,5 @@ See `reference/` for recipes. Common entry points:
   `factor_analysis_along` (`decomposition.md`)
 - Stack / ToF plots: `stack_dispersion_plot` / `flat_stack_plot` /
   `false_color_plot` / `plot_with_std` (`stack-plots.md`)
+- Forward k: `convert_through_angular_point` / `pair` /
+  `convert_coordinate_forward` (`forward-k.md`)
