@@ -80,6 +80,9 @@ with PyARPES versions — check installed package before claiming exact names.
 | `self_energy_from_mdc` | Σ from existing MDC broadcast | `to_self_energy` | | `self-energy.md` |
 | `estimate_bare_band` | Bare E(k) for ReΣ / vF | `estimate_bare_band` (`ransac_linear` default) | | `self-energy.md` |
 | `qp_lifetime` | Quasiparticle lifetime / mfp | `quasiparticle_lifetime` (+ vF×τ if asked) — **ask** before default report | | `self-energy.md` |
+| `band_curvature` | Curvature band enhance | `arpes.analysis.derivative.curvature` | | `band-enhance.md` |
+| `band_min_gradient` | Minimum-gradient enhance | `arpes.analysis.derivative.minimum_gradient` | | `band-enhance.md` |
+| `band_derivative` | 1st/2nd deriv along axis | `d1_along_axis` / `d2_along_axis` / `dn_along_axis` — **ask** | | `band-enhance.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
