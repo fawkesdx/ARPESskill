@@ -24,6 +24,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Treat polarization as ordinary intensity for fits/k | State channel; usually fit up/down or total I (`spin-arpes.md`) |
 | Invent Sherman function / DIY P formula | Package `to_intensity_polarization`; **ask** if Sherman missing |
 | Claim SARPES live-tested with no user file | No spin `example_data`; say untested until user provides data |
+| Call ring `beam_current` sample transport I | Confirm meaning; ring ≠ sample (`in-operando-param-scans.md`) |
+| Assume `volts` = gate / invent dose coverage math | Ask units/meaning; no DIY calibration formulas |
+| Param series overview with no \(P\) meaning stated | Confirm \(P\); mid \(P^*\) or ask if stepped plateaus |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
 | PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |
