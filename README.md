@@ -25,6 +25,7 @@ axes or physics**:
 | FS pocket | One closed sheet; center = user or `pocket_parameters`; curves; EDCs ask |
 | Smooth / deconvolve | Gaussian smooth for noise; RL/ICE only if asked + PSF |
 | Resolution | Package ΔE estimates; ask if endstation tables missing |
+| Backgrounds | Core→Shirley; valence→hull; above-EF incoherent ask |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

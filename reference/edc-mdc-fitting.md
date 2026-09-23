@@ -56,6 +56,7 @@ identify core / core-as-2D
   → angle-integrate (mean/sum over detector) if still 2D
   → state energy axis; select ROI in eV around the core(s)
   → optional Shirley: arpes.analysis.shirley.remove_shirley_background
+    (core default; valence → convex hull — `reference/backgrounds.md`)
   → compose peaks + background (Gaussian/Voigt + AffineBackgroundModel, …)
   → guess_fit on one curve; report lineshape + params
   → optional broadcast_model across x/y (or other dims) with params hints
