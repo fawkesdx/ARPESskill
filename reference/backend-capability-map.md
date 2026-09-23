@@ -92,6 +92,9 @@ with PyARPES versions — check installed package before claiming exact names.
 | `deconvolve_rl` | Richardson–Lucy / ICE | `deconvolve_rl` default; `deconvolve_ice` if asked — **never auto** | | `smooth-deconvolve.md` |
 | `resolution_total` | Quadrature total ΔE | `total_resolution_estimate` (thermal optional) | | `resolution.md` |
 | `resolution_parts` | Thermal / analyzer / beamline parts | `thermal_` / `analyzer_` / `beamline_resolution_estimate` — ask if tables missing | | `resolution.md` |
+| `bg_shirley` | Shirley bg (core) | `remove_shirley_background` | | `backgrounds.md`, `edc-mdc-fitting.md` |
+| `bg_hull` | Convex-hull bg (valence default) | `remove_background_hull` / `calculate_background_hull` | | `backgrounds.md` |
+| `bg_incoherent` | Above-EF incoherent bg | `remove_incoherent_background` — **ask** | | `backgrounds.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user

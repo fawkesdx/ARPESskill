@@ -31,6 +31,7 @@ cost, a one-line note + continue is enough.
 | **Band enhance** many slices / 3D volume | Many derived PNGs | One 2D cut first; both maps only (`band-enhance.md`) |
 | **FS pocket** dense radial EDCs | Many angles × curves | Sample curves first; full EDCs only if asked (`fs-pocket.md`) |
 | **Deconvolve** many iterations / full volume | Heavy arrays + many trials | One 2D cut; state PSF; stop if artifacts (`smooth-deconvolve.md`) |
+| **Background** hull on huge maps | Many 1D ops × pixels | One EDC / ROI first (`backgrounds.md`) |
 | Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |

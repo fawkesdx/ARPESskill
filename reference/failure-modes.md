@@ -77,6 +77,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Assume ANTARES slit rotatable / vertical | Fixed **horizontal**, not rotatable |
 | Invent analyzer/beamline ΔE when tables missing | Package estimates or **ask** (`resolution.md`); no DIY pass-energy math |
 | Apply MERLIN resolution tables to ANTARES/MAESTRO | Endstation-specific; report failure |
+| Shirley default on valence / hull on core | Path B: core→Shirley; valence→hull (`backgrounds.md`) |
+| Auto incoherent-above-EF on every cut | Only if asked; edge heuristic warned |
+| Silent swap raw → bg-subtracted | Echo method; before/after |
 | Invent KE cube when `eV`+`hv` present | Use EF-aligned `eV` + `hv`; no invented matrix |
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
@@ -113,6 +116,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **Smooth / deconvolve:** gaussian for noise; RL only if asked + PSF
   (`smooth-deconvolve.md`).
 - **Resolution:** package estimates; ask if tables missing (`resolution.md`).
+- **Backgrounds:** Shirley core / hull valence / incoherent ask (`backgrounds.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).
