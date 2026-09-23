@@ -78,6 +78,7 @@ and `reference/formats-and-axes.md` for load/inspect details.
    - Masks (user-asked): `reference/masks.md`.
    - Align / register (user-asked): `reference/align.md`.
    - PCA / NMF / ICA (user-asked): `reference/decomposition.md`.
+   - Stack / false-color / ToF±σ (user-asked): `reference/stack-plots.md`.
 
 Do not skip ahead to fit or k/kz on raw angle–energy data without completing
 inspection and at least one reduction product (cut, Fermi map, EDC, or MDC).

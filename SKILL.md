@@ -12,14 +12,15 @@ description: >
   high-symmetry path overlays, axis prep (rebin / symmetrize / normalize /
   sort / condense), data masks (boolean / polygon), and correlation alignment
   of spectra, and sklearn-style decomposition (PCA / NMF / ICA / factor
-  analysis) via PyARPES or a confirmed user-project capability map. Use when
-  working with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES,
-  pump-probe, in-operando, dosing, gated devices, self-energy, curvature,
-  minimum gradient, FS pocket, smooth, deconvolution, resolution, background,
-  Shirley, Brillouin zone, BZ overlay, rebin, symmetrize, normalize_dim, mask,
-  polygon mask, align, register, shift spectra, PCA, NMF, ICA, ANTARES,
-  MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum conversion, hv/kz scans,
-  spatial maps, nanoARPES, pseudogap, or PyARPES.
+  analysis), and specialized plots (stack / false-color / ToF±σ) via PyARPES or
+  a confirmed user-project capability map. Use when working with ARPES spectra,
+  Fermi surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe, in-operando,
+  dosing, gated devices, self-energy, curvature, minimum gradient, FS pocket,
+  smooth, deconvolution, resolution, background, Shirley, Brillouin zone,
+  BZ overlay, rebin, symmetrize, normalize_dim, mask, polygon mask, align,
+  register, shift spectra, PCA, NMF, ICA, stack plot, false color, ToF,
+  ANTARES, MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum conversion,
+  hv/kz scans, spatial maps, nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -33,8 +34,8 @@ pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
 minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
 background subtraction, BZ / high-symmetry path overlay, axis prep (rebin /
 symmetrize / normalize), masks (boolean / polygon), spectrum alignment,
-PCA/NMF/ICA decomposition, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or
-PyARPES.
+PCA/NMF/ICA decomposition, stack / false-color / ToF±σ plots,
+MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -125,6 +126,8 @@ volumes, etc.
   offset; ask before apply; not stitch).
 - **Decomposition (user-asked):** `reference/decomposition.md` (PCA / NMF / ICA /
   factor analysis via `*_along`; echo axes + n_components; NMF non-neg).
+- **Stack / false-color / ToF±σ (user-asked):** `reference/stack-plots.md`
+  (package plot helpers; no invent σ).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -261,8 +264,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/align.md`.
 25. If user asks PCA / NMF / ICA / factor analysis —
     `reference/decomposition.md`.
-26. Plot/report with labeled units; **list overview / conversion assumptions**.
-27. Before expensive batch work — token note (`reference/token-usage.md`).
+26. If user asks stack / waterfall / false-color / ToF±σ plot —
+    `reference/stack-plots.md`.
+27. Plot/report with labeled units; **list overview / conversion assumptions**.
+28. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -287,6 +292,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/masks.md` — boolean / polygon masks (`apply_mask`)
 - `reference/align.md` — correlation align offset (ask before apply)
 - `reference/decomposition.md` — PCA / NMF / ICA / factor analysis
+- `reference/stack-plots.md` — stack / flat stack / false-color / ToF±σ
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
@@ -317,6 +323,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/masks.md`
 - `examples/align.md`
 - `examples/decomposition.md`
+- `examples/stack_plots.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -353,3 +360,5 @@ See `reference/` for recipes. Common entry points:
 - Align: `align` / `align1d` / `align2d` (`align.md`)
 - Decomposition: `pca_along` / `nmf_along` / `ica_along` /
   `factor_analysis_along` (`decomposition.md`)
+- Stack / ToF plots: `stack_dispersion_plot` / `flat_stack_plot` /
+  `false_color_plot` / `plot_with_std` (`stack-plots.md`)
