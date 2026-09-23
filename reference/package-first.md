@@ -72,6 +72,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY Wiener / invent PSF / silent RL | `gaussian_filter_arr` or `deconvolve_rl` + stated PSF (`smooth-deconvolve.md`) |
 | DIY pass-energy / invent ΔE tables | `resolution.md` package helpers or **ask** |
 | DIY polynomial bg / wrong Shirley on valence | Shirley / hull / incoherent per `backgrounds.md` |
+| DIY hexagon / invent lattice for BZ | `bz_plot` / `overplot_standard` / user cell (`bz-overlay.md`) |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
 | “PyARPES can’t do MH1” → immediately rewrite | Document limitation; ask before new loader |
