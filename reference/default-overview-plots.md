@@ -16,7 +16,7 @@ integrated).
 | **Core-level as 2D image** | Cut-shaped dims, but [core-as-2D heuristics](#core-level-saved-as-2d-image) fire | **Two** plots: detector×energy **and** angle-integrated EDC |
 | **Fermi map / angle sweep** | Deflection / polar scan dim (`psi`, `Slit_Defl`, …) with n>1 | **≥3 images** — [Fermi map trio](#fermi-map-trio-required) |
 | **Photon-energy / kz (EPH, hv stack)** | Scan dim is `hv` / `mono_eV` / beamline energy with n>1 | **≥3 images** — [hv / kz trio](#hv--kz-eph-trio-required) |
-| **XY / spatial map** | Scan motors `x`,`y` | Spatial intensity map (state energy window) **or** dispersion at mid (x,y) — say which. |
+| **XY / spatial map** | Scan motors `x`,`y` both n>1 | **Spatial set** — see `reference/spatial-xy-scans.md` (XY map with stated spectroscopic ROI \(R\), hot-spot spectrum, spatial mean, subtype extra). Subtypes: XY–E / XY–ARPES / XY–map / XY–hv. |
 
 **Kind rule:** classify from **loaded dims / sizes**. Measurement-log text
 (“Cut”, “EPH”, “Fermi Map”) is a **comment only** — if log disagrees with dims
@@ -27,7 +27,9 @@ make. Exception: a cut-shaped file may still be **science-kind**
 
 **Hard rule for reports:** if the file is a Fermi map or an hv/kz stack, the
 report (or catalog entry) must include **all three** PNGs below — not only the
-analyzer dispersion. Also echo the [default overview assumptions](#default-overview-assumptions).
+analyzer dispersion. If the file is **spatial** (`x` and `y` n>1), include the
+**spatial set** in `spatial-xy-scans.md`. Also echo the
+[default overview assumptions](#default-overview-assumptions).
 
 **Quick report stays in angle space.** Do **not** run `convert_to_kspace` for
 overview trios — k/kz only in analysis mode (`reference/k-and-kz-conversion.md`).
@@ -134,7 +136,7 @@ figure captions.
 | Kind | From **dims/sizes**; log text is comment only; cut-shaped + core-as-2D heuristics → `core_level_2d` |
 | Core-as-2D detect | Primary: **swept** + deep/core clues; soft: span ≳10 eV or deepest ≳5 eV below EF |
 | Core-as-2D plots | Detector×energy **and** angle-integrated EDC |
-| Slice pick | **Center**, not peak-find: nearest **0°** deflection if in range else mid index; **mid hv**; **mid detector** (`n//2`) |
+| Slice pick | **Center**, not peak-find: nearest **0°** deflection if in range else mid index; **mid hv**; **mid detector** (`n//2`). **Exception — spatial XY:** hot spot = **argmax** of ROI-integrated XY map (`spatial-xy-scans.md`) |
 | Extra dims | Squeeze at mid index if needed |
 | Energy axis | Use loaded `eV` as-is — **no** silent EF / work-function / analyzer recalibration |
 | Isoenergy E | ≈0 if in range (optional ±25 meV mean); else ¼-from-top |
@@ -143,6 +145,7 @@ figure captions.
 ### Do **not** claim from these defaults
 
 - Mid deflection / mid detector ≠ **Γ** (no Γ without a stated method).
+- Spatial **hot spot** (argmax of \(I_R\)) ≠ Γ and ≠ calibrated EF.
 - `pixel` (or unconverted angle) ≠ **Å⁻¹** until `convert_to_kspace`.
 - E≈0 ≠ **calibrated EF** without an EF check.
 - Finite isoenergy window ≠ a true Fermi surface if bands disperse strongly in that window.
@@ -168,6 +171,7 @@ figure captions.
    Suspected **core-as-2D** must include **both** the 2D image and an angle-integrated EDC.
 2. **Never** default Fermi/hv overviews to an arbitrary edge frame — use center / 0° / mid hv.
 3. **Never** ship a Fermi-map or hv/kz **report with only one** dispersion PNG — complete the trio.
+   Spatial XY reports must include the **spatial set** (`spatial-xy-scans.md`), not one mid-pixel only.
 4. Title: stem, hv if known, fixed coords (e.g. `psi=0°`, `E=−0.02±0.025 eV`).
 5. Downsample huge axes for PNG previews if needed.
 6. All-zero arrays → report empty DAQ, not a plot bug.

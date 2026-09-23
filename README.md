@@ -16,6 +16,7 @@ axes or physics**:
 | Fit | Core then EDC/MDC (Gaussian / Lorentzian / Voigt); package models only |
 | k / kz | EF finder + QC; `convert_to_kspace`; hv EF = angle-summed edge + per-hv QC |
 | Near-EF | Metal EF, resolution-broadened FD, symmetrize (gap/pseudogap) when asked |
+| Spatial XY | ROI-integrated map, hot-spot kind reuse (cut / core / Fermi / hv), optional param maps |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

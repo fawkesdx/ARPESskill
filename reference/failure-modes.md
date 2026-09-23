@@ -16,6 +16,11 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Quote vF / m* without band model or k window | Linear/Quadratic on centers; state units + window; prefer k-space |
 | Treat core-as-2D as valence EDC/MDC broadcast | Angle-integrate; core section first; no default k-convert |
 | Use TensorSpec APIs in v1 | Defer; use PyARPES for load, reduce, fit, and k/kz |
+| XY spatial overview = one random mid pixel only | Spatial set: \(I_R\) map, hot-spot, mean (`spatial-xy-scans.md`) |
+| XY map with no stated spectroscopic ROI \(R\) | Echo default or user box (E ± φ/ψ); rebuild if \(R\) changes |
+| Auto broadcast fit every XY pixel | Hot-spot kind analysis first; broadcast only if asked + token note |
+| k/kz whole spatial hypercube by default | Reduce ROI / hot spot / spatial mean first |
+| Treat hot spot as Γ or EF | Anti-claim; run EF/Γ workflows separately if needed |
 | Launch QtTool as only path | Prefer scripted PyARPES + matplotlib; GUIs are optional |
 | PyARPES missing → silent xarray fallback | **STOP**; ask `.venv-arpes`; if declined → user-map then inspect-only |
 | Call user functions without confirmed map | Propose map; wait (`backend-capability-map.md`) |
