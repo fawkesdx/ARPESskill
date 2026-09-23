@@ -65,6 +65,7 @@ and `reference/formats-and-axes.md` for load/inspect details.
    - Near-EF / gap / pseudogap (user-asked): `reference/near-ef-gap.md` — metal
      EF, resolution-broadened FD divide, symmetrize when gap/pseudogap.
    - Spin-ARPES: `reference/spin-arpes.md` when spin channels present.
+   - In-operando param axis \(P\): `reference/in-operando-param-scans.md`.
 
 Do not skip ahead to fit or k/kz on raw angle–energy data without completing
 inspection and at least one reduction product (cut, Fermi map, EDC, or MDC).

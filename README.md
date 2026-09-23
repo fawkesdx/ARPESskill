@@ -18,6 +18,7 @@ axes or physics**:
 | Near-EF | Metal EF, resolution-broadened FD, symmetrize (gap/pseudogap) when asked |
 | Spatial XY | ROI-integrated map, hot-spot kind reuse (cut / core / Fermi / hv), optional param maps |
 | Spin-ARPES | Up/down or I+P; package spin plots; Sherman ask; Spin-EDC + spin cuts |
+| In-operando | External \(P\) (dose/V/I/B/T); mid \(P^*\) or ask if stepped; reuse kind recipes |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

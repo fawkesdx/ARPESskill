@@ -18,6 +18,7 @@ integrated).
 | **Photon-energy / kz (EPH, hv stack)** | Scan dim is `hv` / `mono_eV` / beamline energy with n>1 | **≥3 images** — [hv / kz trio](#hv--kz-eph-trio-required) |
 | **XY / spatial map** | Scan motors `x`,`y` both n>1 | **Spatial set** — see `reference/spatial-xy-scans.md` (XY map with stated spectroscopic ROI \(R\), hot-spot spectrum, spatial mean, subtype extra). Subtypes: XY–E / XY–ARPES / XY–map / XY–hv. |
 | **Spin-ARPES / SARPES** | `up`/`down` or `intensity`+`polarization` (or spin dim) | Spin-EDC and/or spin-cut overviews — `reference/spin-arpes.md` (package spin plots; state Sherman). |
+| **In-operando / param scan** | Extra n>1 dim that is dose / V / I / B / T / … (not φ/ψ/`hv`/x,y) | Param set — `reference/in-operando-param-scans.md` (confirm \(P\) meaning; I vs \(P\); overview at mid \(P^*\) or ask if stepped). |
 
 **Kind rule:** classify from **loaded dims / sizes**. Measurement-log text
 (“Cut”, “EPH”, “Fermi Map”) is a **comment only** — if log disagrees with dims
@@ -137,7 +138,7 @@ figure captions.
 | Kind | From **dims/sizes**; log text is comment only; cut-shaped + core-as-2D heuristics → `core_level_2d` |
 | Core-as-2D detect | Primary: **swept** + deep/core clues; soft: span ≳10 eV or deepest ≳5 eV below EF |
 | Core-as-2D plots | Detector×energy **and** angle-integrated EDC |
-| Slice pick | **Center**, not peak-find: nearest **0°** deflection if in range else mid index; **mid hv**; **mid detector** (`n//2`). **Exception — spatial XY:** hot spot = **argmax** of ROI-integrated XY map (`spatial-xy-scans.md`) |
+| Slice pick | **Center**, not peak-find: nearest **0°** deflection if in range else mid index; **mid hv**; **mid detector** (`n//2`). **Exception — spatial XY:** hot spot = **argmax** of ROI-integrated XY map (`spatial-xy-scans.md`). **Exception — in-operando \(P\):** mid \(P^*`; **ask** if series looks stepped (`in-operando-param-scans.md`) |
 | Extra dims | Squeeze at mid index if needed |
 | Energy axis | Use loaded `eV` as-is — **no** silent EF / work-function / analyzer recalibration |
 | Isoenergy E | ≈0 if in range (optional ±25 meV mean); else ¼-from-top |

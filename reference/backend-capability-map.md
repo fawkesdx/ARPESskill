@@ -69,6 +69,9 @@ with PyARPES versions — check installed package before claiming exact names.
 | `spin_to_IP` | up/down ↔ I+P | `arpes.analysis.sarpes.to_intensity_polarization` / `to_up_down` | | `spin-arpes.md` |
 | `spin_normalize_pc` | Match up/down photocurrent | `normalize_sarpes_photocurrent` — ask (alters counts) | | `spin-arpes.md` |
 | `spin_plot` | Spin-EDC / polarized plots | `arpes.plotting.spin.*` | | `spin-arpes.md` |
+| `param_scan_detect` | Find external \(P\) dims | Dims minus spectroscopic/spatial/`hv`; **ask** meaning/units if unclear | | `in-operando-param-scans.md` |
+| `param_overview` | I vs \(P\) + slice at \(P^*\) | `sel`/`sum`/`mean`; mid \(P^*\) or ask if stepped | | `in-operando-param-scans.md` |
+| `param_slice_reduce` | Reduce to one \(P\) → kind recipe | `sel` / `isel` along \(P\) | | `in-operando-param-scans.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
