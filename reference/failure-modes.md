@@ -90,6 +90,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | DIY correlate / silent apply align offset | Package `align`; ask before apply (`align.md`) |
 | Invent mosaic stitch from align | Offset only; no invent stitch (`align.md`) |
 | DIY sklearn decomp / silent NMF on negatives | Package `*_along`; NMF non-neg warn (`decomposition.md`) |
+| DIY waterfall / invent σ for ToF plots | Package stack / `plot_with_std` (`stack-plots.md`) |
 | Invent KE cube when `eV`+`hv` present | Use EF-aligned `eV` + `hv`; no invented matrix |
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
@@ -135,6 +136,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **Align:** package correlation offset; ask before apply; not stitch (`align.md`).
 - **Decomposition:** package `*_along`; echo axes/n_components; NMF non-neg
   (`decomposition.md`).
+- **Stack plots:** package helpers; no invent σ (`stack-plots.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).

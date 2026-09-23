@@ -113,6 +113,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `decomp_nmf` | NMF (non-negative) | `nmf_along` | | `decomposition.md` |
 | `decomp_ica` | ICA | `ica_along` | | `decomposition.md` |
 | `decomp_factor` | Factor analysis | `factor_analysis_along` | | `decomposition.md` |
+| `plot_stack` | Offset waterfall stack | `stack_dispersion_plot` | | `stack-plots.md` |
+| `plot_flat_stack` | Color-coded flat stack | `flat_stack_plot` | | `stack-plots.md` |
+| `plot_false_color` | RGB false-color spectrum | `false_color_plot` | | `stack-plots.md` |
+| `plot_tof_std` | Line/scatter ±σ | `plot_with_std` / `scatter_with_std` | | `stack-plots.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
