@@ -66,6 +66,7 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 | DIY angle→k with ad-hoc formulas | Use `convert_to_kspace`; state assumptions |
 | DIY FS center / Γ from invent centroid code | Offsets / user / `pocket_parameters` / `ktool` / **ask** |
 | DIY symmetrize / bare FD / custom gap Δ | `gap.symmetrize` + resolution-broadened FD; ask if missing |
+| DIY Σ from linewidth / invent k-dependent Σ | `to_self_energy` / `fit_for_self_energy`; k-independent only |
 | Call user project code without confirm | Propose capability map; wait (`backend-capability-map.md`) |
 | New workflow with no capability row | Living-list: update inventory same change |
 | “PyARPES can’t do MH1” → immediately rewrite | Document limitation; ask before new loader |

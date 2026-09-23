@@ -189,8 +189,12 @@ label provisional and ask to convert):
 | **kF / k0 / E0** | Intercept / vertex from the same fit | With method |
 
 Use PyARPES/`lmfit` models already in the stack (e.g. `LinearModel`,
-`QuadraticModel`). Optional advanced: `arpes.analysis.self_energy` — **ask**
-before using; not part of the default report.
+`QuadraticModel`).
+
+**Self-energy (Σ):** when the user asks for Σ / ReΣ–ImΣ / quasiparticle lifetime
+from a **single-band** cut → `reference/self-energy.md` (path C: reuse MDC
+broadcast if present, else `fit_for_self_energy`; bare band default
+`ransac_linear`). Not part of the default EDC/MDC report.
 
 #### Caveats
 
