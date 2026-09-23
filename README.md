@@ -30,6 +30,7 @@ axes or physics**:
 | Axis prep | Rebin / symmetrize / normalize_dim / sort / condense (user-asked) |
 | Masks | Boolean `.where` or polygon `apply_mask`; GUI ask only |
 | Align | Correlation offset (`align`); ask before apply; not stitch |
+| Decomposition | PCA / NMF / ICA / factor analysis (`*_along`); ask before large cubes |
 | Backend | Default PyARPES; optional confirmed map to **your** project functions |
 
 ## 60-second try

@@ -77,6 +77,7 @@ and `reference/formats-and-axes.md` for load/inspect details.
    - Axis prep (user-asked): `reference/axis-prep.md`.
    - Masks (user-asked): `reference/masks.md`.
    - Align / register (user-asked): `reference/align.md`.
+   - PCA / NMF / ICA (user-asked): `reference/decomposition.md`.
 
 Do not skip ahead to fit or k/kz on raw angle–energy data without completing
 inspection and at least one reduction product (cut, Fermi map, EDC, or MDC).
