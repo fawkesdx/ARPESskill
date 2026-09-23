@@ -76,6 +76,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `tr_find_t0` | Resolve pump–probe t0 | user / attrs / `S.t0` / `find_t0` / ask | | `tr-arpes.md` |
 | `tr_relative_change` | ΔI or ΔI/I vs delay | `relative_change` / `normalized_relative_change` | | `tr-arpes.md` |
 | `tr_overview` | Delay-set quick report | I vs delay + slice at delay\* ≥ t0 + Δ map | | `tr-arpes.md` |
+| `self_energy_fit` | Fit single-band cut → Σ | `fit_for_self_energy` (MDC Lorentzian+affine default) | | `self-energy.md` |
+| `self_energy_from_mdc` | Σ from existing MDC broadcast | `to_self_energy` | | `self-energy.md` |
+| `estimate_bare_band` | Bare E(k) for ReΣ / vF | `estimate_bare_band` (`ransac_linear` default) | | `self-energy.md` |
+| `qp_lifetime` | Quasiparticle lifetime / mfp | `quasiparticle_lifetime` (+ vF×τ if asked) — **ask** before default report | | `self-energy.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
