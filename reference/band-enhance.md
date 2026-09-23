@@ -4,8 +4,8 @@
 **minimum gradient**, or derivative maps — **not** default overview.
 
 **Input:** reduced **2D** cut (or stated ROI of a cut). Prefer intensity as
-loaded/converted; do **not** auto-smooth unless user asks (see future
-smooth/filter recipe).
+loaded/converted; do **not** auto-smooth unless user asks
+(`reference/smooth-deconvolve.md`).
 
 **Docs:** `arpes.analysis.derivative` — `curvature`, `minimum_gradient`,
 `dn_along_axis` / `d1_along_axis` / `d2_along_axis`
@@ -45,7 +45,7 @@ from arpes.analysis.derivative import curvature, minimum_gradient
 |-----|-----|
 | 1st / 2nd derivative along one axis | `d1_along_axis` / `d2_along_axis` / `dn_along_axis` |
 | Tune curvature `alpha` / axes | pass `directions=`, `alpha=` — **state** values |
-| Pre-smooth then enhance | only if user wants; do not invent kernel |
+| Pre-smooth then enhance | only if user wants → `smooth-deconvolve.md`; do not invent kernel |
 
 ---
 

@@ -7,12 +7,12 @@ description: >
   spatial XY / nanoARPES scans, Spin-ARPES (SARPES), in-operando parameter
   scans, time-resolved / pump–probe ARPES (delay, t0, ΔI), single-band
   self-energy (Σ), band enhance (curvature / minimum gradient), and Fermi-surface
-  pocket analysis via PyARPES or a confirmed user-project capability map. Use
-  when working with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES,
-  trARPES, pump-probe, in-operando, dosing, gated devices, self-energy,
-  curvature, minimum gradient, FS pocket, MAESTRO or NeXus/HDF5 ARPES files,
-  angle-to-momentum conversion, hv/kz scans, spatial maps, nanoARPES,
-  pseudogap, or PyARPES.
+  pocket analysis, and smooth / deconvolution via PyARPES or a confirmed
+  user-project capability map. Use when working with ARPES spectra, Fermi
+  surfaces, EDC, MDC, spin-ARPES, trARPES, pump-probe, in-operando, dosing,
+  gated devices, self-energy, curvature, minimum gradient, FS pocket, smooth,
+  deconvolution, MAESTRO or NeXus/HDF5 ARPES files, angle-to-momentum
+  conversion, hv/kz scans, spatial maps, nanoARPES, pseudogap, or PyARPES.
 ---
 
 # ARPES
@@ -23,7 +23,8 @@ User or task involves ARPES spectra, Fermi maps, EDC/MDC, peak fitting,
 k or kz conversion, spatial XY / nanoARPES maps, Spin-ARPES / SARPES,
 in-operando parameter scans (dose, gate, current, field, T), time-resolved /
 pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
-minimum gradient), FS pocket, MAESTRO/NeXus/HDF5/Igor ARPES files, or PyARPES.
+minimum gradient), FS pocket, smooth / deconvolution, MAESTRO/NeXus/HDF5/Igor
+ARPES files, or PyARPES.
 
 ## What reduction means
 
@@ -96,6 +97,8 @@ volumes, etc.
   from these alone).
 - **FS pocket (user-asked):** one closed sheet → `reference/fs-pocket.md`
   (center = user or `pocket_parameters` if clearly one pocket; curves; EDCs ask).
+- **Smooth / deconvolve (user-asked):** `reference/smooth-deconvolve.md`
+  (gaussian smooth = noise default; RL/ICE only on explicit ask + stated PSF).
 - Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
   + matplotlib over launching Qt/Bokeh GUIs.
 - **Package-first:** use PyARPES / confirmed user-map callables / existing
@@ -215,8 +218,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/band-enhance.md` (both maps).
 17. If user asks FS pocket / radial EDCs around a sheet —
     `reference/fs-pocket.md`.
-18. Plot/report with labeled units; **list overview / conversion assumptions**.
-19. Before expensive batch work — token note (`reference/token-usage.md`).
+18. If user asks smooth / denoise / deconvolve —
+    `reference/smooth-deconvolve.md`.
+19. Plot/report with labeled units; **list overview / conversion assumptions**.
+20. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -233,6 +238,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/self-energy.md` — single-band Σ from MDC (path C; bare band; optional lifetime)
 - `reference/band-enhance.md` — curvature + minimum gradient (both; not intensity)
 - `reference/fs-pocket.md` — FS pocket center / curves / EDCs (path B center)
+- `reference/smooth-deconvolve.md` — gaussian smooth; RL/ICE deconvolve (ask + PSF)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55° defaults; SLS soft X-ray postponed
 - `reference/failure-modes.md`
@@ -255,6 +261,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/self_energy.md`
 - `examples/band_enhance.md`
 - `examples/fs_pocket.md`
+- `examples/smooth_deconvolve.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -279,3 +286,5 @@ See `reference/` for recipes. Common entry points:
 - Self-energy: `fit_for_self_energy` / `to_self_energy` (`self-energy.md`)
 - Band enhance: `curvature` + `minimum_gradient` (`band-enhance.md`)
 - FS pocket: `pocket_parameters` / `curves_along_pocket` (`fs-pocket.md`)
+- Smooth / deconvolve: `gaussian_filter_arr`; `deconvolve_rl` + PSF if asked
+  (`smooth-deconvolve.md`)

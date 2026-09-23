@@ -86,6 +86,10 @@ with PyARPES versions — check installed package before claiming exact names.
 | `pocket_params` | Pocket center / anisotropy | `pocket_parameters` (user center wins; else one clear pocket) | | `fs-pocket.md` |
 | `pocket_curves` | Radial cuts around pocket | `curves_along_pocket` | | `fs-pocket.md` |
 | `pocket_edcs` | EDCs around / along pocket ray | `edcs_along_pocket` / `radial_edcs_along_pocket` — **ask** | | `fs-pocket.md` |
+| `smooth_gaussian` | Gaussian denoise | `gaussian_filter_arr` — state σ | | `smooth-deconvolve.md` |
+| `smooth_other` | Boxcar / Savitzky–Golay | `boxcar_filter_arr` / `savitzky_golay` — **ask** | | `smooth-deconvolve.md` |
+| `deconvolve_psf` | Build / accept PSF | `make_psf1d` or user PSF — required before RL/ICE | | `smooth-deconvolve.md` |
+| `deconvolve_rl` | Richardson–Lucy / ICE | `deconvolve_rl` default; `deconvolve_ice` if asked — **never auto** | | `smooth-deconvolve.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
