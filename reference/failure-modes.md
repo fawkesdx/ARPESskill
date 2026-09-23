@@ -80,6 +80,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Shirley default on valence / hull on core | Path B: core→Shirley; valence→hull (`backgrounds.md`) |
 | Auto incoherent-above-EF on every cut | Only if asked; edge heuristic warned |
 | Silent swap raw → bg-subtracted | Echo method; before/after |
+| Invent a₀ / BZ for unnamed crystal | User cell or graphene/ws2/wse2→`wwe2` only (`bz-overlay.md`) |
+| Claim data-on-3D-BZ / DIY hexagon | Package 2D `plot_data_to_bz` / `bz_plot` only; 3D data N/I |
+| Silent missing `ase` for BZ | Report optional dep; ask install or user cell |
 | Invent KE cube when `eV`+`hv` present | Use EF-aligned `eV` + `hv`; no invented matrix |
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
@@ -117,6 +120,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
   (`smooth-deconvolve.md`).
 - **Resolution:** package estimates; ask if tables missing (`resolution.md`).
 - **Backgrounds:** Shirley core / hull valence / incoherent ask (`backgrounds.md`).
+- **BZ overlay:** user cell wins; named library only; ase optional; no invent
+  lattice; no 3D data-on-BZ (`bz-overlay.md`).
 - **Stack policy:** prefer PyARPES; if missing, offer venv then **user-map**
   (`backend-capability-map.md`); inspect-only last. TensorSpec deferred.
   New workflows must update the capability inventory (living list).
