@@ -1,11 +1,11 @@
 # Example: fill a user backend capability map
 
 Follow `reference/backend-capability-map.md`. Use only after the user **declines**
-`.venv-arpes` (or explicitly asks to map project code).
+`.venv-arpes` / shared env (or explicitly asks to map project code).
 
 ## Outline
 
-1. Offer PyARPES 3.8 venv first — if declined, continue here.
+1. Offer shared PyARPES 3.8 env first — if declined, continue here.
 2. Search the project for load / EF / k / fit / gap helpers.
 3. Propose a map (IDs → callables); **wait for confirm**.
 4. Optional: write `analysis/backend_map.json` in the **user project**.

@@ -45,7 +45,7 @@ Ask in this shape (PyARPES missing / incomplete):
 > in your project** to capability IDs (`backend-capability-map.md`), or (C)
 > write a **new** custom helper under `analysis/` (not ideal). Which do you want?
 
-If the user already declined `.venv-arpes`, prefer proposing **(B)** before
+If the user already declined the shared PyARPES env, prefer proposing **(B)** before
 inspect-only xarray.
 
 Do **not** start (C) until the user clearly chooses it.
