@@ -4,6 +4,9 @@
 `intensity` + `polarization`, or an explicit spin dim / attrs. If none → not
 SARPES; use ordinary ARPES recipes.
 
+**Not photon CP/CM dichroism** — that is `reference/dichroism.md` (null-ROI
+scale + diff/asym), not Sherman / spin channels.
+
 **No bundled spin tutorial file** in PyARPES `example_data`. Recipes are
 **package-documented**; live-test when the user supplies a file. Say so in the
 report if untested on their beamline.
