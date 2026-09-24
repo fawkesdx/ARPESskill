@@ -1,6 +1,9 @@
 # ARPESskill
 
-General LLM agent skill for ARPES analysis via **PyARPES**.
+General LLM agent skill for ARPES analysis. **Adapts to different user
+routines**: PyARPES and/or [ARPES-data-browser](https://github.com/DingPei1995/ARPES-data-browser),
+folder triage vs single-file work, scripted analysis or GUI on ask — without
+inventing axes or physics.
 
 **Repo:** https://github.com/fawkesdx/ARPESskill
 
@@ -11,13 +14,13 @@ axes or physics**:
 
 | Step | Skill behavior |
 |------|----------------|
-| Load | Prefer PyARPES (`load_data` / endstations); FITS-first for MAESTRO |
+| Load | Route by file/beamline: MAESTRO/ALS FITS → PyARPES; ANTARES/CASSIOPEE → ARPES-data-browser; override OK |
 | Overview | Cut / Fermi / hv trios with stated assumptions |
-| Fit | Core then EDC/MDC (Gaussian / Lorentzian / Voigt); package models only |
-| k / kz | EF finder + QC; `convert_to_kspace`; hv EF = angle-summed edge + per-hv QC |
+| Fit | Core then EDC/MDC (Gaussian / Lorentzian / Voigt); mapped package models |
+| k / kz | EF finder + QC; mapped convert; hv EF = angle-summed edge + per-hv QC |
 | Near-EF | Metal EF, resolution-broadened FD, symmetrize (gap/pseudogap) when asked |
 | Spatial XY | ROI-integrated map, hot-spot kind reuse (cut / core / Fermi / hv), optional param maps |
-| Spin-ARPES | Up/down or I+P; package spin plots; Sherman ask; Spin-EDC + spin cuts |
+| Spin-ARPES | Up/down or I+P; package spin plots; Sherman ask; Spin-EDC and spin cuts |
 | In-operando | External \(P\) (dose/V/I/B/T); mid \(P^*\) or ask if stepped; reuse kind recipes |
 | trARPES | `delay`; t0; delay\* ≥ t0; package ΔI / ΔI/I; reuse kind at slice |
 | Self-energy | Single-band MDC → Σ (reuse fits or `fit_for_self_energy`); bare band; lifetime ask |
@@ -30,16 +33,17 @@ axes or physics**:
 | Axis prep | Rebin / symmetrize / normalize_dim / sort / condense (user-asked) |
 | Masks | Boolean `.where` or polygon `apply_mask`; GUI ask only |
 | Align | Correlation offset (`align`); ask before apply; not stitch |
-| Decomposition | PCA / NMF / ICA / factor analysis (`*_along`); ask before large cubes |
+| Decomposition | PCA / NMF / ICA / factor analysis (`*_along` on PyARPES); ask before large cubes |
 | Stack plots | Offset / flat stack; false-color; ToF±σ if errors exist |
 | Forward k | Point/pair angular → k-cut; `convert_coordinate_forward` |
 | Dichroism | CP+CM; null-ROI scale; diff + asym; red+/blue− clim tweak |
-| Backend | Default PyARPES; optional confirmed map to **your** project functions |
+| Backend | `pyarpes` \| `arpes_viewer` \| confirmed **user-map**; missing fn → ask A/B/C/D |
 
 ## 60-second try
 
-1. Install skill (below) + PyARPES in a **Python 3.8** venv (agent will ask).
-2. Open Cursor chat in a folder with an ARPES file (or PyARPES tutorial data).
+1. Install skill (below) + a backend env (agent will ask): PyARPES **3.8** and/or
+   ARPES-data-browser **≥3.9**.
+2. Open Cursor chat in a folder with an ARPES file (or tutorial data).
 3. Ask: *“Load this spectrum with the ARPES skill; state axes; show the default overview.”*
 
 Demo GIF / screenshots: coming soon under `examples/demo/` (load → overview → k).
@@ -67,21 +71,24 @@ Point the agent at this repo, or inject `SKILL.md` plus needed files under
 
 ## Requires (full analysis)
 
-- **Python 3.8.x** only (PyARPES: `>=3.8,<3.9`)
-- Dedicated **shared** Python 3.8 env (conda `arpes38` or `~/arpes-py38-venv`;
-  project `.venv-arpes` only if asked) + `pip install arpes` inside it  
-  See `reference/pyarpes-env.md` — agent discovers existing env before creating
+- **PyARPES path:** Python **3.8.x** + shared env — `reference/pyarpes-env.md`
+- **ARPES-data-browser path:** Python **≥3.9** + clone on `PYTHONPATH` —
+  `reference/arpes-viewer-env.md` (separate env; do not mix with 3.8)
 - Load/inspect fallback only: `xarray`, `h5py`
 
 ## What this is not
 
-- Not a replacement for PyARPES — it **drives** PyARPES (or your mapped code)
-- Not TensorSpec / Qt GUI control
+- Not a replacement for PyARPES or ARPES-data-browser — it **drives** them
+  (or your mapped code)
+- Not the first ARPES agent skill (see related tools)
+- Not TensorSpec control
 - Does not ship beamtime data files
 
 ## Related tools
 
 - [PyARPES](https://arpes.readthedocs.io) / [GitHub mirror](https://github.com/chstan/arpes)
+- [ARPES-data-browser](https://github.com/DingPei1995/ARPES-data-browser) (SOLEIL ANTARES / CASSIOPEE)
+- [ERLabPy `arpes-analysis` skill](https://github.com/kmnhan/erlabpy/tree/main/skills/arpes-analysis) — related agent skill on ERLabPy
 - Beamline notes in-skill: MAESTRO, ALBA LOREA (55°); SOLEIL ANTARES (45°, fixed
   horizontal slit); more welcome via PR
 
