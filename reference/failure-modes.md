@@ -94,6 +94,11 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Auto incoherent-above-EF on every cut | Only if asked; edge heuristic warned |
 | Silent swap raw → bg-subtracted | Echo method; before/after |
 | Invent a₀ / BZ for unnamed crystal | User cell or graphene/ws2/wse2→`wwe2` only (`bz-overlay.md`) |
+| Invent moiré twist / layer a₀ | Ask both lattices (`bz-overlay.md`) |
+| `hex_moire_lattice_fast` past 30° without fold | Fold θ↔60−θ or use `moire_reciprocal_vectors` |
+| DIY moiré G / mini-BZ polygon | `tools.moire` on `arpes_viewer`; else A/B/C/**D** |
+| Report a separate “moiré skill” | Same BZ overlay skill |
+| Moiré on `pyarpes` silently DIY | Stop; **D** / user cell / ask |
 | Claim data-on-3D-BZ / DIY hexagon | Package 2D `plot_data_to_bz` / `bz_plot` only; 3D data N/I |
 | Silent missing `ase` for BZ | Report optional dep; ask install or user cell |
 | DIY rebin / silent normalize before fits | Package `rebin` / `normalize_dim`; echo product (`axis-prep.md`) |

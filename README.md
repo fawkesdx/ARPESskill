@@ -29,7 +29,7 @@ axes or physics**:
 | Smooth / deconvolve | Gaussian smooth for noise; RL/ICE only if asked + PSF |
 | Resolution | Package ΔE estimates; ask if endstation tables missing |
 | Backgrounds | Core→Shirley; valence→hull; above-EF incoherent ask |
-| BZ overlay | Prefer k-space; user cell wins; graphene/ws2/wse2 library; ase optional |
+| BZ overlay | Prefer k-space; user cell wins; graphene/ws2/wse2; optional moiré (viewer); ase optional |
 | Axis prep | Rebin / symmetrize / normalize_dim / sort / condense (user-asked) |
 | Masks | Boolean `.where` or polygon `apply_mask`; GUI ask only |
 | Align | Correlation offset (`align`); ask before apply; not stitch |

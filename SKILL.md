@@ -124,7 +124,8 @@ volumes, etc.
   valence→hull; above-EF incoherent only if asked).
 - **BZ overlay (user-asked):** `reference/bz-overlay.md` (prefer k-space; user
   cell / path wins; `overplot_standard` only for graphene/ws2/wse2→`wwe2`; ase
-  optional; no invent lattice; no 3D data-on-BZ).
+  optional; optional **moiré** bilayer via `tools.moire` on viewer — ask both
+  lattices; no invent lattice; no 3D data-on-BZ; not a separate skill).
 - **Axis prep (user-asked):** `reference/axis-prep.md` (rebin / symmetrize_axis /
   normalize_dim / sort_axis / condense — echo dims; no silent normalize before
   fits).
@@ -317,7 +318,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/smooth-deconvolve.md` — gaussian smooth; RL/ICE deconvolve (ask + PSF)
 - `reference/resolution.md` — total / thermal / analyzer / beamline ΔE estimates
 - `reference/backgrounds.md` — Shirley (core) / hull (valence) / incoherent (ask)
-- `reference/bz-overlay.md` — BZ / high-sym path (path C cell; ase optional)
+- `reference/bz-overlay.md` — BZ / high-sym path / moiré mini-BZ (path C cell; ase optional)
 - `reference/axis-prep.md` — rebin / symmetrize / normalize_dim / sort / condense
 - `reference/masks.md` — boolean / polygon masks (`apply_mask`)
 - `reference/align.md` — correlation align offset (ask before apply)
