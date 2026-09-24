@@ -166,9 +166,11 @@ volumes, etc.
 - **No k/kz in quick report** — overview trios stay angle-space; convert only
   in analysis / when user asks (`reference/k-and-kz-conversion.md`).
 - **State energy axis** on load (Ek / Eb / E−EF / ambiguous).
-- **Before cut or Fermi map → k:** PyARPES EF finder; always report EF_fit +
+- **Before cut or Fermi map → k:** package EF finder; always report EF_fit +
   deviation from 0 eV; charging warn if claimed E−EF/Eb and `|EF_fit| > 50 meV`;
-  then shift EF→0. Package `convert_to_kspace` only — no invent formulas.
+  if edge **bows vs detector φ** (straight slit), straighten along φ before
+  convert (`k-and-kz-conversion.md` slit-bend step — mean-only insufficient);
+  then shift EF→0 as needed. Package `convert_to_kspace` only — no invent formulas.
 - **Γ for k conversion:** user offset wins. Cuts may use labeled provisional
   nearest-0°. **Fermi maps:** package `S.offsets` / optional `pocket_parameters`
   / optional `ktool` only — else **ask**; never invent a center finder
