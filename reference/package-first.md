@@ -1,55 +1,62 @@
 # Package-first policy (do not invent loaders)
 
-This skill drives **existing callables**: **PyARPES** by default, or a
-**confirmed user-map** (`backend-capability-map.md`) after the venv offer is
-declined. It is not a license to rewrite ARPES infrastructure in `analysis/`.
+This skill drives **existing callables** on the **active backend**: **PyARPES**
+(`pyarpes`), **ARPES-data-browser** (`arpes_viewer` — `loader`/`tools`), or a
+**confirmed user-map** (`backend-capability-map.md`). It is not a license to
+rewrite ARPES infrastructure in `analysis/`.
 
 ## Order of preference
 
-1. **PyARPES** public API — `arpes.io.load_data`, endstation plugins,
-   `convert_to_kspace`, `broadcast_model` / fit models, etc.
+1. **Active package backend** public API — PyARPES (`load_data`,
+   `convert_to_kspace`, fit models, …) **or** viewer (`loader.registry.load`,
+   `tools.*`) per Route B / override (`arpes-viewer-backend.md`).
 2. **Confirmed user-map** — project functions mapped to capability IDs after
    search + user confirm (`backend-capability-map.md`). Optional persist:
    project `analysis/backend_map.json`.
-3. **Already in the user’s project** (PyARPES present) — import and call
-   existing loaders/scripts when they are the better path (do not duplicate).
+3. **Already in the user’s project** — import and call existing
+   loaders/scripts when they are the better path (do not duplicate).
 4. **Thin glue only** — short scripts that *call* those APIs and save plots under
    `analysis/` (orchestration, not a new library).
-5. **New custom loader / reimplementation** — **only after asking the user**.
+5. **New custom loader / reimplementation** — **only after asking the user**
+   (option **C** below).
 
-When adding a **new skill workflow**, document PyARPES first and **update the
-capability inventory** in the same change (living-list rule).
+When adding a **new skill workflow**, document PyARPES first, fill Browser
+defaults when applicable, and **update the capability inventory** in the same
+change (living-list rule).
 
 ## Before writing new code
 
 **STOP and ask** if you are about to:
 
-- Write a new HDF5/FITS/NeXus loader instead of `arpes.io.load_data` / a plugin
+- Write a new HDF5/FITS/NeXus loader instead of the active backend’s loader
 - Reimplement k-conversion, EDC/MDC extract, or peak fitting by hand
-- Invent **Doniach–Šunjić** or other XPS lineshapes not in installed
-  `arpes.fits.fit_models` (check first; then ask)
-- Invent a **Fermi-surface / Γ center finder** (centroid, argmax, custom symmetry)
-  instead of `S.apply_offsets`, user input, `pocket_parameters`, or `ktool`
+- Invent **Doniach–Šunjić** or other XPS lineshapes not in the active backend
+- Invent a **Fermi-surface / Γ center finder** instead of package offsets /
+  user input / pocket helpers / GUI handoff
 - Invent **photon-momentum** or beamline **incidence** formulas / angles not in
   `beamline-geometry.md` or user/staff input
 - Invent **symmetrize**, bare-FD divide, or a **gap/Δ fitter** instead of
-  `arpes.analysis.gap` / edge models (`near-ef-gap.md`)
+  package helpers (`near-ef-gap.md`)
 - Copy large chunks of package logic into `analysis/`
-- Bypass PyARPES because the first plugin attempt failed
+- Bypass the active backend because the first entry point failed
+- Silently convert **`NxsScan` ↔ xarray** between backends
 
-Ask in this shape (PyARPES missing / incomplete):
+Ask in this shape (feature missing / incomplete on **active** backend):
 
-> PyARPES / package path failed or is incomplete: [exact error / missing
-> feature]. I can (A) retry with another official entry point (`location=…`,
-> different plugin / `pocket_parameters` / `ktool`), (B) **map helpers already
-> in your project** to capability IDs (`backend-capability-map.md`), or (C)
-> write a **new** custom helper under `analysis/` (not ideal). Which do you want?
+> Active backend `[pyarpes|arpes_viewer]` failed or lacks this capability:
+> [exact error / missing ID]. I can (A) retry another official entry on the
+> **same** backend, (B) **map helpers already in your project** to capability
+> IDs (`backend-capability-map.md`), (C) write a **new** custom helper under
+> `analysis/` (not ideal), or (D) **switch backend** for this stem/step (e.g.
+> PCA on `pyarpes` when on `arpes_viewer`). Which do you want?
 
-If the user already declined the shared PyARPES env, prefer proposing **(B)** before
-inspect-only xarray.
+If the user already declined the shared env for that backend, prefer proposing
+**(B)** (or **D** when the other package has the callable) before inspect-only.
 
-Do **not** start (C) until the user clearly chooses it.
-Do **not** call (B) mappings until the user confirms the proposed map.
+Do **not** start (C) until the user clearly chooses it.  
+Do **not** call (B) mappings until the user confirms the proposed map.  
+Do **not** switch backends (**D**) or bridge data models until the user
+clearly chooses it.
 
 ## Allowed without asking
 
@@ -61,10 +68,11 @@ Do **not** call (B) mappings until the user confirms the proposed map.
 
 | Bad habit | Correct |
 |-----------|---------|
-| Custom `maestro_*.py` loader without asking | Report plugin failure; ask A/B/C |
-| Hand-rolled Voigt fit when `arpes.fits` exists | Use package fit models |
-| DIY angle→k with ad-hoc formulas | Use `convert_to_kspace`; state assumptions |
-| DIY FS center / Γ from invent centroid code | Offsets / user / `pocket_parameters` / `ktool` / **ask** |
+| Custom `maestro_*.py` loader without asking | Report plugin failure; ask A/B/C/**D** |
+| Hand-rolled Voigt fit when package peaks exist | Use active-backend fit models |
+| DIY angle→k with ad-hoc formulas | Use mapped `convert_k`; state assumptions |
+| Silent `NxsScan` ↔ xarray bridge | Forbidden; ask **D** or user export |
+| DIY FS center / Γ from invent centroid code | Offsets / user / pocket helpers / GUI / **ask** |
 | DIY symmetrize / bare FD / custom gap Δ | `gap.symmetrize` + resolution-broadened FD; ask if missing |
 | DIY Σ from linewidth / invent k-dependent Σ | `to_self_energy` / `fit_for_self_energy`; k-independent only |
 | DIY Laplacian / Sobel “sharpen” | Package `curvature` + `minimum_gradient` (`band-enhance.md`) |
@@ -94,7 +102,8 @@ Do **not** call (B) mappings until the user confirms the proposed map.
    another official `location=` / plugin entry if documented.
 4. Check whether the **user’s project** already has an MH1 / custom helper —
    **use that** before writing anything new.
-5. If still stuck → **ask** A/B/C above. Do not silently invent an MH1 loader
+5. If still stuck → **ask** A/B/C/**D** above. Do not silently invent an MH1 loader
+   or bridge to another backend without asking.
    or invent `rot90` / axis renames to “fix” the plot.
 
 ## After user approves custom code
