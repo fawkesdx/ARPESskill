@@ -93,11 +93,14 @@ only; before k.
 **V₀ scan:** same doc — `tools.kzconv.scan_inner_potential` (ask `spacing`;
 report uncertainty; user accept). Not a separate skill.
 
+**Slit bend / FS correction:** same doc — `tools.analysis.fs_correction` /
+`edge_flatness` (PyARPES: broadcast vs φ + quadratic). Not a separate skill.
+
 ## See also
 
 - `arpes-viewer-env.md` — interpreter / PYTHONPATH  
 - `folder-manifest.md` — `list_entries` for Pass B peek  
 - `degrid.md` — detector grid removal  
-- `k-and-kz-conversion.md` — EF prep + V₀ + k/kz convert (incl. viewer)  
+- `k-and-kz-conversion.md` — EF / slit bend / V₀ + k/kz convert  
 - `formats-and-axes.md` — PyARPES/MAESTRO notes (other backend)  
 - Upstream README / CHANGELOG for loader and tool detail  

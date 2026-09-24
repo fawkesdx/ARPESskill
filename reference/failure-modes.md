@@ -69,6 +69,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Reuse stale k npz after Γ / V₀ / grid change | Recompute and overwrite (or version); meta must match |
 | Skip energy-axis notice on load | Always state Ek / Eb / E−EF / ambiguous |
 | Convert cut to k without PyARPES EF finder | Fit edge first; report EF_fit + meV from 0; shift EF→0 |
+| Mean-only EF when edge bows vs φ (slit bend) | Quadratic / `fs_correction` along slit (`k-and-kz-conversion.md`) |
+| Confuse slit bend with hv EF align | φ-dependent vs hv-dependent |
+| Confuse slit bend with band-enhance curvature | Different (`band-enhance.md`) |
+| Report a separate “FS bend skill” | One skill: k/kz (slit-bend step) |
 | Claimed E−EF/Eb but \|EF_fit\| > 50 meV, no note | Warn **possible charging**; still print deviation |
 | Invent k formula or auto-Γ / FS-center finder | `convert_to_kspace` + `apply_offsets` only; Fermi: ask if no package path |
 | Fermi map → k without EF finder | Same energy rules as cut (`k-and-kz-conversion.md`) |
