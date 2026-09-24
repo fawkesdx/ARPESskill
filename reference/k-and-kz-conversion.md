@@ -73,6 +73,63 @@ uses that spectral model.
 **Work function:** for EF calibration from analyzer KE when needed — not a usual
 extra argument to `convert_to_kspace` once EF is at 0.
 
+## Slit bend / FS correction (before convert)
+
+**Same skill step** — not a separate “FS bend” skill. PyARPES already documents
+this as [Fermi edge corrections](https://arpes.readthedocs.io/en/latest/notebooks/fermi-edge-correction.html)
+(“Correcting the curved Fermi edges” / straight slit).
+
+### Uniform EF vs slit bend
+
+| | Uniform EF align | Slit bend / FS correction |
+|--|------------------|---------------------------|
+| What | Whole frame off by one energy | Edge **bows vs detector angle** (φ / slit) |
+| Typical cause | Mono / WF / charging | Straight-slit / analyzer optics along slit |
+| Fix | One shift (or one per hv) | Shift **each angle column** so edge is flat vs φ |
+| If skipped when bent | Edge not at 0 | Fake dispersion / fake **kz** bend after convert |
+
+Mean-only `fd_center.mean()` → EF≈0 is **not** enough when `fd_center(φ)` still
+curves. Check span of centers vs φ (or viewer `edge_flatness`); skill warn if
+bend ≳ **~30 meV** across slit (viewer banner ≈ 0.03 eV) — convert still
+allowed with warning.
+
+**Not:** band-enhance `curvature` (`band-enhance.md`); not per-hv mono align.
+
+**Order:** optional de-grid → **this** (if needed) → per-hv EF align on stacks →
+Γ / V₀ → convert.
+
+### `pyarpes`
+
+```python
+from arpes.fits.utilities import broadcast_model
+from arpes.fits.fit_models import AffineBroadenedFD, QuadraticModel
+
+# Slit frame: cut, or map.sum("theta") (deflector) — curvature is along analyzer φ
+near = slit_frame.sel(eV=slice(-0.2, 0.1))  # adapt
+results = broadcast_model(AffineBroadenedFD, near, "phi")
+centers = results.F.p("fd_center")
+bend_span = float(centers.max() - centers.min())  # report
+# If bend_span small → mean shift OK; if large → smooth along φ:
+quad = QuadraticModel().guess_fit(centers)
+edge = quad.eval(x=full.phi)   # evaluate on the volume being corrected
+corrected = full.G.shift_by(edge, "eV")
+```
+
+Package-first — no invent DIY poly outside this pattern / package models.
+
+### `arpes_viewer`
+
+- Check: `tools.kzconv.edge_flatness(cube, angle, energy)` → spread (eV).  
+- Correct: `tools.analysis.fs_correction(values, angle_axis, energy_axis, coeffs, …)`
+  — coeffs from a polynomial through a feature that should be flat (EF or band
+  bottom); apply along slit; maps: fit on slit cut / θ-summed frame, apply to
+  cube.  
+- Do not invent coeffs; user picks / fit_feature path as upstream GUI does.
+
+Report: backend, bend span, method (`quadratic_phi` / `fs_correction` / mean-only).
+
+Capability: `fs_bend_correct` — `backend-capability-map.md`.
+
 ## Γ / zero momentum (policy)
 
 Mechanism: `data.S.apply_offsets({...})` on present angle motors (`phi`,
@@ -115,12 +172,14 @@ silently.
 Before `convert_to_kspace` on a **cut or Fermi map**:
 
 1. **Energy axis notice** (Ek / Eb / E−EF / ambiguous) — same for both.
-2. **EF finder** (PyARPES only) → report EF_fit + deviation from 0 → shift EF→0;
+2. **EF finder** → report EF_fit + deviation from 0 → shift EF→0;
    charging warning if claimed E−EF/Eb and `|EF_fit| > 50 meV`.
-3. Identify which **angles** map to in-plane momentum — read `.coords`.
-4. Set Γ offsets per [Γ policy](#γ--zero-momentum-policy) (Fermi = stricter).
-5. State sample geometry in the report.
-6. For kz: set or ask for **V₀** (`attrs["inner_potential"]`).
+3. **Slit bend** — if edge bows vs detector φ, straighten
+   ([above](#slit-bend--fs-correction-before-convert)); mean-only insufficient.
+4. Identify which **angles** map to in-plane momentum — read `.coords`.
+5. Set Γ offsets per [Γ policy](#γ--zero-momentum-policy) (Fermi = stricter).
+6. State sample geometry in the report.
+7. For kz: set or ask for **V₀** (`attrs["inner_potential"]`).
 
 ## In-plane k — cut
 
@@ -129,20 +188,24 @@ Before `convert_to_kspace` on a **cut or Fermi map**:
 
 ```python
 from arpes.fits.utilities import broadcast_model
-from arpes.fits.fit_models import AffineBroadenedFD
+from arpes.fits.fit_models import AffineBroadenedFD, QuadraticModel
 from arpes.utilities.conversion import convert_to_kspace
 
 # 1) State energy axis kind to user (Ek / Eb / E−EF / ambiguous)
 
 # 2) EF finder (PyARPES only) — even if already labeled E−EF
-#    Adapt ROI / broadcast dim to the cut; example pattern from docs:
 near_ef = cut.sel(eV=slice(-0.15, 0.1))  # adjust window to data
-# Single EDC or broadcast along detector — use package fit models only
-results = broadcast_model(AffineBroadenedFD, near_ef, "phi")  # or mid EDC fit
-ef_fit = float(results.F.p("fd_center").mean())  # or appropriate reduction
-# ALWAYS report: EF_fit and |EF_fit| in meV from 0
-# If claimed E−EF/Eb and abs(ef_fit) > 0.05: warn possible charging
-cut_ef = cut.G.shift_by(-ef_fit, "eV")  # EF → 0; follow PyARPES shift API
+results = broadcast_model(AffineBroadenedFD, near_ef, "phi")
+centers = results.F.p("fd_center")
+bend_span = float(centers.max() - centers.min())
+# ALWAYS report: EF_fit summary + bend_span vs φ
+# If claimed E−EF/Eb and |mean| > 0.05: warn possible charging
+if bend_span > 0.03:  # ~30 meV — straighten along φ (see slit-bend section)
+    edge = QuadraticModel().guess_fit(centers).eval(x=cut.phi)
+    cut_ef = cut.G.shift_by(edge, "eV")
+else:
+    ef_fit = float(centers.mean())
+    cut_ef = cut.G.shift_by(-ef_fit, "eV")  # uniform EF → 0
 
 # 3) Provisional or user Γ offsets (no invent auto-Γ)
 cut_ef.S.apply_offsets({"phi": phi0})  # keys = dims present
@@ -154,8 +217,10 @@ kdata = convert_to_kspace(cut_ef)  # or resolution= / kp=linspace(...)
 
 ## In-plane k — Fermi map
 
-**Energy:** same as cut — axis notice + PyARPES EF finder + EF_fit/deviation +
-charging warn at 50 meV + shift EF→0. Do **not** skip EF because “it’s a map.”
+**Energy:** same as cut — axis notice + EF finder + EF_fit/deviation +
+charging warn at 50 meV + shift EF→0; if edge bows vs φ, slit-bend straighten
+first ([above](#slit-bend--fs-correction-before-convert)). Do **not** skip EF
+because “it’s a map.”
 
 **Center / Γ:** follow [Fermi maps (stricter)](#fermi-maps-stricter--package-only--ask)
 — package offsets / optional `pocket_parameters` / optional `ktool` / **ask**.
@@ -498,6 +563,7 @@ Treat full photon-momentum correction as a **known gap**:
 
 ```text
 load hv stack → state energy axis (expect Eb / E−EF + hv)
+  → optional de-grid; slit bend straighten if edge bows vs φ
   → near-EF × angle-summed edge → AffineBroadenedFD vs hv
   → QC: EF_fit(hv) plot + per-slice report; hard-stop if pinned/junk
   → G.shift_by(centers, shift_axis="eV", shift_coords=True)
@@ -514,6 +580,7 @@ load hv stack → state energy axis (expect Eb / E−EF + hv)
 ```text
 load kz_map → state energy axis
   → optional de-grid (pixel-locked; degrid.md)
+  → slit bend: edge_flatness warn; fs_correction if bent
   → user index box → tools.kzmap.process_kz_map (fit / align / crop / optional norm)
   → QC: ef vs hv + ok mask + spread; post-align ≈0 checks
   → slit/Γ (ask if unclear)
@@ -603,7 +670,8 @@ Point/pair forward cuts (not full volume): `reference/forward-k.md`.
 |------|--------|
 | **No k in quick report** | Overviews stay angle-space |
 | **State energy axis** | Ek / Eb / E−EF / ambiguous on every load |
-| **EF finder before cut/Fermi → k** | PyARPES edge fit; always report EF_fit + deviation from 0 |
+| **EF finder before cut/Fermi → k** | Package edge fit; always report EF_fit + deviation from 0 |
+| **Slit bend / FS correction** | Same skill: if edge bows vs φ, straighten (PyARPES quad+`shift_by` or viewer `fs_correction`); mean-only ≠ bend fix; not band-enhance curvature |
 | **Charging warn** | Claimed E−EF/Eb and \|EF_fit\| > 50 meV |
 | **Fermi Γ** | Package offsets / pocket_parameters / ktool / **ask** — no invent center |
 | **EF align hv stacks** | **Same skill, backend path:** `pyarpes` = angle-summed near-EF + `broadcast_model` / `shift_by`; `arpes_viewer` `kz_map` = index box + `tools.kzmap.process_kz_map` — not a second skill |
