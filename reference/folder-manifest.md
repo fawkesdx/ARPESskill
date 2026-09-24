@@ -19,8 +19,9 @@ API) may sit on top of this manifest without replacing it as the source of truth
 | Single known file path | Manifest optional; still OK to add one row |
 
 Give a **token note** before a full-folder **spectrum** load
-(`reference/token-usage.md`). Prefer: list + **header-only peek** first;
-`load_data` / overview only when user asks or for a chosen file.
+(`reference/token-usage.md`). Prefer: list + **header-only / structure peek**
+first; full load / overview only when user asks or for a chosen file. Set
+`backend` per row via Route B (`arpes-viewer-backend.md`).
 
 ## Where
 
@@ -58,7 +59,9 @@ Top level:
 | `path` | string | yes | Preferred raw path to load |
 | `path_alt` | string \| null | no | Sibling `.h5` / `.fits` if both exist |
 | `ext` | string | yes | e.g. `.fits`, `.h5` |
-| `preferred_loader` | string | yes | e.g. `arpes.io.load_data` + `location=MAESTRO` |
+| `preferred_loader` | string | yes | e.g. `arpes.io.load_data` + `location=MAESTRO`, or `loader.registry.load` |
+| `backend` | string | yes when known | `pyarpes` \| `arpes_viewer` \| `user-map` \| `inspect-only` (Route B / override) |
+| `loader` | string \| null | no | Detected viewer loader name (e.g. `SOLEIL ANTARES`) or PyARPES `location=` |
 | `size_bytes` | int | yes | |
 | `mtime_utc` | string | yes | File mtime ISO-8601 |
 | `content_sha256` | string \| null | no | Optional; recompute on refresh if cheap |
@@ -93,44 +96,51 @@ only (`reference/default-overview-plots.md`).
    exists — record both; set `path` to preferred).
 2. Match measurement log by stem if a log is available → `log_comment`.
 3. Cheap row: stem, paths, ext, size, mtime (and hash if enabled).
-4. **Header-only peek** (default Pass B) — fill shape / hv / energy clues /
-   kind guess. **Do not** call `arpes.io.load_data` here.
-5. Write `manifest.json`; write `manifest.md` summary table (stem, kind, hv,
-   shape, peek_ok, comment).
+4. **Header-only / structure peek** (default Pass B) — fill shape / hv /
+   energy clues / kind guess / `backend`. **Do not** full-load spectra here
+   (`load_data` or viewer full cube).
+5. Write `manifest.json`; write `manifest.md` summary table (stem, backend,
+   kind, hv, shape, peek_ok, comment).
 6. Chat: **short summary only** (counts by kind + path to manifest) — not the
    full JSON.
 
-### Pass B — header peek (required method)
+### Pass B — header / structure peek (required method)
 
-Already in the shared env (`astropy`, `h5py` — `pyarpes-env.md`). No new
-download.
+| Ext / cue | How (no full spectrum cube) | Backend hint |
+|-----------|----------------------------|--------------|
+| `.fits` / `.fit` | `astropy.io.fits.getheader` / open memmap → **headers** only; **do not** load `.data` | usually `pyarpes` |
+| MH1 `.h5` (ALS) | `h5py` attrs + shapes; prefer sibling FITS if present | `pyarpes` |
+| ANTARES `.nxs` / CASSIOPEE / MBS `.krx` | With viewer env: `loader.registry.list_entries` / `detect` — entry names, kinds, shapes only | `arpes_viewer` |
+| NeXus-like without viewer | `h5py` attrs + shapes; **do not** `[:]`; may still ask backend | ask if ambiguous |
+| Other | File size + ext only; `kind=unknown` / ask | ask |
 
-| Ext | How (no spectrum array) |
-|-----|-------------------------|
-| `.fits` / `.fit` | `astropy.io.fits.getheader(path)` and/or `fits.open(..., memmap=True)` → read **headers** / column names / `NAXIS*`; **do not** load table `.data` / Fixed_Spectra columns |
-| `.h5` / `.hdf5` / NeXus-like | `h5py.File(path, "r")` → attrs + dataset `.shape` / names; **do not** `[:]` full arrays |
-| Other | File size + ext only; mark `kind=unknown` / ask |
+Ambiguous cues → **ask** before assigning `backend`. Mixed folders: different
+rows may have different backends.
 
-Extract when present: shape, motor/hv cards (e.g. `mono_eV`, `SF_HV`,
-`LMOTOR*`), energy start/delta/n if in header, provisional kind. Echo that
-dims/kind from header are **provisional** until a later full load.
+Extract when present: shape, motor/hv cards, energy start/delta/n if in header,
+provisional kind. Echo that dims/kind from peek are **provisional** until a
+later full load.
 
 ```python
 from astropy.io import fits
 
 hdr0 = fits.getheader(path, 0)          # primary
 # optional: hdr1 = fits.getheader(path, 1)  # table HDU — still header only
-# shape clues: NAXIS*, NAXIS1, … or defer until overview load
 
-# MH1 / HDF5
+# MH1 / HDF5 (no full read)
 import h5py
 with h5py.File(path, "r") as f:
     # walk groups; record dataset shapes + attrs; no f[…][:]
     pass
+
+# Viewer structure peek (PYTHONPATH → ARPES_viewer; arpes-viewer-env.md)
+from loader.registry import detect, list_entries
+print(detect(path))
+print(list_entries(path))   # cheap metadata — not a full cube load
 ```
 
-**Full `load_data`:** only Pass **C** (overview) or when user picks a file for
-analysis — not for first folder mapping.
+**Full load:** only Pass **C** (overview) or when user picks a file for
+analysis — not for first folder mapping. Use the row’s `backend` interpreter.
 
 ### Invalidation
 
@@ -159,21 +169,22 @@ Do **not** re-paste the full catalog into chat when the manifest is enough.
 | Pass | What | Cost |
 |------|------|------|
 | **A — listing** | Paths, size, mtime, log comment, preferred ext | Low |
-| **B — header peek** | Astropy FITS header / h5py attrs+shapes → shape, hv, kind guess | Low–medium |
-| **C — overview** | `load_data` + PNGs per `default-overview-plots.md`; set `overview_paths` | Higher |
+| **B — header / structure peek** | FITS/h5py attrs+shapes **or** viewer `list_entries` → shape, hv, kind, `backend` | Low–medium |
+| **C — overview** | Full load on that row’s backend + PNGs; set `overview_paths` | Higher |
 
-Default for a new folder: **A**, then **B** (header only). Sample or full **B**
-OK. **C** / PyARPES load only when user wants quick-report figures or picks a
-file to analyze.
+Default for a new folder: **A**, then **B**. Sample or full **B** OK. **C** /
+full load only when user wants quick-report figures or picks a file.
 
 ## Agent rules
 
 1. Manifest before multi-file analysis when a folder is in scope.
 2. Prefer recall from manifest over rediscovering the folder.
 3. Never dump full intensity arrays into the manifest or into chat.
-4. Folder first-map = **header peek only** — no `load_data` / no spectrum.
-5. Update `overview_paths` / `product_paths` when those artifacts are written.
-6. Keep schema_version bumped if fields change incompatibly.
+4. Folder first-map = **peek only** — no full spectrum load.
+5. Record `backend` (and `loader` when known) per row; mixed backends OK;
+   ambiguous → ask before full load.
+6. Update `overview_paths` / `product_paths` when those artifacts are written.
+7. Keep schema_version bumped if fields change incompatibly.
 
 ## Failure modes
 
