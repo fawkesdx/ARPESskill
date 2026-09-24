@@ -1,5 +1,6 @@
 # Local / agent process only — not part of the published skill
 .superpowers/
+.scratch/
 docs/
 .venv-arpes/
 .mplconfig/
