@@ -188,7 +188,10 @@ volumes, etc.
   `reference/beamline-geometry.md` (MAESTRO 55°; ALBA LOREA 55°; SOLEIL ANTARES
   **45°** + fixed horizontal slit — ask; SLS soft X-ray postponed) + **ask**
   about photon momentum / incidence; npz must store
-  `ef_fit_per_hv` (`reference/k-and-kz-conversion.md`).
+  `ef_fit_per_hv` (`reference/k-and-kz-conversion.md`). If user does not know
+  how to pick V₀ → **spell the V₀ handoff** checklist in that doc (paths +
+  paste format / spacing for scan); confirm before convert — never silent
+  10 eV.
 - After k/kz conversion: save `analysis/kspace/*.npz` with required meta;
   prefer reload from cache when meta still matches.
 - **Forward k cuts (user-asked):** point/pair through angle → k-cut via
@@ -230,7 +233,8 @@ chat). Details: `reference/token-usage.md`.
 - Package load fails / feature missing — quote error; offer A/B/C/**D**
   (`reference/package-first.md`).
 - Ambiguous axes or backend sniff — stop and ask one sharp question.
-- Ambiguous V₀ — ask, run viewer scan if applicable, or mark kz as relative/uncertain.
+- Ambiguous V₀ — spell V₀ handoff (`k-and-kz-conversion.md`); ask / lit /
+  viewer scan / relative; never silent guess.
 - Corrupt/partial file — report readable parts only.
 
 ## Workflow
