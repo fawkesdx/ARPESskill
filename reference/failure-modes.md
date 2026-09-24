@@ -66,6 +66,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | `convert_to_kspace` during quick-report trios | Quick = angle-space only; k/kz = analysis / user ask (`k-and-kz-conversion.md`) |
 | Invent absolute KE matrix when EF-aligned `eV` + `hv` exist | Use PyARPES convention; WF only for EF calibration if needed |
 | Γ claimed with no method / ignore user offset | Label provisional heuristic; **user offset wins**; persist in npz |
+| User unsure how to give Γ / offsets → invent center | Spell handoff checklist (`k-and-kz-conversion.md` § Offset / Γ handoff); paste format or GUI→`S.offsets`/save |
 | Reuse stale k npz after Γ / V₀ / grid change | Recompute and overwrite (or version); meta must match |
 | Skip energy-axis notice on load | Always state Ek / Eb / E−EF / ambiguous |
 | Convert cut to k without PyARPES EF finder | Fit edge first; report EF_fit + meV from 0; shift EF→0 |
