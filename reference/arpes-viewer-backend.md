@@ -83,9 +83,13 @@ Skill recipes reuse the same physics names; map through capability IDs.
 Stop. Offer A/B/C/**D** (`package-first.md`). Example: PCA / NMF / ICA are
 **N/A** on `arpes_viewer` → prefer **D** switch to `pyarpes` for that step/stem.
 
+**De-grid** (MCP/mesh): `reference/degrid.md` — `tools.degrid`; pixel-locked
+only; before k.
+
 ## See also
 
 - `arpes-viewer-env.md` — interpreter / PYTHONPATH  
 - `folder-manifest.md` — `list_entries` for Pass B peek  
+- `degrid.md` — detector grid removal  
 - `formats-and-axes.md` — PyARPES/MAESTRO notes (other backend)  
 - Upstream README / CHANGELOG for loader and tool detail  
