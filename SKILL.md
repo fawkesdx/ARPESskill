@@ -13,7 +13,8 @@ description: >
   sort / condense), data masks (boolean / polygon), correlation alignment
   of spectra, sklearn-style decomposition (PCA / NMF / ICA / factor analysis),
   specialized plots (stack / false-color / ToF±σ), forward k cuts through
-  angular points/pairs, and CP/CM dichroism (null-ROI scale then diff/asym)
+  angular points/pairs, CP/CM dichroism (null-ROI scale then diff/asym), and
+  detector de-grid (MCP/mesh via ARPES-data-browser)
   via PyARPES, ARPES-data-browser (arpes_viewer), or a confirmed user-project
   capability map. Use when working
   with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES,
@@ -22,7 +23,7 @@ description: >
   Shirley, Brillouin zone, BZ overlay, rebin, symmetrize, normalize_dim, mask,
   polygon mask, align, register, shift spectra, PCA, NMF, ICA, stack plot,
   false color, ToF, forward k, convert_through_angular, dichroism, CP, CM,
-  circular dichroism, ANTARES, CASSIOPEE, MAESTRO or NeXus/HDF5 ARPES files,
+  circular dichroism, degrid, MCP grid, ANTARES, CASSIOPEE, MAESTRO or NeXus/HDF5 ARPES files,
   angle-to-momentum conversion, hv/kz scans, spatial maps, nanoARPES,
   pseudogap, PyARPES, or ARPES-data-browser.
 ---
@@ -39,7 +40,7 @@ minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
 background subtraction, BZ / high-symmetry path overlay, axis prep (rebin /
 symmetrize / normalize), masks (boolean / polygon), spectrum alignment,
 PCA/NMF/ICA decomposition, stack / false-color / ToF±σ plots, forward-k
-point/pair cuts, CP/CM dichroism, MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES
+point/pair cuts, CP/CM dichroism, detector de-grid (MCP/mesh), MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES
 files, or PyARPES.
 
 ## What reduction means
@@ -183,6 +184,9 @@ volumes, etc.
   `reference/forward-k.md` (complements full-volume convert).
 - **Dichroism (user-asked):** `reference/dichroism.md` (CP+CM; null-ROI scale
   then D and A; red+/blue− plots; clim tweak OK if echoed).
+- **De-grid (user-asked):** `reference/degrid.md` (`arpes_viewer` /
+  `tools.degrid`; pixel-locked only — **before** k / FS / kz-align; map or
+  cut±grid; notch warns PE loss).
 - **Core-as-2D:** cut-shaped file with swept + deep/core clues (soft: span ≳10 eV
   or deepest ≳5 eV below EF) → suspect core level saved as 2D image; quick
   report = detector×energy **and** angle-integrated EDC; no default valence k
@@ -283,8 +287,10 @@ chat). Details: `reference/token-usage.md`.
     `reference/forward-k.md`.
 28. If user asks dichroism / CP−CM / CD —
     `reference/dichroism.md`.
-29. Plot/report with labeled units; **list overview / conversion assumptions**.
-30. Before expensive batch work — token note (`reference/token-usage.md`).
+29. If user asks de-grid / MCP grid / detector mesh —
+    `reference/degrid.md`.
+30. Plot/report with labeled units; **list overview / conversion assumptions**.
+31. Before expensive batch work — token note (`reference/token-usage.md`).
 
 If unsure: read the matching `reference/` file; ask the user one sharp question.
 
@@ -312,6 +318,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/stack-plots.md` — stack / flat stack / false-color / ToF±σ
 - `reference/forward-k.md` — k-cut through angular point/pair; coord forward
 - `reference/dichroism.md` — CP/CM null-ROI scale; diff + asym; red/blue plot
+- `reference/degrid.md` — MCP/mesh de-grid (`tools.degrid`; pixel-locked; before k)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
@@ -348,6 +355,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/stack_plots.md`
 - `examples/forward_k.md`
 - `examples/dichroism.md`
+- `examples/degrid.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
 
@@ -375,6 +383,7 @@ See `reference/` for recipes. Common entry points:
 - Band enhance: curvature + minimum gradient (`band-enhance.md`)
 - FS pocket: `pocket_parameters` / curves (`fs-pocket.md`)
 - Dichroism: null-ROI scale → D and A (`dichroism.md`)
+- De-grid: `not_pixel_locked` → `degrid_map` / `degrid_cut_*` (`degrid.md`)
 - Decomposition: PyARPES `*_along` (viewer = N/A → offer **D**)
 - Smooth / deconvolve: mapped smooth / RL+PSF if asked (`smooth-deconvolve.md`)
 - Resolution / backgrounds / BZ / axis prep / masks / align / stack / forward-k:
@@ -384,3 +393,4 @@ See `reference/` for recipes. Common entry points:
 - Forward k: `convert_through_angular_point` / `pair` /
   `convert_coordinate_forward` (`forward-k.md`)
 - Dichroism: CP/CM null-ROI scale → D and A; `RdBu_r` (`dichroism.md`)
+- De-grid: `tools.degrid` pixel-locked (`degrid.md`)

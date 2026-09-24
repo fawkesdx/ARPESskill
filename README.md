@@ -37,6 +37,7 @@ axes or physics**:
 | Stack plots | Offset / flat stack; false-color; ToF±σ if errors exist |
 | Forward k | Point/pair angular → k-cut; `convert_coordinate_forward` |
 | Dichroism | CP+CM; null-ROI scale; diff + asym; red+/blue− clim tweak |
+| De-grid | MCP/mesh via ARPES-data-browser `tools.degrid`; pixel-locked; **before** k |
 | Backend | `pyarpes` \| `arpes_viewer` \| confirmed **user-map**; missing fn → ask A/B/C/D |
 
 ## 60-second try

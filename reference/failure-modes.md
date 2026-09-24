@@ -106,6 +106,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | PCA / decomp on `arpes_viewer` stem silently DIY | Stop; offer **D** (switch to `pyarpes`) / B / C (`package-first.md`) |
 | Silent `NxsScan` ↔ xarray bridge | Forbidden; ask **D** or user export |
 | Install viewer deps into PyARPES 3.8 env | Separate env (`arpes-viewer-env.md`) |
+| De-grid after k / FS bend / kz-align / smooth | Refuse; `not_pixel_locked` (`degrid.md`) — do first |
+| DIY FFT / Wiener “degrid” | `tools.degrid` on `arpes_viewer` only; else A/B/C/**D** |
+| Silent `degrid_cut_notch` without PE-loss warn | Warn; prefer map `[grid]` + `degrid_cut_with_grid` |
+| De-grid on `pyarpes` stem without ask | Stop; offer **D** / B / C (`degrid.md`) |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |
 | Treat log “Cut” as kind without dims/heuristics | Dims + core-as-2D rules; log → `log_comment` only |
 | Reimplement fit / k-conversion by hand | Use active-backend APIs; ask A/B/C/**D** if unavailable |

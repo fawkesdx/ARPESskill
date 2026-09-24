@@ -143,6 +143,9 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `dichro_diff` | Scaled difference | `CP′ − CM′` (xarray) | `cutops` LD / custom A−B |  | `dichroism.md` |
 | `dichro_asym` | Asymmetry | `(CP′−CM′)/(CP′+CM′)` with denom floor | `cutops` CD / asymmetry preset |  | `dichroism.md` |
 | `dichro_plot` | Diverging red+/blue− maps | matplotlib/`RdBu_r`; echo clim/offset | figure / matplotlib diverging |  | `dichroism.md` |
+| `degrid_pixel_lock` | Refuse de-grid if not on detector pixels | | `tools.degrid.not_pixel_locked` |  | `degrid.md` |
+| `degrid_map` | Remove MCP/mesh grid from map / kz_map | | `tools.degrid.degrid_map` |  | `degrid.md` |
+| `degrid_cut` | Cut de-grid with map grid or notch | | `degrid_cut_with_grid` / `degrid_cut_notch` |  | `degrid.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
