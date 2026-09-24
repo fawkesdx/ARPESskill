@@ -1,8 +1,12 @@
 # k and kz conversion
 
 Reference for converting angle-space ARPES data to **in-plane momentum** (k,
-kx, ky) and **out-of-plane momentum** (kz) via PyARPES. Also covers **when**
-to convert and how to **cache** products under `analysis/`.
+kx, ky) and **out-of-plane momentum** (kz). Also covers **when** to convert,
+**hv-stack EF prep** (backend-specific APIs), and how to **cache** products
+under `analysis/`.
+
+**One skill** — not a separate “kz-map” skill. Same physics; package path
+follows the **active backend** (`pyarpes` vs `arpes_viewer`).
 
 **PyARPES docs:** [Converting to k-space](https://arpes.readthedocs.io/en/latest/notebooks/converting-to-kspace.html)
 
@@ -180,28 +184,40 @@ k_fs = convert_to_kspace(fs_slice)  # or full fmap after EF+offsets
 
 ## hv → kz (Eph stacks)
 
+### Backend fork (same skill)
+
+| Active backend | EF-align path | Then convert |
+|----------------|---------------|--------------|
+| `pyarpes` | Angle-summed near-EF + `broadcast_model` / `G.shift_by` ([below](#ef-align-across-hv--pyarpes)) | `convert_to_kspace` + stated V₀ |
+| `arpes_viewer` + kind `kz_map` | User **index box** + `tools.kzmap.process_kz_map` ([below](#arpes_viewer--kz_map-prep-toolskzmap)) | `tools.kzconv.to_kz_cube` + stated V₀ |
+
+Prep ≠ conversion. Aligned cube is still angle/E until `convert_kz` runs.
+If wrong backend for the data → A/B/C/**D** (`package-first.md`).
+
+Optional **de-grid** first when MCP/mesh present (`reference/degrid.md`) — before
+kzmap align / k convert.
+
 ### Energy on hv stacks
 
-Absolute **Ek differs per hv slice**. After a correct PyARPES load you normally
-have:
+Absolute **Ek differs per hv slice**. After a correct load you normally have:
 
-- `eV` — shared energy coord (intended **Eb / E−EF**), and  
+- `eV` (or viewer energy axis) — shared energy coord (intended **Eb / E−EF**), and  
 - `hv` — photon energy dim and/or attrs  
 
 Do **not** invent a separate kinetic-energy cube when those exist. KE for
-conversion is implied by **hv + EF-aligned `eV`**. If the load still looks like
+conversion is implied by **hv + EF-aligned energy**. If the load still looks like
 raw analyzer KE with one grid for all hv → state that; align EF **per hv**
 before kz.
 
 Always give the energy-axis notice (Ek / Eb / E−EF / ambiguous).
 
-### EF align across hv (required before analysis / kz)
+### EF align across hv — `pyarpes`
 
-Mono / undulator drift can move the edge differently at each hv. Use **PyARPES
-only** ([Fermi edge corrections](https://arpes.readthedocs.io/en/latest/notebooks/fermi-edge-correction.html)).
+Mono / undulator drift can move the edge differently at each hv. Use **package
+APIs only** ([Fermi edge corrections](https://arpes.readthedocs.io/en/latest/notebooks/fermi-edge-correction.html)).
 
-**Hard rule for hv stacks:** fit an **angle-integrated** near-EF edge, then
-broadcast on `hv`. Mid-φ / single-pixel EDC is **not** the default
+**Hard rule for PyARPES hv stacks:** fit an **angle-integrated** near-EF edge,
+then broadcast on `hv`. Mid-φ / single-pixel EDC is **not** the default
 (too noisy / biased). User may override to a stated φ window only if they ask.
 
 #### 1. Edge ROI (required)
@@ -285,6 +301,71 @@ them as calibrated FS / kz.
 Capabilities: `fit_fermi_edge`, `shift_energy` —
 `reference/backend-capability-map.md`.
 
+### `arpes_viewer` — kz_map prep (`tools.kzmap`)
+
+**When:** active backend `arpes_viewer`; data kind `kz_map` (or clear hv stack
+in viewer space); user asks EF align / “process kz map” / prep before kz
+convert. **Not** a separate skill — same k/kz recipe, viewer API.
+
+**Not:** substitute for V₀ or `tools.kzconv.to_kz_cube`. Prep puts EF→0 on a
+common energy axis; Å⁻¹ still needs convert + stated V₀ (next subsections).
+
+**Order:** optional de-grid (`degrid.md`) → this prep → slit/Γ → V₀ →
+`to_kz_cube`.
+
+#### ROI (required)
+
+One **index** box, same detector channels every hv:
+
+```text
+index_region = ((angle_from, angle_to), (energy_from, energy_to))  # inclusive
+```
+
+Pick a metal-like edge region with points clearly above and below EF. State the
+box in the report. Do **not** default to a single mid-angle pixel when a box is
+expected — ask if missing.
+
+Energy bounds are **indices into each spectrum’s energy axis** (axes may not
+yet agree); that is why the box is index-locked, not a shared eV window.
+
+#### Call (prefer one-shot)
+
+```python
+from tools.kzmap import process_kz_map
+
+# cube: (hv, angle, E); energy: 1D axis matching cube[..., E]
+result = process_kz_map(
+    cube, energy, index_region,
+    temperature=30.0,       # adapt; state it
+    normalise=True,         # after align+crop; flux varies with hv
+)
+# result.cube, result.energy (EF=0), result.ef, result.ok, result.trimmed,
+# result.normalised; result.spread; result.summary()
+```
+
+Prefer `process_kz_map` over calling `fit_levels` / `align` /
+`normalise_totals` separately unless debugging. Package-first — no invent EF
+fitter.
+
+#### QC (map onto shared hard-stop spirit)
+
+1. **Plot and store** `result.ef` vs hv under `analysis/`.
+2. **Report** per-hv EF + `result.ok` (False = interpolated from neighbors).
+3. **Fail / ask** if no edges fitted, spread absurd vs energy window, or too
+   many non-ok / wild centers (same spirit as PyARPES ≥20% junk / pinned).
+4. Echo `result.summary()` and `spread` (eV trimmed by misalignment).
+5. **Post-align:** check low/mid/high hv EDCs sit near ≈0 before isoenergy /
+   kz convert.
+
+#### Optional intensity norm
+
+`normalise=True` (default upstream) runs **after** align+crop only — totals
+then cover the same E range. Norm before align biases by the misalignment
+being fixed. State when used.
+
+Capabilities: `fit_fermi_edge`, `shift_energy`, `kz_map_align` —
+`reference/backend-capability-map.md`.
+
 ### Slit / Γ offset (after EF align)
 
 Same family as **cut** Γ: `S.apply_offsets` — no invent center finder.
@@ -299,9 +380,13 @@ slice or which offset to use.
 ### V₀ and convert
 
 1. Confirm `hv` present — **Stop** if missing.  
-2. Set `attrs["inner_potential"]` = V₀ — **ask or state source**; never silent.  
+2. Set inner potential V₀ — **ask or state source**; never silent.  
+   - `pyarpes`: `attrs["inner_potential"]`  
+   - `arpes_viewer`: pass `inner_potential=` into `tools.kzconv.to_kz_cube`  
 3. Soft X-ray / photon momentum — see below.  
-4. `convert_to_kspace(...);` prefer **periodicity** check; absolute kz depends on V₀.
+4. Convert; prefer **periodicity** check; absolute kz depends on V₀.
+
+**`pyarpes`:**
 
 ```python
 import numpy as np
@@ -313,6 +398,10 @@ kz_data = convert_to_kspace(
     # kp=np.linspace(...), kz=np.linspace(...),  # or resolution=
 )
 ```
+
+**`arpes_viewer`:** after `process_kz_map` (or equivalent align), call
+`tools.kzconv.to_kz_cube(..., inner_potential=V0)` — see
+`arpes-viewer-backend.md`. Do not invent free-electron formulas.
 
 Typical V₀ ~5–15 eV (material/surface-dependent). Do not silently assume 10 eV.
 
@@ -338,19 +427,30 @@ Treat full photon-momentum correction as a **known gap**:
 
 ### Pipeline summary
 
+**`pyarpes`:**
+
 ```text
 load hv stack → state energy axis (expect Eb / E−EF + hv)
   → near-EF × angle-summed edge → AffineBroadenedFD vs hv
-  → QC: EF_fit(hv) plot + per-slice report; hard-stop if pinned/junk/stderr
+  → QC: EF_fit(hv) plot + per-slice report; hard-stop if pinned/junk
   → G.shift_by(centers, shift_axis="eV", shift_coords=True)
   → post-shift: summed-φ EDC at low/mid/high hv ≈0 (≲20 meV)
   → slit/Γ offset from lowest-hv slice (cut-like; ask if unclear)
-  → state V₀
+  → state V₀ → convert_to_kspace
   → soft X-ray? → beamline geometry default + ask (photon momentum)
-      (ALS MAESTRO 55°; ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit — ask;
-      SLS soft X-ray postponed)
-  → isoenergy / convert_to_kspace only if EF QC + post-shift passed
   → analysis/kspace/<stem>_kz.npz (include ef_fit_per_hv)
+```
+
+**`arpes_viewer` (`kz_map`):**
+
+```text
+load kz_map → state energy axis
+  → optional de-grid (pixel-locked; degrid.md)
+  → user index box → tools.kzmap.process_kz_map (fit / align / crop / optional norm)
+  → QC: ef vs hv + ok mask + spread; post-align ≈0 checks
+  → slit/Γ (ask if unclear) → state V₀ → tools.kzconv.to_kz_cube
+  → soft X-ray? → beamline geometry + ask
+  → save products + ef_fit_per_hv under analysis/
 ```
 
 ## Output grid / resolution
@@ -436,16 +536,17 @@ Point/pair forward cuts (not full volume): `reference/forward-k.md`.
 | **EF finder before cut/Fermi → k** | PyARPES edge fit; always report EF_fit + deviation from 0 |
 | **Charging warn** | Claimed E−EF/Eb and \|EF_fit\| > 50 meV |
 | **Fermi Γ** | Package offsets / pocket_parameters / ktool / **ask** — no invent center |
-| **EF align hv stacks** | Angle-summed near-EF edge + `broadcast_model(..., "hv")` (or per-hv package loop); do **not** use mid-φ as default |
+| **EF align hv stacks** | **Same skill, backend path:** `pyarpes` = angle-summed near-EF + `broadcast_model` / `shift_by`; `arpes_viewer` `kz_map` = index box + `tools.kzmap.process_kz_map` — not a second skill |
+| **Viewer prep ≠ convert** | `kzmap` align ≠ Å⁻¹; still need V₀ + `kzconv` / `convert_to_kspace` |
 | **hv EF QC** | Plot EF_fit vs hv; per-slice report; hard-stop if ≥20% zero/junk, pinned, or absurd stderr |
-| **hv shift** | Prefer `G.shift_by(centers, shift_axis="eV", shift_coords=True)` |
+| **hv shift** | Prefer `G.shift_by(...)` (`pyarpes`) or `process_kz_map` / `align` (`arpes_viewer`) |
 | **Post-shift verify** | Summed-φ EDC at low/mid/high hv ≈0 (≲20 meV) before isoenergy/kz |
 | **hv npz meta** | Require `ef_fit_per_hv` (+ optional plot path); scalar alone insufficient |
 | **Slit offset for kz** | Prefer **lowest-hv** slice after EF align (cut-like offsets) |
 | **Photon momentum** | Soft X-ray: warn + `beamline-geometry.md` defaults + **ask**; no invent |
 | **State V₀** | Before absolute kz; ask if unknown |
 | **Prefer periodicity** | Cross-check bands vs hv when possible |
-| **No fake Å⁻¹** | Until `convert_to_kspace` runs |
+| **No fake Å⁻¹** | Until package convert runs (`convert_to_kspace` / `to_kz_cube`) |
 | **State geometry + Γ method** | Named method; user offset wins |
 | **User offset wins** | Overrides; update cache |
 | **No invented KE matrix / k formulas / center finders** | Package APIs only; ask before new code |
