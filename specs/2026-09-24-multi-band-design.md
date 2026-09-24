@@ -1,7 +1,7 @@
 # Multi-band dispersion fitting — Design Spec
 
 **Date:** 2026-09-24  
-**Status:** Draft for user review  
+**Status:** Approved (user 2026-09-24)  
 **Repo:** https://github.com/fawkesdx/ARPESskill  
 **Approach:** Extend `edc-mdc-fitting.md` (docs-only; same skill language)
 
