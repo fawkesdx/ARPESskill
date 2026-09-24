@@ -99,6 +99,9 @@ report uncertainty; user accept). Not a separate skill.
 **Moiré / mini-BZ:** `reference/bz-overlay.md` — `tools.moire` (+ `bz2d`).
 Not a separate skill.
 
+**Publication figure layout:** `reference/figure-layout.md` — `tools.figure`
+(journal mm presets). User-asked layout/export — not overview.
+
 ## See also
 
 - `arpes-viewer-env.md` — interpreter / PYTHONPATH  
@@ -106,5 +109,6 @@ Not a separate skill.
 - `degrid.md` — detector grid removal  
 - `k-and-kz-conversion.md` — EF / slit bend / V₀ + k/kz convert  
 - `bz-overlay.md` — BZ / moiré mini-BZ  
+- `figure-layout.md` — publication multi-panel layout  
 - `formats-and-axes.md` — PyARPES/MAESTRO notes (other backend)  
 - Upstream README / CHANGELOG for loader and tool detail  
