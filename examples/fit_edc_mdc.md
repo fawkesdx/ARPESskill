@@ -81,3 +81,39 @@ fit_results = broadcast_model(LorentzianModel, cut, "eV")
 
 **Agent narrative:** after broadcast, always draw the default follow-up curves;
 then linear/parabolic on E(k) for vF/m* when appropriate; package models only.
+
+## 4. Multi-band (N>1)
+
+When a dispersion cut shows **several bands** (user asks multi-band **or** a
+check MDC shows clear multiple peaks):
+
+1. **Propose N** from a mid-cut MDC / overlay → **wait for user confirm** (never
+   silent multi-peak broadcast).
+2. Compose **N prefixed peaks** + background (package models only) →
+   `broadcast_model` along `eV`.
+3. Plot **per-prefix** E vs k (and width vs k); ask **linear vs parabolic per
+   band** → report vF and/or m* with stated k window.
+4. **Continuity / track identity:** package helper only — **N/A** in this repo
+   unless a verified PyARPES / viewer symbol is mapped; **no DIY unswap** /
+   nearest-center loop. If tracks may swap at crossings → handoff A/B/C/D or user
+   re-label.
+5. User stuck → spell **Multi-band handoff** (`reference/edc-mdc-fitting.md` §
+   Multi-band dispersion + Multi-band handoff).
+
+```python
+from arpes.fits.fit_models import LorentzianModel, AffineBackgroundModel
+from arpes.fits.utilities import broadcast_model
+
+# After user confirmed N=2, labels a/b
+model = (
+    AffineBackgroundModel()
+    + LorentzianModel(prefix="a_")
+    + LorentzianModel(prefix="b_")
+)
+fit_results = broadcast_model(model, cut, "eV")
+# centers_a = fit_results.F.p("a_center")  # per prefix — inspect install API
+# centers_b = fit_results.F.p("b_center")
+# Per band: LinearModel / QuadraticModel on centers → vF / m*
+```
+
+**Σ / self-energy:** single-band ROI only — not multi-band (`self-energy.md`).

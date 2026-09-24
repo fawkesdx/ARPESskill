@@ -20,6 +20,12 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Core fit without ROI / invent Doniach–Šunjić | Shirley + package peaks; ask if exotic model missing (`edc-mdc-fitting.md`) |
 | Broadcast fit with no E vs k / width follow-up plots | Save default derived curves (`edc-mdc-fitting.md`) |
 | Quote vF / m* without band model or k window | Linear/Quadratic on centers; state units + window; prefer k-space |
+| Invent peak count N | Propose mid-cut MDC → confirm; or multi-band handoff A–E |
+| DIY nearest-center unswap | Package only; else “may swap” + A/B/C/D |
+| User stuck on multi-band → invent | Spell multi-band handoff (`edc-mdc-fitting.md`) |
+| Multi-band Σ without ask | Single-band ROI only (`self-energy.md`) |
+| Collapse multi-peak to one E(k) track | Per-prefix centers + plots |
+| Report a separate “multi-band skill” | One skill: EDC/MDC fit (multi-band step) |
 | Treat core-as-2D as valence EDC/MDC broadcast | Angle-integrate; core section first; no default k-convert |
 | Use TensorSpec APIs in v1 | Defer; use PyARPES for load, reduce, fit, and k/kz |
 | XY spatial overview = one random mid pixel only | Spatial set: \(I_R\) map, hot-spot, mean (`spatial-xy-scans.md`) |
