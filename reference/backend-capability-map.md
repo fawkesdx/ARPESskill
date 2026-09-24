@@ -150,6 +150,8 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `degrid_pixel_lock` | Refuse de-grid if not on detector pixels | | `tools.degrid.not_pixel_locked` |  | `degrid.md` |
 | `degrid_map` | Remove MCP/mesh grid from map / kz_map | | `tools.degrid.degrid_map` |  | `degrid.md` |
 | `degrid_cut` | Cut de-grid with map grid or notch | | `degrid_cut_with_grid` / `degrid_cut_notch` |  | `degrid.md` |
+| `figure_compose` | Multi-panel publication figure | matplotlib `GridSpec` (simple); full composer → D | `tools.figure.Figure` / `Panel` / `FigureStyle` + export |  | `figure-layout.md` |
+| `figure_journal_preset` | Journal column width / font | N/A — user mm or D | `tools.figure.JOURNAL_PRESETS` |  | `figure-layout.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user

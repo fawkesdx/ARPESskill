@@ -127,6 +127,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | DIY FFT / Wiener “degrid” | `tools.degrid` on `arpes_viewer` only; else A/B/C/**D** |
 | Silent `degrid_cut_notch` without PE-loss warn | Warn; prefer map `[grid]` + `degrid_cut_with_grid` |
 | De-grid on `pyarpes` stem without ask | Stop; offer **D** / B / C (`degrid.md`) |
+| Use figure composer for default overview | Overview = `default-overview-plots.md`; composer = user-asked pub layout (`figure-layout.md`) |
+| Invent journal column mm / font | Use `JOURNAL_PRESETS` or ask (`figure-layout.md`) |
+| Comparable panels with silent mismatched clim | Set/echo `shared_levels` / `shared_ranges` |
+| DIY full journal composer on `pyarpes` | Simple GridSpec OK; full presets → A/B/C/**D** |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |
 | Treat log “Cut” as kind without dims/heuristics | Dims + core-as-2D rules; log → `log_comment` only |
 | Reimplement fit / k-conversion by hand | Use active-backend APIs; ask A/B/C/**D** if unavailable |
