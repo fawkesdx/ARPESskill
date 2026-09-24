@@ -7,6 +7,11 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 |---------|---------|
 | Plot angle axis labeled as k | Convert first with `convert_to_kspace`, or label axes in **degrees** (°) |
 | hv scan plotted as kz without V₀ | Set or ask for `inner_potential`; state uncertainty if V₀ unknown |
+| Silent V₀ = 10 eV (or any guess) | Ask / lit / viewer `scan_inner_potential` / mark relative (`k-and-kz-conversion.md`) |
+| Treat scan `best` as exact truth | Echo `uncertainty()`; settle by eye vs BZ; user accept/edit |
+| Invent lattice `spacing` for V₀ scan | Ask user / cell (Å along normal) |
+| DIY period-vs-V₀ loop on `pyarpes` | No invent; user/lit or A/B/C/**D** |
+| Report a separate “V₀ skill” | One skill: k/kz conversion (V₀ step) |
 | Swap binding ↔ kinetic | Check PyARPES convention (binding often ≤0 below EF); state which is used |
 | Invent MAESTRO motor names | Read coords/attrs from file — never guess `phi`, `theta`, etc. |
 | "Γ is at image center" | No — state method to find Γ (manual pick, fit, symmetry, model) |
@@ -64,11 +69,18 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Reuse stale k npz after Γ / V₀ / grid change | Recompute and overwrite (or version); meta must match |
 | Skip energy-axis notice on load | Always state Ek / Eb / E−EF / ambiguous |
 | Convert cut to k without PyARPES EF finder | Fit edge first; report EF_fit + meV from 0; shift EF→0 |
+| Mean-only EF when edge bows vs φ (slit bend) | Quadratic / `fs_correction` along slit (`k-and-kz-conversion.md`) |
+| Confuse slit bend with hv EF align | φ-dependent vs hv-dependent |
+| Confuse slit bend with band-enhance curvature | Different (`band-enhance.md`) |
+| Report a separate “FS bend skill” | One skill: k/kz (slit-bend step) |
 | Claimed E−EF/Eb but \|EF_fit\| > 50 meV, no note | Warn **possible charging**; still print deviation |
 | Invent k formula or auto-Γ / FS-center finder | `convert_to_kspace` + `apply_offsets` only; Fermi: ask if no package path |
 | Fermi map → k without EF finder | Same energy rules as cut (`k-and-kz-conversion.md`) |
-| hv stack → kz without per-hv EF align | Angle-summed near-EF + package fit vs hv + `shift_by` first |
-| Mid-φ / single-pixel EDC as default hv EF fit | Do not use; sum/mean over φ (or wide window) |
+| hv stack → kz without per-hv EF align | Backend path in `k-and-kz-conversion.md`: `pyarpes` angle-sum + `shift_by`; viewer `kz_map` → `process_kz_map` |
+| Treat `tools.kzmap` prep as kz conversion | Prep ≠ Å⁻¹; still need V₀ + `kzconv` / `convert_to_kspace` |
+| Mid-φ / single-pixel EDC as default hv EF fit | `pyarpes`: sum/mean over φ; viewer: ask/state **index box** (same indices all hv) |
+| Norm viewer kz_map before align | Only after align+crop (`normalise_totals`) |
+| Report a separate “kz-map skill” | One skill: k/kz conversion (viewer prep subsection) |
 | Mean-only EF report for hv stack | Report **per-hv** EF_fit + meV from 0; plot EF_fit vs hv |
 | Skip EF QC / post-shift then claim kz FS | Hard-stop on junk/pinned/stderr; verify ≈0 at low/mid/high hv |
 | hv npz with only scalar `ef_fit_eV` | Require `ef_fit_per_hv` (+ optional plot path) |
@@ -82,6 +94,11 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Auto incoherent-above-EF on every cut | Only if asked; edge heuristic warned |
 | Silent swap raw → bg-subtracted | Echo method; before/after |
 | Invent a₀ / BZ for unnamed crystal | User cell or graphene/ws2/wse2→`wwe2` only (`bz-overlay.md`) |
+| Invent moiré twist / layer a₀ | Ask both lattices (`bz-overlay.md`) |
+| `hex_moire_lattice_fast` past 30° without fold | Fold θ↔60−θ or use `moire_reciprocal_vectors` |
+| DIY moiré G / mini-BZ polygon | `tools.moire` on `arpes_viewer`; else A/B/C/**D** |
+| Report a separate “moiré skill” | Same BZ overlay skill |
+| Moiré on `pyarpes` silently DIY | Stop; **D** / user cell / ask |
 | Claim data-on-3D-BZ / DIY hexagon | Package 2D `plot_data_to_bz` / `bz_plot` only; 3D data N/I |
 | Silent missing `ase` for BZ | Report optional dep; ask install or user cell |
 | DIY rebin / silent normalize before fits | Package `rebin` / `normalize_dim`; echo product (`axis-prep.md`) |
@@ -100,10 +117,23 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
 | Re-walk folder / paste full catalog every turn | Build `analysis/manifest.json`; recall later (`folder-manifest.md`) |
-| Folder map uses full `load_data` / spectrum | Header peek only (astropy/h5py); `load_data` at overview/analysis (`folder-manifest.md`) |
+| Folder map uses full `load_data` / spectrum | Peek only (astropy/h5py or viewer `list_entries`); full load at overview/analysis (`folder-manifest.md`) |
+| Force PyARPES on ANTARES `.nxs` without ask | Route B → `arpes_viewer` or ask (`arpes-viewer-backend.md`) |
+| Force viewer on MAESTRO FITS without ask | Route B → `pyarpes` or ask |
+| PCA / decomp on `arpes_viewer` stem silently DIY | Stop; offer **D** (switch to `pyarpes`) / B / C (`package-first.md`) |
+| Silent `NxsScan` ↔ xarray bridge | Forbidden; ask **D** or user export |
+| Install viewer deps into PyARPES 3.8 env | Separate env (`arpes-viewer-env.md`) |
+| De-grid after k / FS bend / kz-align / smooth | Refuse; `not_pixel_locked` (`degrid.md`) — do first |
+| DIY FFT / Wiener “degrid” | `tools.degrid` on `arpes_viewer` only; else A/B/C/**D** |
+| Silent `degrid_cut_notch` without PE-loss warn | Warn; prefer map `[grid]` + `degrid_cut_with_grid` |
+| De-grid on `pyarpes` stem without ask | Stop; offer **D** / B / C (`degrid.md`) |
+| Use figure composer for default overview | Overview = `default-overview-plots.md`; composer = user-asked pub layout (`figure-layout.md`) |
+| Invent journal column mm / font | Use `JOURNAL_PRESETS` or ask (`figure-layout.md`) |
+| Comparable panels with silent mismatched clim | Set/echo `shared_levels` / `shared_ranges` |
+| DIY full journal composer on `pyarpes` | Simple GridSpec OK; full presets → A/B/C/**D** |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |
 | Treat log “Cut” as kind without dims/heuristics | Dims + core-as-2D rules; log → `log_comment` only |
-| Reimplement fit / k-conversion by hand | Use PyARPES APIs; ask if truly unavailable |
+| Reimplement fit / k-conversion by hand | Use active-backend APIs; ask A/B/C/**D** if unavailable |
 | Near-EF FD divide without resolution | Always convolve FD with resolution (`near-ef-gap.md`) |
 | Symmetrize every EDC by default | Only for gap/pseudogap (or explicit ask); state p–h symmetry |
 | DIY symmetrize / invent gap Δ fitter | `arpes.analysis.gap.symmetrize`; ask before custom Δ |
@@ -113,8 +143,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 
 - **Angle vs momentum:** detector or manipulator angles are in degrees until
   `convert_to_kspace` produces k coordinates. See `reference/k-and-kz-conversion.md`.
-- **Inner potential:** absolute kz from hv scans requires V₀ in
-  `spectrum.attrs["inner_potential"]`. If unknown, report relative kz or ask one
+- **Inner potential:** absolute kz from hv scans requires a **resolved** V₀
+  (`attrs["inner_potential"]` or `to_kz_cube(..., inner_potential=)`). Sources:
+  user/lit, viewer `scan_inner_potential` (with uncertainty), or mark relative.
+  See `reference/k-and-kz-conversion.md`. If unknown, report relative kz or ask.
   sharp question.
 - **Γ (gamma point):** for **overview** plots, mid-frame ≠ Γ. For **k conversion**,
   use provisional heuristic labeled as such, or user offset (wins). Never claim
@@ -122,8 +154,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **k/kz:** analysis mode only; cache under `analysis/kspace/*.npz`. Quick
   report must not convert.
 - **Folder inventory:** multi-file work starts with `analysis/manifest.json`
-  via **header peek** (`folder-manifest.md`); recall instead of re-cataloging;
-  no full `load_data` for first map.
+  via **peek** (`folder-manifest.md`); record `backend` per row; recall
+  instead of re-cataloging; no full spectrum load for first map.
 - **Fits:** every reported fit must name the lineshape and any background model. See
   `reference/edc-mdc-fitting.md`.
 - **Self-energy:** single-band; package `to_self_energy` / `fit_for_self_energy`;

@@ -1,7 +1,7 @@
 # Example: Brillouin-zone overlay
 
 Follow `reference/bz-overlay.md`. Needs k-converted FS/map (user file) + cell
-or named material.
+or named material. Moiré = same skill, two lattices.
 
 ```python
 import numpy as np
@@ -31,5 +31,22 @@ from arpes.plotting.bz import (
 # fig, ax = plot_data_to_bz(k_fs, user_cell, bz_number=(0, 0))
 ```
 
-**Report:** cell source (user / graphene|ws2|wwe2); rotate/repeat; ase status;
-no Γ claim from overlay alone.
+## Moiré mini-BZ (`arpes_viewer` — same skill)
+
+```python
+from tools.moire import moire_bz, moire_reciprocal_vectors
+from tools.bz2d import reciprocal_vectors_2d
+
+# ASK user: a1,a2 / g vectors for each layer + twist — do not invent
+# g1_top, g2_top = reciprocal_vectors_2d(a1_top, a2_top)
+# g1_bot, g2_bot = ...
+# gm1, gm2, polygon = moire_bz(g1_top, g2_top, g1_bot, g2_bot)
+# Plot polygon on k_fs axes; report gm1, gm2 (or |gm|), twist
+# Prefer moire_reciprocal_vectors over hex_moire_lattice_fast for new work
+```
+
+On `pyarpes`: no auto-moiré → A/B/C/**D** or user-supplied moiré cell into
+`bz_plot`.
+
+**Report:** cell source (user / graphene|ws2|wwe2); moiré inputs if used;
+rotate/repeat; ase status; no Γ claim from overlay alone.
