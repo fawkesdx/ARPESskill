@@ -14,16 +14,17 @@ description: >
   of spectra, sklearn-style decomposition (PCA / NMF / ICA / factor analysis),
   specialized plots (stack / false-color / ToF±σ), forward k cuts through
   angular points/pairs, and CP/CM dichroism (null-ROI scale then diff/asym)
-  via PyARPES or a confirmed user-project capability map. Use when working
+  via PyARPES, ARPES-data-browser (arpes_viewer), or a confirmed user-project
+  capability map. Use when working
   with ARPES spectra, Fermi surfaces, EDC, MDC, spin-ARPES, trARPES,
   pump-probe, in-operando, dosing, gated devices, self-energy, curvature,
   minimum gradient, FS pocket, smooth, deconvolution, resolution, background,
   Shirley, Brillouin zone, BZ overlay, rebin, symmetrize, normalize_dim, mask,
   polygon mask, align, register, shift spectra, PCA, NMF, ICA, stack plot,
   false color, ToF, forward k, convert_through_angular, dichroism, CP, CM,
-  circular dichroism, ANTARES, MAESTRO or NeXus/HDF5 ARPES files,
+  circular dichroism, ANTARES, CASSIOPEE, MAESTRO or NeXus/HDF5 ARPES files,
   angle-to-momentum conversion, hv/kz scans, spatial maps, nanoARPES,
-  pseudogap, or PyARPES.
+  pseudogap, PyARPES, or ARPES-data-browser.
 ---
 
 # ARPES
@@ -50,31 +51,29 @@ volumes, etc.
 
 ## Stack policy
 
-1. Prefer **PyARPES** for analysis (fit, k, kz).
-2. **At session start (and before any analysis):** discover a working PyARPES
-   **3.8** interpreter — prefer **shared** env (`reference/pyarpes-env.md`):
-   conda `arpes38` → `~/arpes-py38-venv` → legacy names → project `.venv-arpes`
-   only if already present. Verify:
-   `…/python -c "import arpes, sys; print(sys.executable, sys.version_info[:2])"`
-   PyARPES requires `>=3.8,<3.9` — not 3.9+.
-3. **If none / wrong Python — STOP and ask** (do not silently fall back; do not
-   `pip install arpes` into the current env):
-   - Explain: needs **dedicated Python 3.8**; prefer **one shared env** so
-     projects reuse it (not a new install per folder).
-   - Ask: *Reuse/create shared env — conda `arpes38` (Mac) or
-     `~/arpes-py38-venv` — and install PyARPES?* (Project `.venv-arpes` only
-     if you want isolation.)
-   - Wait for yes/no.
-   - If **yes**: follow `reference/pyarpes-env.md` (discover → create shared →
-     install → re-check). If `python3.8` missing, ask Homebrew vs conda
-     (or user 3.8 path) before inventing installs.
-   - If **no**: **user-map** path (`reference/backend-capability-map.md`);
-     only then xarray/h5py inspect-only. State path explicitly.
-4. After setup, run with that env’s **absolute** `…/bin/python` (state path).
-5. Always state backend: `pyarpes` | `user-map` | `inspect-only`.
-6. TensorSpec / TensorSpec_GUI: deferred named backend later (not wired).
-7. **Living list:** every new skill workflow ships PyARPES-first docs **and**
-   new/updated rows in `reference/backend-capability-map.md` in the same change.
+1. **Resolve backend** for this stem (user override, else Route B sniff —
+   `reference/arpes-viewer-backend.md`). Ambiguous → ask. Typical:
+   MAESTRO/ALS FITS → `pyarpes`; ANTARES `.nxs` / CASSIOPEE / MBS →
+   `arpes_viewer`.
+2. Prefer the **active package backend** for analysis (fit, k, kz) via mapped
+   capability IDs (`reference/backend-capability-map.md`).
+3. **Env for that backend** (discover before create; never mix):
+   - `pyarpes` → Python **3.8** shared env (`reference/pyarpes-env.md`):
+     conda `arpes38` → `~/arpes-py38-venv` → … Verify
+     `import arpes` + `(3, 8)`.
+   - `arpes_viewer` → Python **≥3.9** + `PYTHONPATH` to `ARPES_viewer`
+     (`reference/arpes-viewer-env.md`). Verify `import loader`.
+   - **STOP and ask** if missing/wrong — do not silent-fall back; do not
+     install viewer into the PyARPES 3.8 env (or the reverse).
+4. If user **declines** that env → **user-map** path; only then xarray/h5py
+   inspect-only. State path explicitly.
+5. After setup, run with that env’s **absolute** interpreter (state path).
+6. Always state backend: `pyarpes` | `arpes_viewer` | `user-map` |
+   `inspect-only`.
+7. TensorSpec / TensorSpec_GUI: deferred named backend later (not wired).
+8. **Living list:** every new skill workflow ships PyARPES-first docs, Browser
+   defaults when applicable, **and** inventory rows in
+   `reference/backend-capability-map.md` in the same change.
 
 ## Hard rules
 
@@ -134,19 +133,22 @@ volumes, etc.
   factor analysis via `*_along`; echo axes + n_components; NMF non-neg).
 - **Stack / false-color / ToF±σ (user-asked):** `reference/stack-plots.md`
   (package plot helpers; no invent σ).
-- Prefer scripted **calls to the active backend** (PyARPES or confirmed user-map)
-  + matplotlib over launching Qt/Bokeh GUIs.
-- **Package-first:** use PyARPES / confirmed user-map callables / existing
-  project APIs; do **not** write a new loader or reimplement package features
-  without asking (see `reference/package-first.md`,
-  `reference/backend-capability-map.md`).
+- Prefer scripted **calls to the active backend** (PyARPES `arpes.*` or
+  viewer `loader`/`tools`, or confirmed user-map) + matplotlib over launching
+  Qt/Bokeh GUIs. Launch ARPES_viewer / PyARPES Qt **only if the user asks**
+  (or for an interactive Γ/ROI handoff they accept).
+- **Package-first:** use active-backend / confirmed user-map callables /
+  existing project APIs; do **not** write a new loader or reimplement package
+  features without asking — offer A/B/C/**D** (`reference/package-first.md`,
+  `reference/backend-capability-map.md`). **D** = switch backend for this
+  stem/step.
 - Prefer existing project loaders before writing new ones — and **ask** before
   any new loader.
 - **Capability map living list:** when inserting a new analysis workflow, add
-  PyARPES-default row(s) to `reference/backend-capability-map.md` in the same
-  change so later sessions can map user replacements.
-- **Never skip the PyARPES / Python 3.8 venv question** when `import arpes`
-  fails or `sys.version_info` is not `(3, 8)`.
+  PyARPES-default (+ Browser default when applicable) row(s) to
+  `reference/backend-capability-map.md` in the same change.
+- **Never skip the env question** for the routed backend when import fails.
+- **No silent `NxsScan` ↔ xarray bridge** between backends.
 - **Never `pip install arpes` into Python 3.9+** or into the user’s default env
   without asking first.
 - **Never silently fall back** to xarray/h5py without the user declining the
@@ -205,13 +207,12 @@ chat). Details: `reference/token-usage.md`.
 
 ## Error handling
 
-- Missing PyARPES / wrong Python — **ask shared env** (conda `arpes38` or
-  `~/arpes-py38-venv`; project `.venv-arpes` only if requested) —
-  `reference/pyarpes-env.md`; if declined → user-map path
-  (`backend-capability-map.md`); only then inspect-only xarray/h5py.
-- Package load fails / feature missing — quote error; ask before custom code
+- Missing env for **routed** backend — ask shared env
+  (`pyarpes-env.md` or `arpes-viewer-env.md`); if declined → user-map then
+  inspect-only.
+- Package load fails / feature missing — quote error; offer A/B/C/**D**
   (`reference/package-first.md`).
-- Ambiguous axes — stop and ask one sharp question.
+- Ambiguous axes or backend sniff — stop and ask one sharp question.
 - Ambiguous V₀ — ask or mark kz as relative/uncertain.
 - Corrupt/partial file — report readable parts only.
 
@@ -219,20 +220,19 @@ chat). Details: `reference/token-usage.md`.
 
 1. If the user points at a **folder** / many files: build or refresh
    `analysis/manifest.json` (+ optional `manifest.md`) **first** — listing +
-   **header-only peek** (`folder-manifest.md`). Do **not** full-load every
-   spectrum. Later turns **recall** from the manifest; do not re-walk the
-   folder into chat.
-2. Identify artifact (file type, shape, **existing** package/project loaders);
-   prefer rows from the manifest when present.
-3. Check PyARPES + Python 3.8; if missing/wrong, ask for dedicated venv
-   (see Stack policy / `reference/pyarpes-env.md`). If declined → propose
-   user capability map (`backend-capability-map.md`) before inspect-only.
-4. Try package load/analysis first (`reference/package-first.md`). For
-   MAESTRO: prefer sibling **`.fits`** + `location='MAESTRO'` before MH1
-   `.h5`; pick main spectrum carefully (`formats-and-axes.md`). If load
-   fails or needs new code — **ask** before a custom loader.
-5. Lock coordinates — names + units (° vs Å⁻¹, eV, hν; binding vs kinetic).
-6. Sanity print — shape, ranges, one mid-cut summary.
+   **peek** with per-row `backend` (`folder-manifest.md`). Do **not**
+   full-load every spectrum. Later turns **recall** from the manifest.
+2. Identify artifact (file type, shape); **resolve backend** (override or
+   Route B — `arpes-viewer-backend.md`); prefer manifest rows when present.
+3. Ensure env for that backend (Stack policy). If declined → propose
+   user capability map before inspect-only.
+4. Try active-backend load/analysis first (`package-first.md`). For MAESTRO
+   on `pyarpes`: prefer sibling **`.fits`** + `location='MAESTRO'`. For
+   ANTARES/CASSIOPEE on `arpes_viewer`: `loader.registry.load`. If load
+   fails or needs new code — **ask** A/B/C/**D**.
+5. Lock coordinates — names + units (° vs Å⁻¹, eV, hν; binding vs kinetic;
+   kinetic-until-EF for some MBS spin).
+6. Sanity print — shape, ranges, one mid-cut summary; state backend.
 7. Reduce — cut / FS / EDC / MDC (see `reference/safe-reduction.md`).
 8. **Quick report:** stop at angle-space overviews
    (`default-overview-plots.md`). **Do not** convert to k/kz here.
@@ -316,15 +316,18 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
 - `reference/failure-modes.md`
 - `reference/pyarpes-env.md` — shared Python 3.8 env (conda / home venv) + install
+- `reference/arpes-viewer-env.md` — separate ≥3.9 env for ARPES-data-browser
+- `reference/arpes-viewer-backend.md` — Route B; loader/tools; kinds; fences
 - `reference/token-usage.md` — when to warn about token cost
 - `reference/default-overview-plots.md` — cut / Fermi trio / hv–kz trio + assumptions
-- `reference/package-first.md` — use package APIs; ask before new code
-- `reference/backend-capability-map.md` — capability IDs; PyARPES defaults; user-map; living list
-- `reference/folder-manifest.md` — folder inventory; header peek then recall
+- `reference/package-first.md` — package APIs; ask A/B/C/**D** before new code
+- `reference/backend-capability-map.md` — capability IDs; PyARPES + Browser; user-map
+- `reference/folder-manifest.md` — folder inventory; peek + backend per row
 
 ## Examples
 
 - `examples/maestro_pyarpes.md`
+- `examples/dual_backend_load.md`
 - `examples/fit_edc_mdc.md`
 - `examples/near_ef_gap.md`
 - `examples/spatial_xy_scan.md`
@@ -350,38 +353,32 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 
 ## Requires (full analysis)
 
-- **Python 3.8.x only** for PyARPES (`>=3.8,<3.9` on PyPI)
-- Dedicated **shared** Python 3.8 env (conda `arpes38` or `~/arpes-py38-venv`;
-  project `.venv-arpes` only if asked) — see `reference/pyarpes-env.md`
-- `pip install arpes` **inside that env**
+- **PyARPES:** Python **3.8.x** (`>=3.8,<3.9`) + shared env —
+  `reference/pyarpes-env.md` + `pip install arpes` inside that env
+- **ARPES-data-browser (`arpes_viewer`):** Python **≥3.9** + separate env +
+  `PYTHONPATH` to `ARPES_viewer` — `reference/arpes-viewer-env.md`
 - For load/inspect fallback only: `xarray`, `h5py` (any modern Python OK)
 
-## Key PyARPES paths
+## Key package paths
 
 See `reference/` for recipes. Common entry points:
 
-- Load: `arpes.io.load_data` or project loaders
-- k-space: `convert_to_kspace` + `S.apply_offsets` (analysis mode; state Γ method)
-- kz: hv scans with stated `inner_potential` V₀; cache under `analysis/kspace/`
-- Fit: core (Shirley + multi-peak) then EDC/MDC; `broadcast_model` for maps /
-  dispersion parameter plots
-- Near-EF / gap: metal `AffineBroadenedFD` → shift; optional broadened FD divide;
-  `arpes.analysis.gap.symmetrize` for gap/pseudogap (`near-ef-gap.md`)
-- Self-energy: `fit_for_self_energy` / `to_self_energy` (`self-energy.md`)
-- Band enhance: `curvature` + `minimum_gradient` (`band-enhance.md`)
-- FS pocket: `pocket_parameters` / `curves_along_pocket` (`fs-pocket.md`)
-- Smooth / deconvolve: `gaussian_filter_arr`; `deconvolve_rl` + PSF if asked
-  (`smooth-deconvolve.md`)
-- Resolution: `total_resolution_estimate` / parts (`resolution.md`)
-- Backgrounds: Shirley / hull / incoherent (`backgrounds.md`)
-- BZ overlay: `overplot_standard` / `bz_plot` / `annotate_special_paths` /
-  `plot_data_to_bz` (`bz-overlay.md`)
-- Axis prep: `rebin` / `symmetrize_axis` / `normalize_dim` / `sort_axis` /
-  `condense` (`axis-prep.md`)
-- Masks: `.where` / `apply_mask` (`masks.md`)
-- Align: `align` / `align1d` / `align2d` (`align.md`)
-- Decomposition: `pca_along` / `nmf_along` / `ica_along` /
-  `factor_analysis_along` (`decomposition.md`)
+- Load (`pyarpes`): `arpes.io.load_data` or project loaders
+- Load (`arpes_viewer`): `loader.registry.load` / `list_entries`
+- k-space: mapped `convert_k` (PyARPES `convert_to_kspace` or viewer
+  `tools.kspace` / `cutk`); state Γ method
+- kz: mapped `convert_kz` + stated V₀; cache under `analysis/kspace/`
+- Fit: core then EDC/MDC; broadcast / viewer fit paths per backend
+- Near-EF / gap: metal edge → shift; optional broadened FD; symmetrize for
+  gap/pseudogap (`near-ef-gap.md`)
+- Self-energy: mapped Σ helpers (`self-energy.md`)
+- Band enhance: curvature + minimum gradient (`band-enhance.md`)
+- FS pocket: `pocket_parameters` / curves (`fs-pocket.md`)
+- Dichroism: null-ROI scale → D and A (`dichroism.md`)
+- Decomposition: PyARPES `*_along` (viewer = N/A → offer **D**)
+- Smooth / deconvolve: mapped smooth / RL+PSF if asked (`smooth-deconvolve.md`)
+- Resolution / backgrounds / BZ / axis prep / masks / align / stack / forward-k:
+  see matching `reference/*.md` and Browser column when on `arpes_viewer`
 - Stack / ToF plots: `stack_dispersion_plot` / `flat_stack_plot` /
   `false_color_plot` / `plot_with_std` (`stack-plots.md`)
 - Forward k: `convert_through_angular_point` / `pair` /
