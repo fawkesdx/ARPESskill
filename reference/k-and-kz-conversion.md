@@ -380,11 +380,67 @@ slice or which offset to use.
 ### V₀ and convert
 
 1. Confirm `hv` present — **Stop** if missing.  
-2. Set inner potential V₀ — **ask or state source**; never silent.  
+2. **Resolve V₀** — **ask or state source**; never silent (see sources table).  
    - `pyarpes`: `attrs["inner_potential"]`  
    - `arpes_viewer`: pass `inner_potential=` into `tools.kzconv.to_kz_cube`  
 3. Soft X-ray / photon momentum — see below.  
-4. Convert; prefer **periodicity** check; absolute kz depends on V₀.
+4. Convert; prefer **periodicity** / BZ eye-check; absolute kz depends on V₀.
+
+Same skill step — not a separate “V₀ scan” skill.
+
+#### Sources (resolve before convert)
+
+| Source | When | Report |
+|--------|------|--------|
+| User / literature | Preferred | Value + citation / “user stated” |
+| Viewer `scan_inner_potential` | User asks scan / unknown V₀ on `kz_map` | `best` + `uncertainty()` + `spacing` used |
+| Typical ~5–15 eV guess | Last resort only | Mark **uncertain / relative kz** — **never** silent 10 eV |
+
+#### Viewer — `scan_inner_potential`
+
+**Gate:** active `arpes_viewer`; EF-prepped (or aligned) hv / `kz_map` cube; user
+asks V₀ scan / periodicity tune / “find inner potential.”
+
+**Need:**
+
+- `spacing` — repeat distance along surface normal (Å); often lattice `c` or
+  `c/2`. **Ask** if unknown — do **not** invent. (Cleavage / interlayer
+  candidates may later help; until then: user cell.)
+- `work_function` (eV) — state source.
+- Optional: trial grid (upstream default ≈ 2–30 eV, step 0.5),
+  `binding_energy`, `kpar_halfwidth`, geometry offsets.
+
+```python
+from tools.kzconv import scan_inner_potential
+
+scan = scan_inner_potential(
+    photon_energy, angle, energy, cube,
+    spacing=spacing_A,          # ASK — Å along normal
+    work_function=work_function,
+    # inner_potentials=np.arange(2.0, 30.5, 0.5),  # optional override
+)
+# scan.best (eV or None), scan.periods vs scan.inner_potentials,
+# scan.target (= 2π/spacing), scan.uncertainty(), scan.sensitivity
+```
+
+**Honesty (upstream):** this is a **weak** measurement. Report
+`uncertainty()` next to `best`. A short hv range may constrain V₀ only to a
+few eV. **Settle** by eye — kz pattern vs BZ / zone boundaries — then **ask**
+user accept / edit `best`. Do not treat the scalar alone as exact truth.
+
+Then pass the **accepted** V₀ into `to_kz_cube`. Store in npz
+`inner_potential` + assumptions (`v0_source=scan|user|lit`, spacing, uncertainty).
+
+Capability: `scan_inner_potential` — `backend-capability-map.md`.
+
+#### `pyarpes` — no invent scan loop
+
+Prefer user / literature V₀ + visual periodicity vs hv. Do **not** invent a
+DIY Fourier / period-vs-V₀ fitter. If user wants automated
+`scan_inner_potential` on a PyARPES-only stem → A/B/C/**D** (D only if data can
+live on viewer) or mark relative kz.
+
+#### Convert after V₀ resolved
 
 **`pyarpes`:**
 
@@ -392,16 +448,27 @@ slice or which offset to use.
 import numpy as np
 from arpes.utilities.conversion import convert_to_kspace
 
-hv_ef.attrs["inner_potential"] = V0  # eV — MUST state
+hv_ef.attrs["inner_potential"] = V0  # eV — MUST state source
 kz_data = convert_to_kspace(
     hv_ef,  # or .S.fermi_surface / appropriate reduction
     # kp=np.linspace(...), kz=np.linspace(...),  # or resolution=
 )
 ```
 
-**`arpes_viewer`:** after `process_kz_map` (or equivalent align), call
-`tools.kzconv.to_kz_cube(..., inner_potential=V0)` — see
-`arpes-viewer-backend.md`. Do not invent free-electron formulas.
+**`arpes_viewer`:** after `process_kz_map` (or equivalent align) + V₀ resolve:
+
+```python
+from tools import kzconv
+
+kz_axis, kpar_axis, e_out, out = kzconv.to_kz_cube(
+    photon_energy, angle, energy, cube,
+    inner_potential=V0,   # accepted value
+    work_function=work_function,
+    # …
+)
+```
+
+Do not invent free-electron formulas outside package APIs.
 
 Typical V₀ ~5–15 eV (material/surface-dependent). Do not silently assume 10 eV.
 
@@ -436,7 +503,8 @@ load hv stack → state energy axis (expect Eb / E−EF + hv)
   → G.shift_by(centers, shift_axis="eV", shift_coords=True)
   → post-shift: summed-φ EDC at low/mid/high hv ≈0 (≲20 meV)
   → slit/Γ offset from lowest-hv slice (cut-like; ask if unclear)
-  → state V₀ → convert_to_kspace
+  → resolve V₀ (user/lit | mark relative — no DIY scan invent)
+  → convert_to_kspace
   → soft X-ray? → beamline geometry default + ask (photon momentum)
   → analysis/kspace/<stem>_kz.npz (include ef_fit_per_hv)
 ```
@@ -448,7 +516,9 @@ load kz_map → state energy axis
   → optional de-grid (pixel-locked; degrid.md)
   → user index box → tools.kzmap.process_kz_map (fit / align / crop / optional norm)
   → QC: ef vs hv + ok mask + spread; post-align ≈0 checks
-  → slit/Γ (ask if unclear) → state V₀ → tools.kzconv.to_kz_cube
+  → slit/Γ (ask if unclear)
+  → resolve V₀ (user/lit | scan_inner_potential + ask accept | relative)
+  → tools.kzconv.to_kz_cube
   → soft X-ray? → beamline geometry + ask
   → save products + ef_fit_per_hv under analysis/
 ```
@@ -544,8 +614,9 @@ Point/pair forward cuts (not full volume): `reference/forward-k.md`.
 | **hv npz meta** | Require `ef_fit_per_hv` (+ optional plot path); scalar alone insufficient |
 | **Slit offset for kz** | Prefer **lowest-hv** slice after EF align (cut-like offsets) |
 | **Photon momentum** | Soft X-ray: warn + `beamline-geometry.md` defaults + **ask**; no invent |
-| **State V₀** | Before absolute kz; ask if unknown |
-| **Prefer periodicity** | Cross-check bands vs hv when possible |
+| **State V₀** | Before absolute kz; ask / lit / viewer scan / mark relative — never silent |
+| **V₀ scan** | Same skill step: `tools.kzconv.scan_inner_potential` on viewer; report uncertainty; user accept; ask `spacing` — not a second skill |
+| **Prefer periodicity** | Cross-check bands vs hv / BZ when possible; scan alone is weak |
 | **No fake Å⁻¹** | Until package convert runs (`convert_to_kspace` / `to_kz_cube`) |
 | **State geometry + Γ method** | Named method; user offset wins |
 | **User offset wins** | Overrides; update cache |
