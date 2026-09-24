@@ -100,10 +100,15 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Long swept “Cut” treated as valence only | Check core-as-2D heuristics; report image + angle-integrated EDC (`default-overview-plots.md`) |
 | Valence k-conversion on suspected core-as-2D | Stop / ask; user must override science kind |
 | Re-walk folder / paste full catalog every turn | Build `analysis/manifest.json`; recall later (`folder-manifest.md`) |
-| Folder map uses full `load_data` / spectrum | Header peek only (astropy/h5py); `load_data` at overview/analysis (`folder-manifest.md`) |
+| Folder map uses full `load_data` / spectrum | Peek only (astropy/h5py or viewer `list_entries`); full load at overview/analysis (`folder-manifest.md`) |
+| Force PyARPES on ANTARES `.nxs` without ask | Route B → `arpes_viewer` or ask (`arpes-viewer-backend.md`) |
+| Force viewer on MAESTRO FITS without ask | Route B → `pyarpes` or ask |
+| PCA / decomp on `arpes_viewer` stem silently DIY | Stop; offer **D** (switch to `pyarpes`) / B / C (`package-first.md`) |
+| Silent `NxsScan` ↔ xarray bridge | Forbidden; ask **D** or user export |
+| Install viewer deps into PyARPES 3.8 env | Separate env (`arpes-viewer-env.md`) |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |
 | Treat log “Cut” as kind without dims/heuristics | Dims + core-as-2D rules; log → `log_comment` only |
-| Reimplement fit / k-conversion by hand | Use PyARPES APIs; ask if truly unavailable |
+| Reimplement fit / k-conversion by hand | Use active-backend APIs; ask A/B/C/**D** if unavailable |
 | Near-EF FD divide without resolution | Always convolve FD with resolution (`near-ef-gap.md`) |
 | Symmetrize every EDC by default | Only for gap/pseudogap (or explicit ask); state p–h symmetry |
 | DIY symmetrize / invent gap Δ fitter | `arpes.analysis.gap.symmetrize`; ask before custom Δ |
@@ -122,8 +127,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **k/kz:** analysis mode only; cache under `analysis/kspace/*.npz`. Quick
   report must not convert.
 - **Folder inventory:** multi-file work starts with `analysis/manifest.json`
-  via **header peek** (`folder-manifest.md`); recall instead of re-cataloging;
-  no full `load_data` for first map.
+  via **peek** (`folder-manifest.md`); record `backend` per row; recall
+  instead of re-cataloging; no full spectrum load for first map.
 - **Fits:** every reported fit must name the lineshape and any background model. See
   `reference/edc-mdc-fitting.md`.
 - **Self-energy:** single-band; package `to_self_energy` / `fit_for_self_energy`;
