@@ -90,7 +90,9 @@ volumes, etc.
 - **Peak fitting:** backend models only (PyARPES or confirmed user-map; core →
   then EDC/MDC); ask before any new lineshape (`reference/edc-mdc-fitting.md`).
   After valence broadcast: default E vs k / width plots; linear or parabolic on
-  E(k) → report vF / m* when asked by that workflow (prefer k-space).
+  E(k) → report vF / m* when asked by that workflow (prefer k-space). If clear
+  multi-peak / user asks multi-band → **propose N → confirm**; spell **Multi-band
+  handoff** if stuck; per-band plots + vF/m*; no DIY unswap (`edc-mdc-fitting.md`).
 - **Near-EF / gap / pseudogap (cuts, user-asked only):** metal-ref EF → shift
   sample; optional divide by **resolution-broadened** FD (state T + resolution);
   if gap/pseudogap → symmetrize EDC about E=0 (`arpes.analysis.gap.symmetrize`);
@@ -233,6 +235,8 @@ chat). Details: `reference/token-usage.md`.
 - Package load fails / feature missing — quote error; offer A/B/C/**D**
   (`reference/package-first.md`).
 - Ambiguous axes or backend sniff — stop and ask one sharp question.
+- Ambiguous multi-band peak count N — propose from mid-cut MDC → confirm, or
+  spell multi-band handoff; never silent N.
 - Ambiguous V₀ — spell V₀ handoff (`k-and-kz-conversion.md`); ask / lit /
   viewer scan / relative; never silent guess.
 - Corrupt/partial file — report readable parts only.
@@ -268,8 +272,9 @@ chat). Details: `reference/token-usage.md`.
    `analysis/kspace/*.npz`; link `product_paths` on the manifest row.
    Spatial hypercubes: reduce ROI / hot spot first (`spatial-xy-scans.md`).
 10. If line / core analysis — fit (`reference/edc-mdc-fitting.md`: **core first**,
-   then EDC/MDC; package models only). At a spatial hot spot / ROI, pick the
-   recipe that matches the spectroscopic kind.
+   then EDC/MDC; package models only). When N>1 bands → multi-band path (propose
+   N → confirm; per-prefix broadcast + plots). At a spatial hot spot / ROI, pick
+   the recipe that matches the spectroscopic kind.
 11. If user asks near-EF / metal EF / FD / **gap** / **pseudogap** on a cut —
     `reference/near-ef-gap.md` (metal fit → shift; optional resolution-broadened
     FD divide; symmetrize when gap/pseudogap).

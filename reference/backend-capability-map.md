@@ -76,8 +76,9 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `extract_edc_mdc` | EDC / MDC extraction | `sel` / `isel` / package helpers | cursor / curve extract + `tools.curves` |  | `safe-reduction.md`, `edc-mdc-fitting.md` |
 | `fit_peak` | Single-curve peak fit | `GaussianModel` / `LorentzianModel` / `VoigtModel` + `guess_fit` | `tools.peaks` + curve-fit path |  | `edc-mdc-fitting.md` |
 | `fit_core` | Core / XPS-style fit | Shirley + multi-peak package models | curve fit + Shirley (`tools.curves` / peaks) |  | `edc-mdc-fitting.md` |
-| `broadcast_fit` | Fit along dim(s) | `arpes.fits.utilities.broadcast_model` | MDC/EDC fit across cut (viewer fit path) — check install |  | `edc-mdc-fitting.md` |
+| `broadcast_fit` | Fit along dim(s) | `arpes.fits.utilities.broadcast_model` | MDC/EDC fit across cut (viewer fit path) — check install |  | `edc-mdc-fitting.md` — multi-peak → `multi_band_fit` step |
 | `band_vf_mstar` | vF / m* on E(k) | `LinearModel` / `QuadraticModel` on centers | `tools.dispersion.fit_dispersion` |  | `edc-mdc-fitting.md` |
+| `multi_band_fit` | Multi-peak MDC track (N>1) | Prefixed models + `broadcast_model`; propose N→confirm; continuity **N/A** unless verified helper | `tools.peaks` / cut fit + `tools.dispersion.fit_dispersion` if mapped |  | `edc-mdc-fitting.md` |
 | `convert_k` | Angle → in-plane k | `convert_to_kspace` + `S.apply_offsets` | `tools.kspace.convert_map` / `tools.cutk.convert_cut` |  | `k-and-kz-conversion.md` |
 | `convert_kz` | hv → kz | `convert_to_kspace` / kz path + **resolved** V₀ | `tools.kzconv.to_kz_cube` after V₀ resolve |  | `k-and-kz-conversion.md`, `beamline-geometry.md` |
 | `kz_map_align` | hv-stack EF prep (step) | N/A — use angle-summed EF + `shift_by` under `fit_fermi_edge` / `shift_energy` | `tools.kzmap.process_kz_map` (box → fit → align → crop → optional norm) |  | `k-and-kz-conversion.md` |
