@@ -152,36 +152,115 @@ fit_results = broadcast_model(LorentzianModel, data_2d, "eV")  # use real dim na
 - `"eV"` → fit MDCs vs energy (typical dispersion track).  
 - Momentum / `phi` / `pixel` → fit EDCs vs that axis.  
 - Multi-peak: pass a list of model classes or a composite, with `params=`.
+- **Multi-band (N>1):** enter the flow below — **never** silent multi-peak
+  broadcast.
+
+### Multi-band dispersion
+
+When a dispersion cut shows **several bands**, use this pipeline (prefer
+k-space cut):
+
+```text
+cut ready (prefer k-space)
+  → mid-cut (or user ROI) MDC / overlay → propose N (+ optional labels)
+  → MULTI-BAND HANDOFF: user confirms N / labels / energy–k window
+  → compose N prefixed peaks + background (package models only)
+  → broadcast_model along eV (MDC track)
+  → extract centers/widths per prefix
+  → continuity: ONLY if mapped package helper exists
+       else: “tracks may swap” + A/B/C/D or user re-label
+  → default plots per band: E vs k, width vs k (+ width vs E if useful)
+  → per band: ask linear vs parabolic → vF and/or m* (stated k window)
+  → save analysis/; report band IDs + method
+```
+
+Enter this flow when the user asks multi-band **or** a check MDC shows clear
+multiple peaks → **propose N and wait** (never silent multi-peak broadcast).
+
+```python
+from arpes.fits.fit_models import LorentzianModel, AffineBackgroundModel
+from arpes.fits.utilities import broadcast_model
+
+# After user confirmed N=2, labels a/b
+model = (
+    AffineBackgroundModel()
+    + LorentzianModel(prefix="a_")
+    + LorentzianModel(prefix="b_")
+)
+# Prefer params= hints from a single mid-cut guess_fit
+fit_results = broadcast_model(model, cut_roi, "eV")
+# centers_a = fit_results.F.p("a_center")  # inspect API for install
+# centers_b = fit_results.F.p("b_center")
+```
+
+**Continuity / track identity:** verify the install for any track-continuity
+helper (capability map / package search). If **none** → document **N/A** — state
+that tracks **may swap** at crossings; offer handoff paths A/B/C/D or user
+re-label. **Do not** document a DIY nearest-center loop.
+
+### Multi-band handoff (spell it out)
+
+When the user sees several bands but does not know how to drive the fit — **do
+not invent N**.
+
+1. **Plain goal:** need peak count **N** (+ optional labels) so MDC broadcast
+   tracks each band.
+
+2. **Paths — user picks one:**
+
+   | Path | What | How agent gets numbers |
+   |------|------|------------------------|
+   | **A. Confirm propose** | Mid-cut MDC + proposed N | User: `N=2` / edit |
+   | **B. You type** | User knows count / labels | `bands: a=inner, b=outer; N=2` |
+   | **C. ROI / window** | Energy±k box | Stated slices before broadcast |
+   | **D. GUI pick** | Fit GUI **after ask** | Paste N / save; no mind-read Qt |
+   | **E. Single-band first** | One clear branch | Label `partial` |
+
+3. **Paste format** (copy-paste friendly):
+
+   ```text
+   N=2; labels=a,b; eV=[-0.5,0.05]; lineshape=Lorentzian
+   ```
+
+4. **Confirm before broadcast**; persist `n_bands`, `band_ids`, method in
+   report / `analysis/`.
+
+5. Still unclear → **one** sharp question; **STOP**.
 
 ### Derived plots (after broadcast) — defaults
 
 After a valence **broadcast** fit, always save follow-up curves under `analysis/`
-(and link in the report). Do not stop at raw `fit_report` text.
+(and link in the report). Do not stop at raw `fit_report` text. When **multi-peak**,
+produce plots **per prefix / band ID** (not one collapsed E(k) track).
 
 #### Which plots (by mode)
 
 | Broadcast mode | Required by default | Also recommended |
 |----------------|---------------------|------------------|
 | **MDC vs E** (dispersion track) | **E vs k** (peak centers) · **width vs k** | **width vs E** |
+| **MDC vs E, multi-peak** | **E vs k** + **width vs k** **per prefix / band ID** | **width vs E** per band |
 | **EDC vs k** | **width vs E** | center vs k; width vs k if useful |
 
 Single-curve fit only → plot data + model (+ residual); **no** E(k) / vF / m*
 until a broadcast (or user-supplied) dispersion exists.
 
 Extract centers/widths from broadcast results (e.g. `.F.p("center")` /
-width params — inspect structure for the installed PyARPES version). Label axes
-with units; state lineshape and whether width is σ, γ, or FWHM.
+`.F.p("a_center")` for prefixed models — inspect structure for the installed
+PyARPES version). Label axes with units; state lineshape and whether width is σ,
+γ, or FWHM. Multi-peak: report **per band**.
 
 #### Second-stage band fit on E vs k (physics)
 
 When **E vs k** centers exist (prefer after **k-conversion**; if still angle,
 label provisional and ask to convert):
 
-1. Overlay a smooth band using **package models only**:
+1. **Multi-peak:** run the steps below **per band** (each prefix / band ID).
+2. Overlay a smooth band using **package models only**:
    - `LinearModel` near EF → **Fermi velocity**
    - `QuadraticModel` / parabola near band extremum → **effective mass**
-2. If linear vs parabolic is unclear → **ask** (do not invent higher-order bands).
-3. Fit only inside a stated **k window** (and note E range).
+3. If linear vs parabolic is unclear → **ask** once or **per band** if bands
+   differ (do not invent higher-order bands).
+4. Fit only inside a stated **k window** (and note E range).
 
 | Quantity | How | Report |
 |----------|-----|--------|
@@ -195,7 +274,9 @@ Use PyARPES/`lmfit` models already in the stack (e.g. `LinearModel`,
 **Self-energy (Σ):** when the user asks for Σ / ReΣ–ImΣ / quasiparticle lifetime
 from a **single-band** cut → `reference/self-energy.md` (path C: reuse MDC
 broadcast if present, else `fit_for_self_energy`; bare band default
-`ransac_linear`). Not part of the default EDC/MDC report.
+`ransac_linear`). Not part of the default EDC/MDC report. **Multi-peak /
+multi-band:** do **not** run `self-energy.md` until a **single-band ROI** is
+confirmed — stop and ask.
 
 #### Caveats
 
@@ -227,3 +308,15 @@ Warn before large broadcasts (`token-usage.md`).
 5. If E vs k available: linear or parabolic band fit (ask which) → report **vF**
    and/or **m\*** with units + k window — or state skipped with reason.  
 6. No lifetime claims without assumptions.
+
+### Multi-band
+
+1. **N confirmed** before multi-peak broadcast (proposed from mid-cut MDC, not
+   invented).  
+2. **Handoff** if user stuck — paths A–E + paste format; confirm before
+   broadcast.  
+3. **Per-band plots** saved (E vs k, width vs k per prefix / band ID).  
+4. **Per-band vF/m\*** after linear vs parabolic ask (stated k window).  
+5. **No DIY unswap** — package continuity helper only, else “tracks may swap” +
+   A/B/C/D.  
+6. **No multi-band Σ claim** — single-band ROI only (`self-energy.md`).
