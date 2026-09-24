@@ -8,6 +8,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Plot angle axis labeled as k | Convert first with `convert_to_kspace`, or label axes in **degrees** (°) |
 | hv scan plotted as kz without V₀ | Set or ask for `inner_potential`; state uncertainty if V₀ unknown |
 | Silent V₀ = 10 eV (or any guess) | Ask / lit / viewer `scan_inner_potential` / mark relative (`k-and-kz-conversion.md`) |
+| User unsure how to pick V₀ → invent / silent 10 eV | Spell V₀ handoff checklist (`k-and-kz-conversion.md` § V₀ handoff); paste format or scan→accept; confirm before convert |
 | Treat scan `best` as exact truth | Echo `uncertainty()`; settle by eye vs BZ; user accept/edit |
 | Invent lattice `spacing` for V₀ scan | Ask user / cell (Å along normal) |
 | DIY period-vs-V₀ loop on `pyarpes` | No invent; user/lit or A/B/C/**D** |
@@ -147,8 +148,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 - **Inner potential:** absolute kz from hv scans requires a **resolved** V₀
   (`attrs["inner_potential"]` or `to_kz_cube(..., inner_potential=)`). Sources:
   user/lit, viewer `scan_inner_potential` (with uncertainty), or mark relative.
-  See `reference/k-and-kz-conversion.md`. If unknown, report relative kz or ask.
-  sharp question.
+  See `reference/k-and-kz-conversion.md`. If user cannot report V₀ → spell
+  **V₀ handoff** (paths + paste); never silent 10 eV / invent `spacing`.
 - **Γ (gamma point):** for **overview** plots, mid-frame ≠ Γ. For **k conversion**,
   use provisional heuristic labeled as such, or user offset (wins). Never claim
   Γ without method. See `reference/k-and-kz-conversion.md`.

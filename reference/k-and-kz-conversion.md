@@ -219,7 +219,8 @@ Before `convert_to_kspace` on a **cut or Fermi map**:
 4. Identify which **angles** map to in-plane momentum — read `.coords`.
 5. Set Γ offsets per [Γ policy](#γ--zero-momentum-policy) (Fermi = stricter).
 6. State sample geometry in the report.
-7. For kz: set or ask for **V₀** (`attrs["inner_potential"]`).
+7. For kz: resolve **V₀** per [V₀ handoff](#v₀-handoff-spell-it-out) /
+   sources table — never silent.
 
 ## In-plane k — cut
 
@@ -501,6 +502,50 @@ Same skill step — not a separate “V₀ scan” skill.
 | Viewer `scan_inner_potential` | User asks scan / unknown V₀ on `kz_map` | `best` + `uncertainty()` + `spacing` used |
 | Typical ~5–15 eV guess | Last resort only | Mark **uncertain / relative kz** — **never** silent 10 eV |
 
+#### V₀ handoff (spell it out)
+
+When the user does **not** know how to pick V₀ (common), **do not invent**
+`inner_potential` (no silent 10 eV). Walk them step by step — same spirit as
+[Offset / Γ handoff](#offset--γ-handoff-spell-it-out).
+
+1. **Name the goal in plain language**  
+   “Absolute kz needs an inner potential V₀ (eV) — free-electron-like offset
+   inside the solid. Wrong V₀ stretches / shifts the kz period; relative
+   intensity maps can still be useful without it.”
+
+2. **Offer paths — user picks one** (ask; prefer typed / lit unless they want
+   scan):
+
+   | Path | What you do | How agent gets the number |
+   |------|-------------|---------------------------|
+   | **A. You type it** | Paste V₀ from beamline notes / prior paper / lab | `attrs["inner_potential"]` or `inner_potential=`; `v0_source=user` |
+   | **B. Literature** | Cite material (e.g. graphite ~…) if known; **ask accept** | Same + `v0_source=lit` + citation |
+   | **C. Viewer scan** | Backend `arpes_viewer` + aligned `kz_map`; run `scan_inner_potential` | Need **`spacing`** (Å along normal — **ask**, no invent) + work function; echo `best` + `uncertainty()`; **user accept / edit** |
+   | **D. Relative only** | Skip absolute kz scale | Label `v0_source=relative` — plot hv or index; **no** claim absolute Å⁻¹ kz |
+   | **E. Uncertain band** | Last resort: state trial in ~5–15 eV | Mark **uncertain**; show sensitivity or offer C — **never** silent fixed guess |
+
+3. **Spell the reply format** (copy-paste friendly), e.g.:
+
+   ```text
+   V0: 12.0 eV   # edit; source=user|lit|scan
+   spacing: 6.7 Angstrom   # only if path C — lattice c or c/2 along normal
+   work_function: 4.5 eV   # if known; else ask
+   ```
+
+   or: “Accept scan.best = X eV (uncertainty Y), or reply with a different V0.”  
+   or: “No absolute kz — proceed relative / photon-energy axis.”
+
+4. **Confirm before convert** — echo V₀ + source + (if scan) spacing /
+   uncertainty; then `attrs["inner_potential"]` / `to_kz_cube(...)`. Persist in
+   report / `analysis/kspace/*.npz` (`inner_potential`, `v0_source`,
+   assumptions).
+
+5. If still unclear → **one** sharp question; **STOP**. Never silent 10 eV /
+   invent `spacing`.
+
+`pyarpes`-only stem: paths A/B/D/E; path C only via A/B/C/**D** (data on
+viewer) — no DIY period-vs-V₀ fitter.
+
 #### Viewer — `scan_inner_potential`
 
 **Gate:** active `arpes_viewer`; EF-prepped (or aligned) hv / `kz_map` cube; user
@@ -724,6 +769,7 @@ Point/pair forward cuts (not full volume): `reference/forward-k.md`.
 | **Slit offset for kz** | Prefer **lowest-hv** slice after EF align (cut-like offsets) |
 | **Photon momentum** | Soft X-ray: warn + `beamline-geometry.md` defaults + **ask**; no invent |
 | **State V₀** | Before absolute kz; ask / lit / viewer scan / mark relative — never silent |
+| **V₀ handoff** | If user cannot report V₀: spell paths A–E + paste format; confirm before convert ([V₀ handoff](#v₀-handoff-spell-it-out)) |
 | **V₀ scan** | Same skill step: `tools.kzconv.scan_inner_potential` on viewer; report uncertainty; user accept; ask `spacing` — not a second skill |
 | **Prefer periodicity** | Cross-check bands vs hv / BZ when possible; scan alone is weak |
 | **No fake Å⁻¹** | Until package convert runs (`convert_to_kspace` / `to_kz_cube`) |
