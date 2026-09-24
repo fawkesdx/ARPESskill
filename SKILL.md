@@ -177,7 +177,9 @@ volumes, etc.
 - **Γ for k conversion:** user offset wins. Cuts may use labeled provisional
   nearest-0°. **Fermi maps:** package `S.offsets` / optional `pocket_parameters`
   / optional `ktool` only — else **ask**; never invent a center finder
-  (`reference/k-and-kz-conversion.md`).
+  (`reference/k-and-kz-conversion.md`). If user does not know how to report
+  offsets → **spell the Offset / Γ handoff** checklist in that doc (paths +
+  paste format); confirm before convert.
 - **hv → kz:** EF-align **per hv** via **active backend** path in
   `reference/k-and-kz-conversion.md` (`pyarpes`: angle-integrated near-EF — not
   mid-φ default; `arpes_viewer` `kz_map`: index box + `tools.kzmap.process_kz_map`);

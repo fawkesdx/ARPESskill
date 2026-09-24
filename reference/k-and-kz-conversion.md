@@ -167,6 +167,46 @@ Order:
 Any **new** center-finding code → ask A/B/C (`package-first.md`); do not write it
 silently.
 
+### Offset / Γ handoff (spell it out)
+
+When the user does **not** know how to report offsets (common), **do not invent
+Γ**. Walk them step by step. Same idea for a slit cut’s φ₀ or a Fermi-map
+normal-emission point.
+
+1. **Name the goal in plain language**  
+   “For momentum conversion we need angle offsets so the Γ (or normal-emission)
+   point sits at k∥ = 0 — usually `phi`, `theta`, and maybe `psi` / `chi` in
+   degrees.”
+
+2. **Offer paths — user picks one** (ask; prefer scripted unless they want GUI):
+
+   | Path | What you do | How agent gets the number |
+   |------|-------------|---------------------------|
+   | **A. You type it** | Paste angles if known from beamline / prior scan | `apply_offsets({…})`; method `user` |
+   | **B. GUI pick (PyARPES)** | Launch `ktool` / `kspace_tool` **after ask** | Same session: read `data.S.offsets`; or ask user to paste that dict |
+   | **C. GUI pick (viewer)** | Launch `ARPES_viewer.py` **after ask**; user marks Γ / ROI | User pastes numbers **or** saves corrected dataset; agent reloads — no mind-reading the Qt window |
+   | **D. Pocket helper** | Only if clear single pocket | `pocket_parameters` → **ask before** applying as offsets |
+   | **E. Provisional** | Mid-detector / nearest 0° | Label `provisional:…` — **not** “Γ found”; offer to refine later |
+
+3. **Spell the reply format** (copy-paste friendly), e.g.:
+
+   ```text
+   offsets: phi=0.05, theta=-0.02   # degrees; edit numbers
+   ```
+
+   or: “After ktool, send me the output of `data.S.offsets`.”  
+   or: “Save the map with offsets applied; tell me the file path.”
+
+4. **Confirm before convert** — echo method + numbers + dims; then
+   `apply_offsets` → convert. Persist in report / `analysis/kspace/*.npz`
+   (`offsets`, `gamma_method`).
+
+5. If still unclear → **one** sharp question; **STOP**. Never silent centroid /
+   invent.
+
+Viewer session: agent cannot see clicks in a separate GUI process. Always end
+with paste, `S.offsets`, or a saved file path.
+
 ## Prerequisites
 
 Before `convert_to_kspace` on a **cut or Fermi map**:
@@ -674,6 +714,7 @@ Point/pair forward cuts (not full volume): `reference/forward-k.md`.
 | **Slit bend / FS correction** | Same skill: if edge bows vs φ, straighten (PyARPES quad+`shift_by` or viewer `fs_correction`); mean-only ≠ bend fix; not band-enhance curvature |
 | **Charging warn** | Claimed E−EF/Eb and \|EF_fit\| > 50 meV |
 | **Fermi Γ** | Package offsets / pocket_parameters / ktool / **ask** — no invent center |
+| **Γ handoff** | If user cannot report offsets: spell paths A–E + paste format; confirm before convert ([Offset / Γ handoff](#offset--γ-handoff-spell-it-out)) |
 | **EF align hv stacks** | **Same skill, backend path:** `pyarpes` = angle-summed near-EF + `broadcast_model` / `shift_by`; `arpes_viewer` `kz_map` = index box + `tools.kzmap.process_kz_map` — not a second skill |
 | **Viewer prep ≠ convert** | `kzmap` align ≠ Å⁻¹; still need V₀ + `kzconv` / `convert_to_kspace` |
 | **hv EF QC** | Plot EF_fit vs hv; per-slice report; hard-stop if ≥20% zero/junk, pinned, or absurd stderr |
