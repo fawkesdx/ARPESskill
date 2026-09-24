@@ -20,7 +20,7 @@ cost, a one-line note + continue is enough.
 | Step | Why tokens spike | Lighter alternative |
 |------|------------------|---------------------|
 | Catalog **many** files in one reply | Metadata + shapes × N in chat | Build `analysis/manifest.json` (+ short `manifest.md`); chat = counts by kind only (`folder-manifest.md`) |
-| Folder catalog via full PyARPES loads | Heavy RAM/IO × N | **Header peek** only (astropy/h5py); `load_data` later (`folder-manifest.md`) |
+| Folder catalog via full package loads | Heavy RAM/IO × N | **Peek** only (astropy/h5py or viewer `list_entries`); full load later (`folder-manifest.md`) |
 | Paste **full array / DataArray** into chat | Huge numeric dumps | Print shape, coords, min/max/mean; save `.nc` / plot PNG under `analysis/` |
 | Re-load whole **measurement log** repeatedly | Long CSV in context | Cache summary once; store `log_comment` on manifest rows |
 | Re-walk folder every follow-up turn | Wastes tokens | **Recall** `analysis/manifest.json`; refresh only if mtime/hash changed |

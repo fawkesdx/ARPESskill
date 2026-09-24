@@ -14,7 +14,7 @@ angle space (`default-overview-plots.md`).
 ```python
 from arpes.io import example_data
 from arpes.fits.utilities import broadcast_model
-from arpes.fits.fit_models import AffineBroadenedFD
+from arpes.fits.fit_models import AffineBroadenedFD, QuadraticModel
 from arpes.utilities.conversion import convert_to_kspace
 from pathlib import Path
 import numpy as np
@@ -29,11 +29,20 @@ print(cut.dims, list(cut.coords))
 # --- EF finder (required before convert; PyARPES only) ---
 near_ef = cut.sel(eV=slice(-0.15, 0.1))  # adapt window
 results = broadcast_model(AffineBroadenedFD, near_ef, "phi")
-ef_fit = float(results.F.p("fd_center").mean())
+centers = results.F.p("fd_center")
+bend_span = float(centers.max() - centers.min())
+# If bend_span ≳ 30 meV: QuadraticModel along phi + shift_by(edge)
+# else mean shift OK — see k-and-kz-conversion.md slit-bend section
+if bend_span > 0.03:
+    edge = QuadraticModel().guess_fit(centers).eval(x=cut.phi)
+    cut_ef = cut.G.shift_by(edge, "eV")
+    ef_fit = float(centers.mean())  # summary only
+else:
+    ef_fit = float(centers.mean())
+    cut_ef = cut.G.shift_by(-ef_fit, "eV")
 ef_dev_meV = abs(ef_fit) * 1000.0
-# ALWAYS report EF_fit and deviation from 0 eV
+# ALWAYS report EF_fit, bend_span, deviation from 0
 # If claimed E−EF/Eb and ef_dev_meV > 50: warn possible charging
-cut_ef = cut.G.shift_by(-ef_fit, "eV")
 
 # --- Γ offsets (provisional or user; no auto-Γ API) ---
 phi0 = 0.0
@@ -67,8 +76,10 @@ np.savez_compressed(
 kdata.S.plot()
 ```
 
-**Agent narrative:** State energy axis kind, EF_fit + deviation from 0 (charging
-warn if >50 meV on claimed E−EF/Eb), Γ method, geometry. Å⁻¹ only after convert.
+**Agent narrative:** State energy axis kind, EF_fit + bend_span vs φ + deviation
+from 0 (charging warn if >50 meV on claimed E−EF/Eb), Γ method, geometry.
+Å⁻¹ only after convert. Viewer path: `edge_flatness` / `fs_correction`
+(`k-and-kz-conversion.md`).
 
 ## 1b. Fermi map → in-plane k (sketch)
 
@@ -167,6 +178,61 @@ np.savez_compressed(
 - Prefer periodicity check vs hv when data allow.
 - If user changes Γ / V₀ / grid → recompute and overwrite npz.
 
+## 2b. Viewer `kz_map` prep (same skill — `arpes_viewer`)
+
+Not a separate skill. After optional de-grid, align EF with `tools.kzmap`, then
+convert with `tools.kzconv` + stated V₀. See
+`reference/k-and-kz-conversion.md` (viewer subsection).
+
+```python
+from tools.kzmap import process_kz_map
+from tools import kzconv  # to_kz_cube after prep
+
+# cube: (hv, angle, E); energy: 1D matching last axis
+# index_region: inclusive ((a0, a1), (e0, e1)) — ask/state metal-like edge box
+result = process_kz_map(
+    cube, energy, index_region,
+    temperature=30.0,
+    normalise=True,  # only after align+crop
+)
+print(result.summary())
+# QC: plot result.ef vs hv; check result.ok; post-align EDCs ≈0
+# Then: V0 = ...  # ASK; state source
+# kz_axis, kpar_axis, e_out, out = kzconv.to_kz_cube(
+#     hv, angle, result.energy, result.cube, inner_potential=V0, ...
+# )
+# Save analysis products + ef_fit_per_hv (= result.ef)
+```
+
+**Agent narrative:** Report box, spread, ok/interpolated count, whether
+normalised. Prep ≠ Å⁻¹ until `to_kz_cube`. Do not invent a second “kz-map
+skill” name in the user-facing list.
+
+## 2c. V₀ resolve / scan (same skill)
+
+```python
+from tools.kzconv import scan_inner_potential, to_kz_cube
+
+# After process_kz_map (result.cube, result.energy) — or aligned cube
+spacing_A = ...  # ASK — Å along surface normal (c or c/2)
+work_function = ...  # state source
+scan = scan_inner_potential(
+    hv, angle, result.energy, result.cube,
+    spacing=spacing_A,
+    work_function=work_function,
+)
+print("best", scan.best, "uncertainty_eV", scan.uncertainty())
+# ASK user accept/edit; settle by eye vs BZ — scan is weak
+V0 = scan.best  # or user override
+# kz_axis, kpar_axis, e_out, out = to_kz_cube(
+#     hv, angle, result.energy, result.cube,
+#     inner_potential=V0, work_function=work_function, ...
+# )
+```
+
+On `pyarpes`: user/literature V₀ + eye periodicity — no DIY scan loop; else
+A/B/C/**D** or mark relative kz.
+
 ## Rules
 
 | Rule | Detail |
@@ -174,7 +240,9 @@ np.savez_compressed(
 | Quick report | No conversion |
 | Energy axis | State Ek / Eb / E−EF on load |
 | EF before cut→k | Fit + report deviation; charging warn if >50 meV on E−EF/Eb |
-| State V₀ | Before absolute kz |
+| Slit bend | If edge bows vs φ — straighten (not mean-only); same k/kz skill |
+| hv EF path | Backend fork in `k-and-kz-conversion.md` — one skill |
+| State V₀ | User/lit / viewer scan + uncertainty / relative — never silent |
 | User Γ wins | Overrides provisional |
 | Cache | `analysis/kspace/*.npz` with meta |
 
