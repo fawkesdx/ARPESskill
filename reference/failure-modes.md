@@ -7,6 +7,11 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 |---------|---------|
 | Plot angle axis labeled as k | Convert first with `convert_to_kspace`, or label axes in **degrees** (°) |
 | hv scan plotted as kz without V₀ | Set or ask for `inner_potential`; state uncertainty if V₀ unknown |
+| Silent V₀ = 10 eV (or any guess) | Ask / lit / viewer `scan_inner_potential` / mark relative (`k-and-kz-conversion.md`) |
+| Treat scan `best` as exact truth | Echo `uncertainty()`; settle by eye vs BZ; user accept/edit |
+| Invent lattice `spacing` for V₀ scan | Ask user / cell (Å along normal) |
+| DIY period-vs-V₀ loop on `pyarpes` | No invent; user/lit or A/B/C/**D** |
+| Report a separate “V₀ skill” | One skill: k/kz conversion (V₀ step) |
 | Swap binding ↔ kinetic | Check PyARPES convention (binding often ≤0 below EF); state which is used |
 | Invent MAESTRO motor names | Read coords/attrs from file — never guess `phi`, `theta`, etc. |
 | "Γ is at image center" | No — state method to find Γ (manual pick, fit, symmetry, model) |
@@ -125,8 +130,10 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 
 - **Angle vs momentum:** detector or manipulator angles are in degrees until
   `convert_to_kspace` produces k coordinates. See `reference/k-and-kz-conversion.md`.
-- **Inner potential:** absolute kz from hv scans requires V₀ in
-  `spectrum.attrs["inner_potential"]`. If unknown, report relative kz or ask one
+- **Inner potential:** absolute kz from hv scans requires a **resolved** V₀
+  (`attrs["inner_potential"]` or `to_kz_cube(..., inner_potential=)`). Sources:
+  user/lit, viewer `scan_inner_potential` (with uncertainty), or mark relative.
+  See `reference/k-and-kz-conversion.md`. If unknown, report relative kz or ask.
   sharp question.
 - **Γ (gamma point):** for **overview** plots, mid-frame ≠ Γ. For **k conversion**,
   use provisional heuristic labeled as such, or user offset (wins). Never claim

@@ -80,7 +80,9 @@ volumes, etc.
 
 - Never invent axis names or units.
 - Never treat detector angle as momentum without conversion + stated assumptions.
-- Never hv→kz without stating inner potential V₀ (or that it is unknown).
+- Never hv→kz without stating inner potential V₀ (or that it is unknown /
+  relative). Optional viewer `scan_inner_potential` is the same k/kz skill
+  (`k-and-kz-conversion.md`) — report uncertainty; ask `spacing`; user accept.
 - Never claim Γ found without method (manual / fit / model).
 - Never report fits without naming lineshape (+ background if used).
 - **Peak fitting:** backend models only (PyARPES or confirmed user-map; core →
@@ -219,7 +221,7 @@ chat). Details: `reference/token-usage.md`.
 - Package load fails / feature missing — quote error; offer A/B/C/**D**
   (`reference/package-first.md`).
 - Ambiguous axes or backend sniff — stop and ask one sharp question.
-- Ambiguous V₀ — ask or mark kz as relative/uncertain.
+- Ambiguous V₀ — ask, run viewer scan if applicable, or mark kz as relative/uncertain.
 - Corrupt/partial file — report readable parts only.
 
 ## Workflow
