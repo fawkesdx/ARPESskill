@@ -167,6 +167,36 @@ np.savez_compressed(
 - Prefer periodicity check vs hv when data allow.
 - If user changes Γ / V₀ / grid → recompute and overwrite npz.
 
+## 2b. Viewer `kz_map` prep (same skill — `arpes_viewer`)
+
+Not a separate skill. After optional de-grid, align EF with `tools.kzmap`, then
+convert with `tools.kzconv` + stated V₀. See
+`reference/k-and-kz-conversion.md` (viewer subsection).
+
+```python
+from tools.kzmap import process_kz_map
+from tools import kzconv  # to_kz_cube after prep
+
+# cube: (hv, angle, E); energy: 1D matching last axis
+# index_region: inclusive ((a0, a1), (e0, e1)) — ask/state metal-like edge box
+result = process_kz_map(
+    cube, energy, index_region,
+    temperature=30.0,
+    normalise=True,  # only after align+crop
+)
+print(result.summary())
+# QC: plot result.ef vs hv; check result.ok; post-align EDCs ≈0
+# Then: V0 = ...  # ASK; state source
+# kz_axis, kpar_axis, e_out, out = kzconv.to_kz_cube(
+#     hv, angle, result.energy, result.cube, inner_potential=V0, ...
+# )
+# Save analysis products + ef_fit_per_hv (= result.ef)
+```
+
+**Agent narrative:** Report box, spread, ok/interpolated count, whether
+normalised. Prep ≠ Å⁻¹ until `to_kz_cube`. Do not invent a second “kz-map
+skill” name in the user-facing list.
+
 ## Rules
 
 | Rule | Detail |
@@ -174,6 +204,7 @@ np.savez_compressed(
 | Quick report | No conversion |
 | Energy axis | State Ek / Eb / E−EF on load |
 | EF before cut→k | Fit + report deviation; charging warn if >50 meV on E−EF/Eb |
+| hv EF path | Backend fork in `k-and-kz-conversion.md` — one skill |
 | State V₀ | Before absolute kz |
 | User Γ wins | Overrides provisional |
 | Cache | `analysis/kspace/*.npz` with meta |

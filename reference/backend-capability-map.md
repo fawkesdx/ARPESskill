@@ -71,8 +71,8 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `spatial_overview` | XY map + hot spot + mean | `sum`/`mean`/`sel` + optional `arpes.plotting.spatial`; hot spot = argmax of \(I_R\) | `spem_*` kinds / ROI — see upstream; else N/A → D |  | `spatial-xy-scans.md` |
 | `spatial_roi_reduce` | Reduce x,y ROI → kind recipe | `sel` / `where` / mean over spatial dims | truncate / sel-style via `tools.dataops` when applicable |  | `spatial-xy-scans.md` |
 | `pca_spatial` | PCA along x,y (optional) | `arpes.analysis.decomposition.pca_along` — ask before large runs; full decomp recipe `decomposition.md` |  |  | `spatial-xy-scans.md`, `decomposition.md` |
-| `fit_fermi_edge` | Metal / EF edge fit | `AffineBroadenedFD` / FD models + `guess_fit` / `broadcast_model`; **hv stacks:** angle-summed near-EF then vs `hv` + QC (`k-and-kz-conversion.md`) | `tools.fermi.fit_fermi_edge` / `fit_channels`; kzmap fits |  | `k-and-kz-conversion.md`, `near-ef-gap.md` |
-| `shift_energy` | Align EF → 0 | `G.shift_by` (hv: `shift_by(centers, shift_axis="eV", shift_coords=True)` + post-shift verify) | `tools.fermi` / `tools.kzmap.align` / curve shift |  | `k-and-kz-conversion.md`, `near-ef-gap.md` |
+| `fit_fermi_edge` | Metal / EF edge fit | `AffineBroadenedFD` / FD models + `guess_fit` / `broadcast_model`; **hv stacks:** angle-summed near-EF then vs `hv` + QC (`k-and-kz-conversion.md`) | `tools.fermi.fit_fermi_edge` / `fit_channels`; **kz_map:** `tools.kzmap.fit_levels` / `process_kz_map` |  | `k-and-kz-conversion.md`, `near-ef-gap.md` |
+| `shift_energy` | Align EF → 0 | `G.shift_by` (hv: `shift_by(centers, shift_axis="eV", shift_coords=True)` + post-shift verify) | `tools.fermi` / `tools.kzmap.align` / `process_kz_map` |  | `k-and-kz-conversion.md`, `near-ef-gap.md` |
 | `extract_edc_mdc` | EDC / MDC extraction | `sel` / `isel` / package helpers | cursor / curve extract + `tools.curves` |  | `safe-reduction.md`, `edc-mdc-fitting.md` |
 | `fit_peak` | Single-curve peak fit | `GaussianModel` / `LorentzianModel` / `VoigtModel` + `guess_fit` | `tools.peaks` + curve-fit path |  | `edc-mdc-fitting.md` |
 | `fit_core` | Core / XPS-style fit | Shirley + multi-peak package models | curve fit + Shirley (`tools.curves` / peaks) |  | `edc-mdc-fitting.md` |
@@ -80,6 +80,7 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `band_vf_mstar` | vF / m* on E(k) | `LinearModel` / `QuadraticModel` on centers | `tools.dispersion.fit_dispersion` |  | `edc-mdc-fitting.md` |
 | `convert_k` | Angle → in-plane k | `convert_to_kspace` + `S.apply_offsets` | `tools.kspace.convert_map` / `tools.cutk.convert_cut` |  | `k-and-kz-conversion.md` |
 | `convert_kz` | hv → kz | `convert_to_kspace` / kz path + stated V₀ | `tools.kzconv.to_kz_cube` |  | `k-and-kz-conversion.md`, `beamline-geometry.md` |
+| `kz_map_align` | hv-stack EF prep (step) | N/A — use angle-summed EF + `shift_by` under `fit_fermi_edge` / `shift_energy` | `tools.kzmap.process_kz_map` (box → fit → align → crop → optional norm) |  | `k-and-kz-conversion.md` |
 | `fd_broadened` | Resolution-broadened FD | package gap helper if present (check install); else ask | `tools.fermi` models |  | `near-ef-gap.md` |
 | `symmetrize_edc` | Symmetrize about EF | `arpes.analysis.gap.symmetrize` | `tools.process` symmetrise when present — else ask |  | `near-ef-gap.md` |
 | `gap_delta_fit` | Quantify gap Δ | package models only; **ask** if missing |  |  | `near-ef-gap.md` |

@@ -171,9 +171,11 @@ volumes, etc.
   nearest-0°. **Fermi maps:** package `S.offsets` / optional `pocket_parameters`
   / optional `ktool` only — else **ask**; never invent a center finder
   (`reference/k-and-kz-conversion.md`).
-- **hv → kz:** EF-align **per hv** on an **angle-integrated** near-EF edge
-  (do not use mid-φ as default); QC + plot EF_fit vs hv; per-slice report; post-shift
-  verify ≈0; slit offset from **lowest-hv** slice; state V₀; soft X-ray →
+- **hv → kz:** EF-align **per hv** via **active backend** path in
+  `reference/k-and-kz-conversion.md` (`pyarpes`: angle-integrated near-EF — not
+  mid-φ default; `arpes_viewer` `kz_map`: index box + `tools.kzmap.process_kz_map`);
+  QC + plot EF_fit vs hv; per-slice report; post-shift verify ≈0; slit offset
+  from **lowest-hv** slice; state V₀; soft X-ray →
   `reference/beamline-geometry.md` (MAESTRO 55°; ALBA LOREA 55°; SOLEIL ANTARES
   **45°** + fixed horizontal slit — ask; SLS soft X-ray postponed) + **ask**
   about photon momentum / incidence; npz must store
@@ -245,7 +247,8 @@ chat). Details: `reference/token-usage.md`.
 9. **Analysis / user-requested momentum:** convert to k / kz
    (`reference/k-and-kz-conversion.md`) — state energy axis; EF finder +
    report EF_fit/deviation (charging warn if >50 meV on E−EF/Eb); for **hv
-   stacks**: angle-summed edge + per-hv QC + post-shift verify + `ef_fit_per_hv`
+   stacks**: backend path (PyARPES angle-summed edge **or** viewer
+   `process_kz_map` box) + per-hv QC + post-shift verify + `ef_fit_per_hv`
    in npz; Γ per cut vs Fermi rules; stated V₀ for kz; save
    `analysis/kspace/*.npz`; link `product_paths` on the manifest row.
    Spatial hypercubes: reduce ROI / hot spot first (`spatial-xy-scans.md`).
