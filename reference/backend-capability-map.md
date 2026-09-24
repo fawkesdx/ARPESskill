@@ -79,8 +79,9 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `broadcast_fit` | Fit along dim(s) | `arpes.fits.utilities.broadcast_model` | MDC/EDC fit across cut (viewer fit path) — check install |  | `edc-mdc-fitting.md` |
 | `band_vf_mstar` | vF / m* on E(k) | `LinearModel` / `QuadraticModel` on centers | `tools.dispersion.fit_dispersion` |  | `edc-mdc-fitting.md` |
 | `convert_k` | Angle → in-plane k | `convert_to_kspace` + `S.apply_offsets` | `tools.kspace.convert_map` / `tools.cutk.convert_cut` |  | `k-and-kz-conversion.md` |
-| `convert_kz` | hv → kz | `convert_to_kspace` / kz path + stated V₀ | `tools.kzconv.to_kz_cube` |  | `k-and-kz-conversion.md`, `beamline-geometry.md` |
+| `convert_kz` | hv → kz | `convert_to_kspace` / kz path + **resolved** V₀ | `tools.kzconv.to_kz_cube` after V₀ resolve |  | `k-and-kz-conversion.md`, `beamline-geometry.md` |
 | `kz_map_align` | hv-stack EF prep (step) | N/A — use angle-summed EF + `shift_by` under `fit_fermi_edge` / `shift_energy` | `tools.kzmap.process_kz_map` (box → fit → align → crop → optional norm) |  | `k-and-kz-conversion.md` |
+| `scan_inner_potential` | V₀ from kz periodicity (step) | N/A — user/lit V₀ or mark relative; no DIY scan | `tools.kzconv.scan_inner_potential` → `PeriodScan` (ask `spacing`; report uncertainty; user accept) |  | `k-and-kz-conversion.md` |
 | `fd_broadened` | Resolution-broadened FD | package gap helper if present (check install); else ask | `tools.fermi` models |  | `near-ef-gap.md` |
 | `symmetrize_edc` | Symmetrize about EF | `arpes.analysis.gap.symmetrize` | `tools.process` symmetrise when present — else ask |  | `near-ef-gap.md` |
 | `gap_delta_fit` | Quantify gap Δ | package models only; **ask** if missing |  |  | `near-ef-gap.md` |

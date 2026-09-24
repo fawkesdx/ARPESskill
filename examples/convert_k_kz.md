@@ -197,6 +197,31 @@ print(result.summary())
 normalised. Prep ≠ Å⁻¹ until `to_kz_cube`. Do not invent a second “kz-map
 skill” name in the user-facing list.
 
+## 2c. V₀ resolve / scan (same skill)
+
+```python
+from tools.kzconv import scan_inner_potential, to_kz_cube
+
+# After process_kz_map (result.cube, result.energy) — or aligned cube
+spacing_A = ...  # ASK — Å along surface normal (c or c/2)
+work_function = ...  # state source
+scan = scan_inner_potential(
+    hv, angle, result.energy, result.cube,
+    spacing=spacing_A,
+    work_function=work_function,
+)
+print("best", scan.best, "uncertainty_eV", scan.uncertainty())
+# ASK user accept/edit; settle by eye vs BZ — scan is weak
+V0 = scan.best  # or user override
+# kz_axis, kpar_axis, e_out, out = to_kz_cube(
+#     hv, angle, result.energy, result.cube,
+#     inner_potential=V0, work_function=work_function, ...
+# )
+```
+
+On `pyarpes`: user/literature V₀ + eye periodicity — no DIY scan loop; else
+A/B/C/**D** or mark relative kz.
+
 ## Rules
 
 | Rule | Detail |
@@ -205,7 +230,7 @@ skill” name in the user-facing list.
 | Energy axis | State Ek / Eb / E−EF on load |
 | EF before cut→k | Fit + report deviation; charging warn if >50 meV on E−EF/Eb |
 | hv EF path | Backend fork in `k-and-kz-conversion.md` — one skill |
-| State V₀ | Before absolute kz |
+| State V₀ | User/lit / viewer scan + uncertainty / relative — never silent |
 | User Γ wins | Overrides provisional |
 | Cache | `analysis/kspace/*.npz` with meta |
 

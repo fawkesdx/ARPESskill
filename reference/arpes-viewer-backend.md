@@ -90,11 +90,14 @@ only; before k.
 `reference/k-and-kz-conversion.md` (`tools.kzmap.process_kz_map` then
 `tools.kzconv.to_kz_cube`). Not a separate skill.
 
+**V₀ scan:** same doc — `tools.kzconv.scan_inner_potential` (ask `spacing`;
+report uncertainty; user accept). Not a separate skill.
+
 ## See also
 
 - `arpes-viewer-env.md` — interpreter / PYTHONPATH  
 - `folder-manifest.md` — `list_entries` for Pass B peek  
 - `degrid.md` — detector grid removal  
-- `k-and-kz-conversion.md` — EF prep + k/kz convert (incl. viewer kz_map)  
+- `k-and-kz-conversion.md` — EF prep + V₀ + k/kz convert (incl. viewer)  
 - `formats-and-axes.md` — PyARPES/MAESTRO notes (other backend)  
 - Upstream README / CHANGELOG for loader and tool detail  
