@@ -17,7 +17,7 @@ axes or physics**:
 | Load | Route by file/beamline: MAESTRO/ALS FITS → PyARPES; ANTARES/CASSIOPEE → ARPES-data-browser; override OK |
 | Overview | Cut / Fermi / hv trios with stated assumptions |
 | Fit | Core then EDC/MDC (Gaussian / Lorentzian / Voigt); mapped package models |
-| k / kz | EF finder + QC; mapped convert; hv EF = angle-summed edge + per-hv QC |
+| k / kz | EF finder + QC; mapped convert; hv EF = backend path (angle-sum or viewer `kzmap`) + per-hv QC |
 | Near-EF | Metal EF, resolution-broadened FD, symmetrize (gap/pseudogap) when asked |
 | Spatial XY | ROI-integrated map, hot-spot kind reuse (cut / core / Fermi / hv), optional param maps |
 | Spin-ARPES | Up/down or I+P; package spin plots; Sherman ask; Spin-EDC and spin cuts |

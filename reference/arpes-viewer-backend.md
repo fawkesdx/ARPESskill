@@ -15,7 +15,7 @@ Use **Qt-free** modules only:
 |--------|------|
 | `loader.registry` | `detect`, `list_entries`, `load`, `LoadOptions` |
 | `loader.soleil` / `cassiopee` / `cassiopee_spin` / `native` | Beamline readers |
-| `tools.*` | fermi, kspace, cutk, kzconv, peaks, cutops, spin, … |
+| `tools.*` | fermi, kspace, cutk, kzmap, kzconv, peaks, cutops, spin, degrid, … |
 
 Do **not** import `ui.*` for routine analysis. Launch the GUI only when the
 user asks (or for an interactive Γ/ROI handoff they accept):
@@ -86,10 +86,15 @@ Stop. Offer A/B/C/**D** (`package-first.md`). Example: PCA / NMF / ICA are
 **De-grid** (MCP/mesh): `reference/degrid.md` — `tools.degrid`; pixel-locked
 only; before k.
 
+**hv / kz_map EF prep:** same skill as k/kz —
+`reference/k-and-kz-conversion.md` (`tools.kzmap.process_kz_map` then
+`tools.kzconv.to_kz_cube`). Not a separate skill.
+
 ## See also
 
 - `arpes-viewer-env.md` — interpreter / PYTHONPATH  
 - `folder-manifest.md` — `list_entries` for Pass B peek  
 - `degrid.md` — detector grid removal  
+- `k-and-kz-conversion.md` — EF prep + k/kz convert (incl. viewer kz_map)  
 - `formats-and-axes.md` — PyARPES/MAESTRO notes (other backend)  
 - Upstream README / CHANGELOG for loader and tool detail  
