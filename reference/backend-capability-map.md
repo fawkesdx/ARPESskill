@@ -120,6 +120,7 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `bz_overplot_standard` | Named-material BZ overlay | `overplot_standard` (`graphene`/`ws2`/`wwe2` for WSe2) |  |  | `bz-overlay.md` |
 | `bz_annotate_path` | High-symmetry path labels | `annotate_special_paths` | BZ overlay path helpers — check |  | `bz-overlay.md` |
 | `bz_data_on_zone` | Plot k-data onto 2D BZ | `plot_data_to_bz` (2D only; 3D N/I) | contour + BZ overlay (2D) |  | `bz-overlay.md` |
+| `bz_moire` | Moiré / mini-BZ (bilayer) | N/A — user moiré cell into `bz_plot` or **D** | `tools.moire.moire_bz` / `moire_reciprocal_vectors` (prefer); optional `hex_moire_lattice_fast` |  | `bz-overlay.md` |
 | `rebin` | Downsample by chunk integrate | `arpes.analysis.general.rebin` | `tools.dataops.compress` / `tools.curves.rebin` |  | `axis-prep.md` |
 | `symmetrize_axis` | Mirror+combine about axis | `symmetrize_axis` | `tools.process` symmetrise — ask |  | `axis-prep.md` |
 | `normalize_dim` | Equalize intensity along dim(s) | `arpes.preparation.normalize_dim` | `tools.dataops.self_normalize` / curves normalise |  | `axis-prep.md` |

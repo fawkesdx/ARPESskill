@@ -96,11 +96,15 @@ report uncertainty; user accept). Not a separate skill.
 **Slit bend / FS correction:** same doc — `tools.analysis.fs_correction` /
 `edge_flatness` (PyARPES: broadcast vs φ + quadratic). Not a separate skill.
 
+**Moiré / mini-BZ:** `reference/bz-overlay.md` — `tools.moire` (+ `bz2d`).
+Not a separate skill.
+
 ## See also
 
 - `arpes-viewer-env.md` — interpreter / PYTHONPATH  
 - `folder-manifest.md` — `list_entries` for Pass B peek  
 - `degrid.md` — detector grid removal  
 - `k-and-kz-conversion.md` — EF / slit bend / V₀ + k/kz convert  
+- `bz-overlay.md` — BZ / moiré mini-BZ  
 - `formats-and-axes.md` — PyARPES/MAESTRO notes (other backend)  
 - Upstream README / CHANGELOG for loader and tool detail  
