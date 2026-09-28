@@ -66,3 +66,53 @@ def test_h5_only_stem(tmp_path):
     ) as f:
         rows = list(csv.DictReader(f))
     assert rows[0]["File Name"] == "only.h5"
+
+
+def test_fits_only_stem_na_columns(tmp_path):
+    stem = "fits_only_scan"
+    (tmp_path / f"{stem}.fits").write_bytes(b"")
+    extract_maestro_metadata(str(tmp_path))
+    with open(
+        tmp_path / "MAESTRO_Measurement_Log.csv", newline="", encoding="utf-8"
+    ) as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["File Name"] == f"{stem}.fits"
+    assert "fits-only" in row["Measurement Type"].lower()
+    assert "unknown" in row["Measurement Type"].lower()
+    assert row["Pre/Post Comments"] == "None"
+    for col in (
+        "Photon Energy (eV)",
+        "Polarization",
+        "Cryostat A (K)",
+        "Cryostat B (K)",
+        "Cryostat C (K)",
+        "Cryostat D (K)",
+        "Manipulator Position",
+        "Deflection Settings",
+        "SMU 1 & 2 Settings",
+        "Analyzer Settings",
+        "Energy Resolution",
+    ):
+        assert row[col] == "N/A"
+
+
+def test_both_fit_and_fits_prefers_fits_filename(tmp_path):
+    stem = "20260101_00002"
+    (tmp_path / f"{stem}.fit").write_bytes(b"")
+    (tmp_path / f"{stem}.fits").write_bytes(b"")
+    extract_maestro_metadata(str(tmp_path))
+    with open(
+        tmp_path / "MAESTRO_Measurement_Log.csv", newline="", encoding="utf-8"
+    ) as f:
+        rows = list(csv.DictReader(f))
+    assert rows[0]["File Name"] == f"{stem}.fits"
+
+
+def test_empty_folder_removes_stale_csv(tmp_path):
+    csv_path = tmp_path / "MAESTRO_Measurement_Log.csv"
+    csv_path.write_text("File Name\nstale\n", encoding="utf-8")
+    result = extract_maestro_metadata(str(tmp_path))
+    assert result is None
+    assert not csv_path.is_file()

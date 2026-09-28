@@ -69,9 +69,13 @@ def collect_stems(folder_path):
             continue
         stem, ext = os.path.splitext(name)
         ext = ext.lower()
-        if ext == ".fit":
-            ext = ".fits"
-        stems.setdefault(stem, {})[ext] = name
+        slot = stems.setdefault(stem, {})
+        if ext == ".h5":
+            slot[".h5"] = name
+        elif ext == ".fits":
+            slot[".fits"] = name
+        elif ext == ".fit":
+            slot.setdefault(".fits", name)
     return dict(sorted(stems.items()))
 
 
@@ -297,7 +301,11 @@ def extract_maestro_metadata(folder_path, verbose=False):
 
     stems = collect_stems(folder_path)
     if not stems:
-        print(f"❌ No .h5 or .fits files found in {folder_path}")
+        msg = f"❌ No .h5 or .fits files found in {folder_path} (folder has no data files)."
+        if os.path.isfile(csv_file_path):
+            os.remove(csv_file_path)
+            msg += f"\nRemoved stale log: {csv_file_path}"
+        print(msg)
         return None
 
     n = len(stems)
