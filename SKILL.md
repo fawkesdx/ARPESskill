@@ -212,6 +212,11 @@ volumes, etc.
 - **Folder first:** for multi-file folders, build/refresh `analysis/manifest.json`
   with **header-only peek** (astropy/h5py — not full `load_data`); later
   **recall** from it (`reference/folder-manifest.md`).
+- **MAESTRO measurement log (user-asked):** triggers like “log the maestro data
+  in …” → `reference/maestro-measurement-log.md` — write
+  `MAESTRO_Measurement_Log.csv` **in the data folder**, then Pass A merge into
+  `analysis/manifest.json`; no graphify; CSV **Measurement Type** ≠ manifest
+  `kind` (store in `maestro_log.meas_type_log` only).
 
 ## Package-first (important)
 
@@ -247,6 +252,10 @@ chat). Details: `reference/token-usage.md`.
    `analysis/manifest.json` (+ optional `manifest.md`) **first** — listing +
    **peek** with per-row `backend` (`folder-manifest.md`). Do **not**
    full-load every spectrum. Later turns **recall** from the manifest.
+   **MAESTRO log trigger** (“log the maestro data in …” / refresh measurement
+   log): run `scripts/maestro_measurement_log.py` then
+   `scripts/merge_maestro_log_to_manifest.py` per
+   `maestro-measurement-log.md`; report counts — never paste full CSV.
 2. Identify artifact (file type, shape); **resolve backend** (override or
    Route B — `arpes-viewer-backend.md`); prefer manifest rows when present.
 3. Ensure env for that backend (Stack policy). If declined → propose
@@ -356,10 +365,12 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/package-first.md` — package APIs; ask A/B/C/**D** before new code
 - `reference/backend-capability-map.md` — capability IDs; PyARPES + Browser; user-map
 - `reference/folder-manifest.md` — folder inventory; peek + backend per row
+- `reference/maestro-measurement-log.md` — MAESTRO CSV logger + Pass A manifest merge
 
 ## Examples
 
 - `examples/maestro_pyarpes.md`
+- `examples/maestro_measurement_log.md`
 - `examples/dual_backend_load.md`
 - `examples/fit_edc_mdc.md`
 - `examples/near_ef_gap.md`

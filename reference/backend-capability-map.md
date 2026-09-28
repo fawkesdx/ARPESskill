@@ -67,6 +67,8 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `state_axes` | Dims, units, energy convention | `.dims` / `.coords` / `.attrs` | `NxsScan` kind + axes / `info` / labels |  | `formats-and-axes.md` |
 | `folder_manifest` | Multi-file inventory | thin glue → `analysis/manifest.json` | thin glue → `analysis/manifest.json` |  | `folder-manifest.md` |
 | `folder_header_peek` | Header/attrs only for catalog | `astropy.io.fits.getheader` / `h5py` shapes — **not** `load_data` | `loader.registry.list_entries` / `detect` — not full cube |  | `folder-manifest.md` |
+| `maestro_measurement_log` | Write `MAESTRO_Measurement_Log.csv` | `scripts/maestro_measurement_log.py` | `scripts/maestro_measurement_log.py` |  | `maestro-measurement-log.md` |
+| `maestro_log_to_manifest` | Pass A CSV → manifest | `scripts/merge_maestro_log_to_manifest.py` | `scripts/merge_maestro_log_to_manifest.py` |  | `folder-manifest.md` |
 | `overview_plot` | Quick-report figures | matplotlib (+ package plot helpers if used); spatial → `spatial-xy-scans.md` set | matplotlib / viewer export helpers; GUI on ask |  | `default-overview-plots.md`, `spatial-xy-scans.md` |
 | `spatial_overview` | XY map + hot spot + mean | `sum`/`mean`/`sel` + optional `arpes.plotting.spatial`; hot spot = argmax of \(I_R\) | `spem_*` kinds / ROI — see upstream; else N/A → D |  | `spatial-xy-scans.md` |
 | `spatial_roi_reduce` | Reduce x,y ROI → kind recipe | `sel` / `where` / mean over spatial dims | truncate / sel-style via `tools.dataops` when applicable |  | `spatial-xy-scans.md` |

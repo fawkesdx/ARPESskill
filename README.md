@@ -15,6 +15,7 @@ axes or physics**:
 | Step | Skill behavior |
 |------|----------------|
 | Load | Route by file/beamline: MAESTRO/ALS FITS → PyARPES; ANTARES/CASSIOPEE → ARPES-data-browser; override OK |
+| MAESTRO log | FITS-first `MAESTRO_Measurement_Log.csv` in data folder; Pass A → manifest; log type ≠ `kind` |
 | Overview | Cut / Fermi / hv trios with stated assumptions |
 | Fit | Core then EDC/MDC (Gaussian / Lorentzian / Voigt); mapped package models |
 | k / kz | EF + slit-bend if needed; mapped convert; hv EF = backend path; V₀ = user/lit/scan/relative |

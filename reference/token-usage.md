@@ -23,6 +23,7 @@ cost, a one-line note + continue is enough.
 | Folder catalog via full package loads | Heavy RAM/IO × N | **Peek** only (astropy/h5py or viewer `list_entries`); full load later (`folder-manifest.md`) |
 | Paste **full array / DataArray** into chat | Huge numeric dumps | Print shape, coords, min/max/mean; save `.nc` / plot PNG under `analysis/` |
 | Re-load whole **measurement log** repeatedly | Long CSV in context | Cache summary once; store `log_comment` on manifest rows |
+| Paste full **`MAESTRO_Measurement_Log.csv`** into chat | Many rows × wide columns in context | Run logger + merge scripts; report row count + short sample only (`maestro-measurement-log.md`) |
 | Re-walk folder every follow-up turn | Wastes tokens | **Recall** `analysis/manifest.json`; refresh only if mtime/hash changed |
 | **Broadcast fits** over full 2D/3D maps | Long fit reports × many curves | Fit one EDC/MDC first; then scripted broadcast → save params CSV |
 | **Spatial XY** full-volume plots / PCA / all-pixel fits | Huge cubes × many PNGs / fits | Hot-spot kind analysis first; stated ROI \(R\); broadcast only if asked (`spatial-xy-scans.md`) |
@@ -52,6 +53,8 @@ cost, a one-line note + continue is enough.
 - One mid-cut or near-EF map plot saved to `analysis/figures/`  
 - One EDC/MDC extract + one peak fit  
 - Short checklist / yes-no questions  
+- **`maestro_measurement_log` / `maestro_log_to_manifest` scripts** — local
+  folder I/O; quiet stdout; no blanket token note before running (`maestro-measurement-log.md`)
 
 ## Agent habits that save tokens
 

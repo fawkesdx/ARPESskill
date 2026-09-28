@@ -141,6 +141,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | DIY full journal composer on `pyarpes` | Simple GridSpec OK; full presets → A/B/C/**D** |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |
 | Treat log “Cut” as kind without dims/heuristics | Dims + core-as-2D rules; log → `log_comment` only |
+| Copy CSV **Measurement Type** into manifest `kind` | Pass A keeps `kind=unknown` until peek; `maestro_log.meas_type_log` only (`maestro-measurement-log.md`) |
+| Log only `.h5` when sibling `.fits` exists | FITS-first `File Name`; parse rich columns from sibling `.h5` (`maestro-measurement-log.md`) |
+| Paste full `MAESTRO_Measurement_Log.csv` into chat | Row count + brief sample; CSV on disk (`token-usage.md`) |
 | Reimplement fit / k-conversion by hand | Use active-backend APIs; ask A/B/C/**D** if unavailable |
 | Near-EF FD divide without resolution | Always convolve FD with resolution (`near-ef-gap.md`) |
 | Symmetrize every EDC by default | Only for gap/pseudogap (or explicit ask); state p–h symmetry |
