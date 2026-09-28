@@ -128,6 +128,46 @@ def test_merge_preserves_existing_real_kind(tmp_path):
     assert entry["maestro_log"]["meas_type_log"] == "WrongLabel"
 
 
+def test_merge_preserves_existing_load_error_kind(tmp_path):
+    stem = "badpeek"
+    (tmp_path / f"{stem}.h5").write_bytes(b"z")
+    analysis = tmp_path / "analysis"
+    analysis.mkdir()
+    (analysis / "manifest.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "created_utc": "2026-01-01T00:00:00Z",
+                "updated_utc": "2026-01-01T00:00:00Z",
+                "data_root": str(tmp_path),
+                "skill_ref": "arpes",
+                "files": [
+                    {
+                        "stem": stem,
+                        "path": str(tmp_path / f"{stem}.h5"),
+                        "ext": ".h5",
+                        "kind": "load_error",
+                        "load_error": "peek failed",
+                        "backend": "pyarpes",
+                        "preferred_loader": "x",
+                        "size_bytes": 1,
+                        "mtime_utc": "2026-01-01T00:00:00Z",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    _write_csv(
+        tmp_path / "MAESTRO_Measurement_Log.csv",
+        [{"File Name": f"{stem}.h5", "Measurement Type": "Cut"}],
+    )
+    merge_maestro_log(str(tmp_path))
+    entry = json.loads((analysis / "manifest.json").read_text())["files"][0]
+    assert entry["kind"] == "load_error"
+    assert entry.get("load_error") == "peek failed"
+
+
 def test_merge_writes_manifest_md(tmp_path):
     (tmp_path / "a.h5").write_bytes(b"a")
     _write_csv(

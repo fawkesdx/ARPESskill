@@ -20,7 +20,7 @@ def parse_hv(cell: str):
 
 
 def _real_kind(kind) -> bool:
-    return kind not in (None, "unknown", "load_error")
+    return kind not in (None, "unknown")
 
 
 def merge_maestro_log(data_root: str, analysis_root: Optional[str] = None) -> Path:
