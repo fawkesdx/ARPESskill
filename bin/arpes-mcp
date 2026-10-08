@@ -1,0 +1,5 @@
+#!/bin/sh
+# Launch the arpes MCP with the repo root on the module path.
+ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+cd "$ROOT" || exit 1
+exec python3 -m mcp_arpes

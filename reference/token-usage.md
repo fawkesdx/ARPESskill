@@ -42,7 +42,8 @@ cost, a one-line note + continue is enough.
 | **Stack** many axes / huge max_stacks | Dense PNGs | One stack_axis; let package rebin (`stack-plots.md`) |
 | **Forward k** many probe points | Slow test-charge converts | One point/pair first (`forward-k.md`) |
 | **Dichroism** full cubes + many clim trials | Heavy maps | One energy/ROI; echo clim (`dichroism.md`) |
-| Full **k / kz conversion** volumes + prose dump | Large grids in text | Convert in script; plot or save; chat = axes + assumptions only |
+| Full **k / kz conversion** volumes + prose dump | Large grids in text | `scripts/convert_k.py` for in-plane; chat = axes + assumptions only |
+| Free-form codegen of load, overview, one EDC fit, in-plane k, or a folder catalog | Re-writes physics the skill already refused | Run `scripts/load_qc.py`, `overview_plots.py`, `fit_edc.py`, `convert_k.py`, `folder_manifest.py` (`hot-paths.md`) |
 | Attach / describe **many PNG** overviews | Image tokens add up | Few representative figures; rest on disk |
 | Install + long **pip/conda logs** in chat | Noisy build output | Run install quietly; report only success/fail + env path |
 | Re-read entire `reference/` every turn | Skill context bloat | Read one matching reference file when needed |
@@ -58,7 +59,8 @@ cost, a one-line note + continue is enough.
 
 ## Agent habits that save tokens
 
-1. Prefer **scripts under `analysis/`** that write reports/figures; summarize results in chat.
+1. Prefer **`scripts/`** for load QC, overview, one EDC fit, in-plane k, and
+   folder manifest (`hot-paths.md`). Summarize JSON in chat. Do not paste arrays.
 2. Never paste raw intensity arrays into the conversation.
 3. Cap catalogs: default **header peek** (Pass B); sample if huge folder;
    always write **manifest** rather than pasting rows in chat. Full

@@ -8,7 +8,12 @@ Skill = **workflow + physics**. Backend = **capability ID → callable**.
 last resort.  
 Load routing: `arpes-viewer-backend.md` (Route B). Envs: `pyarpes-env.md` /
 `arpes-viewer-env.md` (never mix).  
-**Future:** TensorSpec / others — deferred.
+**Future:** TensorSpec / others — deferred.  
+**Optional third backend (map only):** [peaks-arpes](https://pypi.org/project/peaks-arpes/)
+(`import peaks as pks`, Python ≥3.11, **own env** — never the PyARPES 3.8 env
+or the viewer env). No callable is filled in below. Do not route a recipe to
+peaks until a session checks the installed tree and records real symbols.
+Do not invent peaks function names.
 
 ---
 
@@ -63,25 +68,25 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 
 | ID | Meaning | PyARPES default | Browser default | User (session) | Reference |
 |----|---------|-----------------|-----------------|----------------|-----------|
-| `load_spectrum` | Open cut / map / hv stack | `arpes.io.load_data` (+ `location=`) / project loader if already preferred | `loader.registry.load` / soleil / cassiopee / cassiopee_spin |  | `formats-and-axes.md` |
-| `state_axes` | Dims, units, energy convention | `.dims` / `.coords` / `.attrs` | `NxsScan` kind + axes / `info` / labels |  | `formats-and-axes.md` |
-| `folder_manifest` | Multi-file inventory | thin glue → `analysis/manifest.json` | thin glue → `analysis/manifest.json` |  | `folder-manifest.md` |
+| `load_spectrum` | Open cut / map / hv stack | `arpes.io.load_data` (+ `location=`) / project loader if already preferred. Agent entry: `scripts/load_qc.py` | `loader.registry.load` / soleil / cassiopee / cassiopee_spin |  | `formats-and-axes.md`, `hot-paths.md` |
+| `state_axes` | Dims, units, energy convention | `.dims` / `.coords` / `.attrs`. Agent entry: `scripts/load_qc.py` | `NxsScan` kind + axes / `info` / labels |  | `formats-and-axes.md`, `hot-paths.md` |
+| `folder_manifest` | Multi-file inventory | `scripts/folder_manifest.py` → `analysis/manifest.json` | `scripts/folder_manifest.py` → `analysis/manifest.json` |  | `folder-manifest.md`, `hot-paths.md` |
 | `folder_header_peek` | Header/attrs only for catalog | `astropy.io.fits.getheader` / `h5py` shapes — **not** `load_data` | `loader.registry.list_entries` / `detect` — not full cube |  | `folder-manifest.md` |
 | `maestro_measurement_log` | Write `MAESTRO_Measurement_Log.csv` | `scripts/maestro_measurement_log.py` | `scripts/maestro_measurement_log.py` |  | `maestro-measurement-log.md` |
 | `maestro_log_to_manifest` | Pass A CSV → manifest | `scripts/merge_maestro_log_to_manifest.py` | `scripts/merge_maestro_log_to_manifest.py` |  | `folder-manifest.md` |
-| `overview_plot` | Quick-report figures | matplotlib (+ package plot helpers if used); spatial → `spatial-xy-scans.md` set | matplotlib / viewer export helpers; GUI on ask |  | `default-overview-plots.md`, `spatial-xy-scans.md` |
+| `overview_plot` | Quick-report figures | `scripts/overview_plots.py` (angle space; matplotlib) | matplotlib / viewer export helpers; GUI on ask. Script is xarray/pyarpes shaped; viewer `NxsScan` is not bridged |  | `default-overview-plots.md`, `spatial-xy-scans.md`, `hot-paths.md` |
 | `spatial_overview` | XY map + hot spot + mean | `sum`/`mean`/`sel` + optional `arpes.plotting.spatial`; hot spot = argmax of \(I_R\) | `spem_*` kinds / ROI — see upstream; else N/A → D |  | `spatial-xy-scans.md` |
 | `spatial_roi_reduce` | Reduce x,y ROI → kind recipe | `sel` / `where` / mean over spatial dims | truncate / sel-style via `tools.dataops` when applicable |  | `spatial-xy-scans.md` |
 | `pca_spatial` | PCA along x,y (optional) | `arpes.analysis.decomposition.pca_along` — ask before large runs; full decomp recipe `decomposition.md` |  |  | `spatial-xy-scans.md`, `decomposition.md` |
 | `fit_fermi_edge` | Metal / EF edge fit | `AffineBroadenedFD` / FD models + `guess_fit` / `broadcast_model`; **hv stacks:** angle-summed near-EF then vs `hv` + QC; **slit bend:** broadcast vs `phi` (`k-and-kz-conversion.md`) | `tools.fermi.fit_fermi_edge` / `fit_channels`; **kz_map:** `tools.kzmap.fit_levels` / `process_kz_map` |  | `k-and-kz-conversion.md`, `near-ef-gap.md` |
 | `shift_energy` | Align EF → 0 | `G.shift_by` (uniform, per-hv, or **per-φ** edge curve) + post-shift verify | `tools.fermi` / `tools.kzmap.align` / `process_kz_map` / `tools.analysis.fs_correction` |  | `k-and-kz-conversion.md`, `near-ef-gap.md` |
 | `extract_edc_mdc` | EDC / MDC extraction | `sel` / `isel` / package helpers | cursor / curve extract + `tools.curves` |  | `safe-reduction.md`, `edc-mdc-fitting.md` |
-| `fit_peak` | Single-curve peak fit | `GaussianModel` / `LorentzianModel` / `VoigtModel` + `guess_fit` | `tools.peaks` + curve-fit path |  | `edc-mdc-fitting.md` |
+| `fit_peak` | Single-curve peak fit | `scripts/fit_edc.py` → `GaussianModel` / `LorentzianModel` / `VoigtModel` + `guess_fit`. N=1 only | `tools.peaks` + curve-fit path |  | `edc-mdc-fitting.md`, `hot-paths.md` |
 | `fit_core` | Core / XPS-style fit | Shirley + multi-peak package models | curve fit + Shirley (`tools.curves` / peaks) |  | `edc-mdc-fitting.md` |
 | `broadcast_fit` | Fit along dim(s) | `arpes.fits.utilities.broadcast_model` | MDC/EDC fit across cut (viewer fit path) — check install |  | `edc-mdc-fitting.md` — multi-peak → `multi_band_fit` step |
 | `band_vf_mstar` | vF / m* on E(k) | `LinearModel` / `QuadraticModel` on centers | `tools.dispersion.fit_dispersion` |  | `edc-mdc-fitting.md` |
 | `multi_band_fit` | Multi-peak MDC track (N>1) | Prefixed models + `broadcast_model`; propose N→confirm; continuity **N/A** unless verified helper | `tools.peaks` / cut fit + `tools.dispersion.fit_dispersion` if mapped |  | `edc-mdc-fitting.md` |
-| `convert_k` | Angle → in-plane k | `convert_to_kspace` + `S.apply_offsets` | `tools.kspace.convert_map` / `tools.cutk.convert_cut` |  | `k-and-kz-conversion.md` |
+| `convert_k` | Angle → in-plane k | `scripts/convert_k.py` → `convert_to_kspace` + `S.apply_offsets`. No k formula in the script | `tools.kspace.convert_map` / `tools.cutk.convert_cut` |  | `k-and-kz-conversion.md`, `hot-paths.md` |
 | `convert_kz` | hv → kz | `convert_to_kspace` / kz path + **resolved** V₀ | `tools.kzconv.to_kz_cube` after V₀ resolve |  | `k-and-kz-conversion.md`, `beamline-geometry.md` |
 | `kz_map_align` | hv-stack EF prep (step) | N/A — use angle-summed EF + `shift_by` under `fit_fermi_edge` / `shift_energy` | `tools.kzmap.process_kz_map` (box → fit → align → crop → optional norm) |  | `k-and-kz-conversion.md` |
 | `scan_inner_potential` | V₀ from kz periodicity (step) | N/A — user/lit V₀ or mark relative; no DIY scan | `tools.kzconv.scan_inner_potential` → `PeriodScan` (ask `spacing`; report uncertainty; user accept) |  | `k-and-kz-conversion.md` |

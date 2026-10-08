@@ -5,7 +5,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 
 | Failure | Correct |
 |---------|---------|
-| Plot angle axis labeled as k | Convert first with `convert_to_kspace`, or label axes in **degrees** (°) |
+| Plot angle axis labeled as k | Convert first with `convert_to_kspace`, or label axes in **degrees** (°). Hot path: `scripts/load_qc.py` + `scripts/overview_plots.py` (`hot-paths.md`) |
+| Rewrite load / overview / one-peak fit / in-plane k / folder manifest as new code | Run the matching script under `scripts/`. `mcp_arpes` only wraps those functions |
 | hv scan plotted as kz without V₀ | Set or ask for `inner_potential`; state uncertainty if V₀ unknown |
 | Silent V₀ = 10 eV (or any guess) | Ask / lit / viewer `scan_inner_potential` / mark relative (`k-and-kz-conversion.md`) |
 | User unsure how to pick V₀ → invent / silent 10 eV | Spell V₀ handoff checklist (`k-and-kz-conversion.md` § V₀ handoff); paste format or scan→accept; confirm before convert |

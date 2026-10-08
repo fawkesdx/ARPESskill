@@ -48,6 +48,8 @@ axes or physics**:
    ARPES-data-browser **≥3.9**.
 2. Open Cursor chat in a folder with an ARPES file (or tutorial data).
 3. Ask: *“Load this spectrum with the ARPES skill; state axes; show the default overview.”*
+   The agent should run `scripts/load_qc.py` then `scripts/overview_plots.py`
+   (`examples/golden_prompts.md`), not invent a loader.
 
 Demo GIF / screenshots: coming soon under `examples/demo/` (load → overview → k).
 
@@ -92,15 +94,28 @@ Point the agent at this repo, or inject `SKILL.md` plus needed files under
 - [PyARPES](https://arpes.readthedocs.io) / [GitHub mirror](https://github.com/chstan/arpes)
 - [ARPES-data-browser](https://github.com/DingPei1995/ARPES-data-browser) (SOLEIL ANTARES / CASSIOPEE)
 - [ERLabPy `arpes-analysis` skill](https://github.com/kmnhan/erlabpy/tree/main/skills/arpes-analysis) — related agent skill on ERLabPy
+- [peaks-arpes](https://pypi.org/project/peaks-arpes/) — optional third backend in the capability map only; no callables filled until an install is checked
 - Beamline notes in-skill: MAESTRO, ALBA LOREA (55°); SOLEIL ANTARES (45°, fixed
   horizontal slit); more welcome via PR
 
 ## Skill layout
 
-- `SKILL.md` — entry + hard rules  
-- `reference/` — workflows  
-- `examples/` — short recipes  
+- `SKILL.md` — entry + hard rules (policy)
+- `reference/` — workflows, including `hot-paths.md`
+- `scripts/` — hot-path CLIs (load QC, overview, EDC fit, in-plane k, manifest)
+- `mcp_arpes/` — optional stdio MCP over those same functions
+- `mcp_clio_hdf5/` — optional HDF5 attrs / capped partial read (not reduction)
+- `examples/` — short recipes, including `golden_prompts.md` and `tutorial_cut.nc`
+- `plugin.json` + `mcp.json` — Agent Plugin layout; `.cursor-plugin/plugin.json` for Cursor
 - `LICENSE` · `README.md`
+
+Logbook and HDF5-header Q&A stay a later sibling skill. They are not part of these reduction recipes.
+
+## Plugin install
+
+Cursor discovers the root `SKILL.md` plus `.cursor-plugin/plugin.json`.
+Claude Code can keep the symlink in Install above.
+`mcp.json` starts `./bin/arpes-mcp` and `./bin/clio-hdf5-mcp` (Python 3 with `numpy`, `xarray`, `h5py`, `matplotlib` on `PYTHONPATH` of the repo root). PyARPES itself stays in the 3.8 env; point `--backend pyarpes` at that interpreter when you run the CLIs.
 
 ## Citation / contact
 
