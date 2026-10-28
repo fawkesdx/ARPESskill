@@ -105,3 +105,7 @@ Point the agent at this repo, or inject `SKILL.md` plus needed files under
 ## Citation / contact
 
 Sandy Adhitia Ekahana
+
+## Privacy guard
+
+`scripts/privacy_check.sh` blocks personal paths, logins, e-mails and credentials at commit and push time. Enable once per clone: `git config core.hooksPath .githooks`
