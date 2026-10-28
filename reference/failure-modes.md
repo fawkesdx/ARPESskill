@@ -23,7 +23,8 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Invent peak count N | Propose mid-cut MDC → confirm; or multi-band handoff A–E |
 | T labels from `Temperature.Sample` sensor; exposure from the comment time | T from scan comment / contact thermometer (+ edge width); exposure = header sweeps×frames, validated by a same-T control pair (`temperature-series.md`) |
 | Compare six-band low-T areas with two-band high-T areas silently | Fit the high-T sub-model at every T on one crop; say when models differ (`temperature-series.md`) |
-| Widths at the cap quoted as physical; λ or MFL from one energy; DW with in-plane k as \|G\| | Flag cap-limited pairs; λ(E) over a grid with one v and two T ranges; \|G\| = photoelectron momentum, one feature, controls, excluded T (`temperature-series.md`) |
+| Widths at the cap quoted as physical; λ or MFL from one energy | Flag cap-limited pairs; λ(E) over a grid with one v and two T ranges (`temperature-series.md`) |
+| DW with in-plane k as \|G\|; DW claimed from peak heights; one Θ_D for a compound | \|G\| = photoelectron momentum with V₀ stated; fit areas and heights separately; controls, excluded T, Θ_D per sublattice mass or 2σ bound (`debye-waller.md`) |
 | DIY nearest-center unswap | Package only; else “may swap” + A/B/C/D |
 | User stuck on multi-band → invent | Spell multi-band handoff (`edc-mdc-fitting.md`) |
 | Multi-band Σ without ask | Single-band ROI only (`self-energy.md`) |
