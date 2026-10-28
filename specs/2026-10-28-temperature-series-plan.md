@@ -4,8 +4,8 @@
 multi-band tracking, exposure-validated weight test, linewidth → λ, Debye–Waller) as a
 reference recipe; keep single-cut fitting, Σ(E) and in-operando scans where they are.
 
-**Origin:** VTe₂ near-Γ MAESTRO series (30–500 K), analysed Oct 2026; numbers in the
-recipe are examples from that series.
+**Origin:** a temperature series of one k-line on a layered material at a synchrotron
+beamline, analysed Oct 2026; numbers in the recipe are labelled example values.
 
 **Not duplicated:** multi-band propose-N / handoff (`edc-mdc-fitting.md`), Σ(E) at one T
 (`self-energy.md`), FD division (`near-ef-gap.md`), external-axis slicing
