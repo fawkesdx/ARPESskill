@@ -10,8 +10,14 @@ a core ARPES “analysis skill” sibling to k/kz.
 
 **Backend:** primarily `arpes_viewer` —
 [ARPES-data-browser](https://github.com/DingPei1995/ARPES-data-browser)
-`tools.figure` (+ `tools.export`; paint may use `ui.figure` — prefer headless
-model). Env: `arpes-viewer-env.md`.
+`tools.output.figure` (+ `tools.output.export`, `tools.output.figfile`; the
+painter is `ui.panels.figure` — prefer the headless model, paint offscreen).
+Older checkouts have the same model at `tools.figure` — check which imports.
+Env: `arpes-viewer-env.md`.
+
+**Which panels to make** (notched cube, CEC series, stacked slices, k_z
+evolution, data vs calculation, crystal + BZ, fitted trends) →
+`figure-gallery.md`. This file is how to lay them out and save them.
 
 **`pyarpes`:** simple multi-panel matplotlib / `GridSpec` OK. Do **not** invent
 a full journal-composer clone; if user needs `JOURNAL_PRESETS` / shared style
@@ -43,7 +49,7 @@ Nature single/double, APS/PRB, Science, Elsevier, slide — **read the tuple in
 the installed package**; do not hardcode different mm from memory.
 
 ```python
-from tools.figure import Figure, Panel, PanelData, FigureStyle, JOURNAL_PRESETS
+from tools.output.figure import Figure, Panel, PanelData, FigureStyle, JOURNAL_PRESETS
 
 # Pick preset by user ask, or ask which journal width
 label, width_mm, font_pt = JOURNAL_PRESETS[0]  # e.g. Nature single — verify index
@@ -64,6 +70,66 @@ shared vs per-panel.
 
 ---
 
+## Free layout: frames, alignment, letters
+
+A grid is fine for equal panels. A paper figure with mixed panels (a 3-D
+view beside a row of maps, a curve plot beside cuts) is laid out by hand:
+each `Panel.frame = (x, y, w, h)` in mm from the top left, then tidied.
+
+```python
+fig.panels[0].frame = (10, 8, 40, 40)
+fig.panels[1].frame = (58, 9, 40, 38)
+fig.align_panels([0, 1, 2], "top")        # left / right / top / bottom / hcenter / vcenter
+fig.distribute_panels([3, 4, 5, 6], "x")  # equal gaps (3+ panels)
+fig.match_size([0, 1, 2], "height")       # width / height / both, from the first
+fig.letter_panels()                       # (a), (b), … in reading order
+fig.panels[1].label_offset = (-4.0, 0.0)  # nudge one letter (mm), e.g. off a long y title
+```
+
+- `FigureStyle.panel_label_aligned = True` (default): letters of a row share
+  one height, of a column one left edge, whatever each panel's titles are.
+- Not every panel needs a letter: sub-panels of one result share one letter
+  (clear the others' `label`, add `(i)`, `(ii)` as text notes).
+
+## Colour bars, guides, error bars
+
+| Want | Set |
+|------|-----|
+| Raw intensity bar | `colorbar=True`, `colorbar_ends="high-low"` (words, not counts) |
+| Short bar under a panel | `colorbar_position="below"`, `colorbar_length=0.6` |
+| Calculated / guide line | `Overlay(xs, ys, color, width_pt, style="dashed")` |
+| Measured points ± σ | `Overlay(..., marker="o", marker_mm=1.1, line=False, y_errors=[…])` |
+| Named k ticks | `x_tick_labels=[(0.0, "Γ"), (1.2, "M")]` |
+| A gap in a curve | NaN in `ys` (drawn in pieces) |
+
+Curves (fitted quantity vs parameter): `ui.viewers.curves.curve_panel(x,
+[(label, y, colour)], x_label=…, y_label=…, name=…)` makes a plot panel; add
+measured points as an `Overlay` with markers and error bars.
+
+## Save: editable figure + data folder
+
+```python
+import os
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+from PyQt5.QtWidgets import QApplication
+app = QApplication.instance() or QApplication([])
+from ui.panels.figure import FigurePainter, write_figure
+from tools.output import figfile
+
+write_figure(FigurePainter(fig), "analysis/figures/fig1.pdf", "pdf")   # or png / svg / tif
+figfile.save("analysis/figures/fig1.afig", fig)            # re-opens in the composer
+figfile.write_data_folder("analysis/figures/fig1.afig", fig)
+# -> analysis/figures/data for fig1/<letter>/processed/ (panel data .nxs, lines.csv)
+#    .../original/ (source files traced back through conversions), sources.txt
+```
+
+Recommend saving the `.afig` + data folder with every paper figure: a
+referee question months later is answered from the folder, not from memory.
+Set `PanelData.sources` (`figfile.source_record(path, entry=…)`) when a
+panel is built from arrays so the original file is traced.
+
+---
+
 ## Rules
 
 | Rule | Detail |
@@ -75,6 +141,8 @@ shared vs per-panel.
 | Edge labels | Default `edge_labels_only=True` — outer axes only |
 | Save | `analysis/figures/`; path in report; no huge arrays in chat |
 | Style reuse | `style_dict` / `save_style` when making a paper set |
+| Align, don't eyeball | `align_panels` / `distribute_panels` / `match_size`; letters aligned |
+| Editable copy | `.afig` + `data for <stem>/` next to the PDF when on `arpes_viewer` |
 
 ---
 
@@ -84,4 +152,6 @@ shared vs per-panel.
 2. Backend: viewer `tools.figure` or simple matplotlib; no DIY composer invent.  
 3. Preset / width_mm / font_pt echoed.  
 4. Shared clim/limits stated; panels lettered if multi.  
-5. PNG/PDF under `analysis/figures/`.
+5. PNG/PDF under `analysis/figures/` (+ `.afig` and data folder on viewer).  
+6. Panel content chosen from `figure-gallery.md` when the user asks for a
+   figure *type*.

@@ -4,7 +4,7 @@ Follow `reference/figure-layout.md`. User asked a journal multi-panel figure —
 **not** a quick-report overview trio.
 
 ```python
-from tools.figure import (
+from tools.output.figure import (   # older checkouts: tools.figure
     Figure, Panel, PanelData, FigureStyle, JOURNAL_PRESETS,
 )
 

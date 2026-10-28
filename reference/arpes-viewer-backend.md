@@ -99,8 +99,10 @@ report uncertainty; user accept). Not a separate skill.
 **Moiré / mini-BZ:** `reference/bz-overlay.md` — `tools.moire` (+ `bz2d`).
 Not a separate skill.
 
-**Publication figure layout:** `reference/figure-layout.md` — `tools.figure`
-(journal mm presets). User-asked layout/export — not overview.
+**Publication figure layout:** `reference/figure-layout.md` — `tools.output.figure`
+(journal mm presets, align / letters, editable `.afig` + data folder; older
+checkouts: `tools.figure`). Which panels: `reference/figure-gallery.md`.
+User-asked layout/export — not overview.
 
 ## See also
 

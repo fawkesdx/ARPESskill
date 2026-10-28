@@ -158,8 +158,16 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `degrid_pixel_lock` | Refuse de-grid if not on detector pixels | | `tools.degrid.not_pixel_locked` |  | `degrid.md` |
 | `degrid_map` | Remove MCP/mesh grid from map / kz_map | | `tools.degrid.degrid_map` |  | `degrid.md` |
 | `degrid_cut` | Cut de-grid with map grid or notch | | `degrid_cut_with_grid` / `degrid_cut_notch` |  | `degrid.md` |
-| `figure_compose` | Multi-panel publication figure | matplotlib `GridSpec` (simple); full composer → D | `tools.figure.Figure` / `Panel` / `FigureStyle` + export |  | `figure-layout.md` |
-| `figure_journal_preset` | Journal column width / font | N/A — user mm or D | `tools.figure.JOURNAL_PRESETS` |  | `figure-layout.md` |
+| `figure_compose` | Multi-panel publication figure | matplotlib `GridSpec` (simple); full composer → D | `tools.output.figure.Figure` / `Panel` / `FigureStyle` + `ui.panels.figure.write_figure` (older: `tools.figure`) |  | `figure-layout.md` |
+| `figure_journal_preset` | Journal column width / font | N/A — user mm or D | `tools.output.figure.JOURNAL_PRESETS` |  | `figure-layout.md` |
+| `figure_arrange` | Align / distribute / match panels; aligned letters | matplotlib `GridSpec` / manual axes positions | `Figure.align_panels` / `distribute_panels` / `match_size` / `letter_panels` |  | `figure-layout.md` |
+| `figure_save_editable` | Re-editable figure + per-panel data folder | N/A — save arrays + script next to PDF | `tools.output.figfile.save` / `write_data_folder` (`.afig`) |  | `figure-layout.md` |
+| `figure_gallery` | Choose panel archetypes for a paper figure | matplotlib per archetype | viewer builders per archetype |  | `figure-gallery.md` |
+| `plot_notched_cube` | 3-D cube with a corner removed | matplotlib `plot_surface` on faces | `tools.processing.volume.notched_box` + 3-D view → composer |  | `figure-gallery.md` |
+| `plot_stacked_slices` | CEC / cuts stacked in 3-D | matplotlib 3-D `plot_surface` per layer | `tools.processing.volume.stack_faces` + 3-D view → composer |  | `figure-gallery.md` |
+| `plot_calc_overlay` | Calculated bands / contours over data (Z, shift) | user calc arrays + matplotlib; fit → D | `tools.crystal.bandfiles.read` / `bands.bands_along_cut` / `contours` / `follow_band` / `fit_alignment` |  | `figure-gallery.md` |
+| `plot_crystal_bz` | Crystal render + BZ with data on planes | `ase.visualize.plot.plot_atoms`; `bz_plot` (no data planes) | `tools.crystal.structure.read_cif` / `bz3d` + viewer crystal window |  | `figure-gallery.md` |
+| `band_crossing_fit` | Crossing of two fitted straight branches ± σ | user-map (two linear fits) | `tools.spectra.dispersion.line_crossing` |  | `figure-gallery.md` |
 
 **User (session)** column: fill only after [confirm](#discovery--confirm). Not
 committed into the skill repo for a specific user — persist in the **user
