@@ -97,6 +97,8 @@ Quick report: no full-cube k/kz.
   test one step first.  
 - Temperature series: same rules; PyARPES `temperature_dependence` example is
   the pattern, not a special case.  
+  If the **lineshape** changes with T (peaks appear / split, widths or weights
+  to compare, λ, Debye–Waller) → `temperature-series.md`.
 - Specialty (monolayer calibration, four-probe \(R\), Hall) → package-first ask
   A/B/C or user-map; do not invent.
 
