@@ -124,7 +124,8 @@ volumes, etc.
   raw headers, common crop); one model per T stated; constrained tracking
   (width cap per pair → shared-slope lines, X crossing) as **user-map**;
   weights per sweep×frame validated by a control pair + deep reference, FD⊗ΔE;
-  λ(E) from dΓ/dT with one stated v; Debye–Waller with photoelectron |G|.
+  λ(E) from dΓ/dT with one stated v; Debye–Waller → `reference/debye-waller.md`
+  (photoelectron |G|, area vs height, controls, excluded T, Θ_D per mass).
   Never comment-time or sensor-T normalisation; never λ / MFL from one energy.
 - **Band enhance (user-asked):** 2D cut → `reference/band-enhance.md` (both
   `curvature` + `minimum_gradient` side by side; not intensity; no centers/EF
