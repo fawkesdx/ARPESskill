@@ -108,7 +108,7 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `tdep_normalize` | Per sweep×frame (validated by control pair), deep reference, FD⊗Gaussian | numpy on fit products; FD helper | `tools.fermi.fermi_function` |  | `temperature-series.md` |
 | `tdep_weight_test` | Area / FWHM / height per side vs T; L/R asymmetry; fixed-k ratios | numpy on fit products | same |  | `temperature-series.md` |
 | `linewidth_vs_T_lambda` | Γ(E,T) = Γ₀ + 2πλk_BT per E with one v; MFL check | numpy lstsq on widths | same |  | `temperature-series.md` |
-| `debye_waller_fit` | ln I = ln I₀ − ⟨u²⟩\|G\|² with photoelectron \|G\|; controls; Θ_D | `curve_fit` on one-feature intensities | same |  | `temperature-series.md` |
+| `debye_waller_fit` | ln I = ln I₀ − ⟨u²⟩\|G\|² with photoelectron \|G\|; area vs height; controls; k-test; Θ_D per mass | `curve_fit` + lstsq on one-feature intensities (one model at every T) | `tools.peaks.fit_line` + same | | `debye-waller.md` |
 | `band_curvature` | Curvature band enhance | `arpes.analysis.derivative.curvature` | `tools.process` curvature/derivatives |  | `band-enhance.md` |
 | `band_min_gradient` | Minimum-gradient enhance | `arpes.analysis.derivative.minimum_gradient` |  |  | `band-enhance.md` |
 | `band_derivative` | 1st/2nd deriv along axis | `d1_along_axis` / `d2_along_axis` / `dn_along_axis` — **ask** | `tools.process` derivatives — ask |  | `band-enhance.md` |

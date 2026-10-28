@@ -136,24 +136,15 @@ so `λ(E) = (dΓ/dT) / (2π k_B)`.
 
 ---
 
-## 5. Debye–Waller test (user-asked, e.g. for a one-step / alloy-analogy theorist)
+## 5. Debye–Waller test (user-asked)
 
-`ln I(T) = ln I₀ − 2W(T)`, `2W = ⟨u²⟩(T) |G|²`, with **|G| = photoelectron
-momentum** `0.512·√(hv − φ + V₀)` Å⁻¹ (≈ 4.8 Å⁻¹ at 82 eV), **not** the in-plane k
-of the band. State φ and V₀ (± uncertainty).
-
-1. Observable: peak **height or area of one sharp feature above background**
-   with **one model at every T** (e.g. the outer pair at −90..−120 meV where only
-   it exists, or one EDC peak at fixed k); per sweep×frame; FD-corrected.
-2. Controls: the deep window (sum rule, DW-insensitive) and the MDC background
-   level — both should not follow the decay.
-3. Fit T range: exclude a structural transition (bulk VTe₂ changes near ~480 K)
-   and any scan with a flux/spot change; add a normalisation floor (≈ 5 %) in
-   quadrature.
-4. Report `⟨u²⟩(T)` slope, an effective Θ_D from the Debye `⟨u²⟩` with the mass
-   stated, and the caveat that weight transfer found in § 3 can mimic or mask
-   the decay. The clean discriminator is a **photon-energy series at two T**
-   (DW ∝ E_kin; electron–phonon broadening is not).
+Full routine in `debye-waller.md`: `ln I(T) = ln I₀ − ⟨u²⟩(T)|G|²` with **|G| =
+photoelectron momentum** (not the band k), one lineshape model at every T, area
+*and* height of one feature, deep-window and background controls, excluded
+temperatures (structural transition, flux change), Θ_D per sublattice mass or its
+2σ bound, and the k-dependence test. Weight transfer found in § 3 can mimic or
+mask the decay; say which range is clean. The clean discriminator is a
+photon-energy pair at two temperatures (2W ∝ E_kin).
 
 ---
 
