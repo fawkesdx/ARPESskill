@@ -24,6 +24,7 @@ axes or physics**:
 | In-operando | External \(P\) (dose/V/I/B/T); mid \(P^*\) or ask if stepped; reuse kind recipes |
 | trARPES | `delay`; t0; delay\* ≥ t0; package ΔI / ΔI/I; reuse kind at slice |
 | Self-energy | Single-band MDC → Σ (reuse fits or `fit_for_self_energy`); bare band; lifetime ask |
+| T series | Metadata first (comment T, sweeps×frames); one model per T; constrained track (cap → shared slopes); weight test; λ(E) from dΓ/dT; Debye–Waller |
 | Band enhance | Curvature + min-gradient side by side (not intensity) |
 | FS pocket | One closed sheet; center = user or `pocket_parameters`; curves; EDCs ask |
 | Smooth / deconvolve | Gaussian smooth for noise; RL/ICE only if asked + PSF |
