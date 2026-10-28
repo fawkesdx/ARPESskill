@@ -11,8 +11,8 @@ Capabilities: `tdep_metadata`, `tdep_common_model`, `tdep_constrained_track`,
 `tdep_normalize`, `tdep_weight_test`, `tdep_onset_metric`, `linewidth_vs_T_lambda`,
 `debye_waller_fit` — `backend-capability-map.md`.
 
-This workflow was built on a MAESTRO near-Γ series (30–500 K, eight scans); the
-numbers below are examples of what to check, not defaults to copy.
+Material- and beamline-agnostic. Numbers below (windows, caps, δ, percentages)
+are examples of what to check, not defaults to copy; provenance is in `specs/`.
 
 ---
 
@@ -22,8 +22,8 @@ Before any fit across temperatures, build one table per scan and **echo it**:
 
 | Field | Where it really is | Why |
 |-------|--------------------|-----|
-| Sample T | Scan **comment** / log, contact thermometer (`contacts_A`-type 0D channel), raw Fermi-edge width as a cross-check | The `Temperature.Sample` sensor can saturate or read the cold tip; labels from the sensor were wrong above ~135 K and at base T |
-| Exposure | Raw header **sweeps × frames** (MAESTRO: `Headers/DAQ_Swept` `SSsw0` × `SSfr_0`; `0D_Data/*_num_sw_actual`) | Counts scale exactly with sweeps×frames; the comment "2 min" is **not** the exposure (wrong by ~1.7×) |
+| Sample T | Scan **comment** / log, a contact-thermometer channel if logged, raw Fermi-edge width as a cross-check | The `Temperature.Sample` sensor can saturate or read the cold tip; labels from the sensor were wrong above ~135 K and at base T |
+| Exposure | Raw header **sweeps × frames** (field names are beamline-specific; MAESTRO example: `Headers/DAQ_Swept` `SSsw0` × `SSfr_0`, `0D_Data/*_num_sw_actual`) | Counts scale exactly with sweeps×frames; the comment "2 min" is **not** the exposure (wrong by ~1.7×) |
 | hv, PE, slit, step, polarisation, ring current, spot | Headers | Must be constant; a flux / spot change (e.g. the highest-T scan) invalidates intensity comparison |
 | Crop | k- and E-window containing **every** peak at **every** T | A band whose k_F moves out of the crop at high T breaks the series (re-crop everything, then redo all fits) |
 
@@ -57,11 +57,11 @@ overlap. The two-phase rule used here (user-map; see § Package map):
 1. Seeds: hand-placed (E, k) anchors per band, PCHIP-interpolated; centres may
    move ± 1.5 × seed width (the package rule).
 2. Pass A: widths free → read each **pair's** FWHM at one reference energy
-   (e.g. −9 meV).
+   (a few meV below EF).
 3. Pass B (kept): **one Lorentzian width per left/right pair**, bounded
    `FWHM ≤ WCAP × (pass-A pair width at E_ref)`, WCAP = 1.5. Report which pairs
    sit on the cap (those widths are lower bounds).
-4. Innermost pair: active only within its energy range (e.g. −27 meV..EF).
+4. Innermost pair: active only within its energy range (e.g. within a few tens of meV of EF).
 
 **Phase 2 — linear-constrained centres**
 1. Straight line per branch from the phase-1 centres over a stated trusted
@@ -72,8 +72,8 @@ overlap. The two-phase rule used here (user-map; see § Package map):
 2. Crossing pairs (X shape): place the crossing from the phase-1 **separation at
    EF**: `E* = −Δk_F / (2A)`, `k* = midpoint`; narrow the centre window near the
    crossing (taper) so the two tracks cannot swap.
-3. Centres bounded to ± δ around their line (δ ≈ 0.006 Å⁻¹ here; halve it if
-   the user says the window is too wide); widths as in phase 1 pass B.
+3. Centres bounded to ± δ around their line (a few 10⁻³ Å⁻¹; halve it if the user
+   says the window is too wide); widths as in phase 1 pass B.
 4. Output per scan: centres ± σ, widths ± σ (full numeric Jacobian), areas,
    χ², flags for cap-limited pairs. Save `analysis/mdc_fit_<phase>_<scan>.npz`.
 
@@ -91,16 +91,16 @@ Question type: "does the high-T peak break into the low-T fine structure?" or
    **control pair** (two scans at the same T with different exposure → ratio
    must be 1.00 ± few %).
 2. **Deep reference**: a window far below EF with no T-dependent band
-   (e.g. −1.2..−1.0 eV, |k| small) must be constant per sweep×frame to a few %
-   (3 % here). If it is not, the flux/spot changed — do not compare absolute
-   weights for that scan (the 500 K scan: 3.5× drop).
+   (≈ 1 eV below EF, |k| small) must be constant per sweep×frame to a few %.
+   If it is not, the flux/spot changed — do not compare absolute weights for
+   that scan.
 3. **Fermi-function correction**: divide by FD(T) ⊗ Gaussian(ΔE from metadata)
    (`near-ef-gap.md` style); state T and ΔE; do not trust the corrected values
    within ~5 meV of EF.
 4. Compare **areas** (not heights) of the same band; also report height and
    FWHM — a peak that keeps its area but broadens 40 % looks "weaker".
 5. **Matrix elements:** (i) left/right asymmetry of the k-integrated weight vs T —
-   if it is T-independent (0.68–0.70 at 30, 80, 300 K here) the geometry factor
+   if it is T-independent the geometry factor
    cancels in per-side T ratios; (ii) **fixed-k EDC weight ratios** between
    temperatures are |M(k)|²-robust (same k, hv, geometry); (iii) relative |M|² of
    *different* bands cannot be removed with one polarisation — say so before
