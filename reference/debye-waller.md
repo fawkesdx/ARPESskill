@@ -1,6 +1,6 @@
 # Debye–Waller test on a temperature series
 
-**Gate:** user (or a theorist they relay) asks whether **thermal Debye–Waller (DW)
+**Gate:** user asks whether **thermal Debye–Waller (DW)
 suppression** of the coherent direct-transition intensity explains the temperature
 smearing of a cut, or asks for `⟨u²⟩(T)` / an effective Debye temperature from
 ARPES. Upstream: the temperature-series workflow (`temperature-series.md`:

@@ -1,7 +1,7 @@
 # Debye–Waller test — Implementation record
 
-**Goal:** add the Debye–Waller routine used on the VTe₂ temperature series (request from a
-one-step / alloy-analogy theorist, 2026-10-27) as its own reference recipe, replacing the short
+**Goal:** add the Debye–Waller routine used on a temperature series (a question raised by a
+one-step-theory collaboration, Oct 2026) as its own reference recipe, replacing the short
 § 5 of `temperature-series.md` with a pointer.
 
 **Content:** |G| = photoelectron momentum with V₀ propagated; one lineshape model at every T;
