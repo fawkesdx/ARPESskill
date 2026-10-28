@@ -39,7 +39,7 @@ axes or physics**:
 | Forward k | Point/pair angular → k-cut; `convert_coordinate_forward` |
 | Dichroism | CP+CM; null-ROI scale; diff + asym; red+/blue− clim tweak |
 | De-grid | MCP/mesh via viewer `tools.degrid`; pixel-locked; **before** k |
-| Pub figure | Journal mm presets / multi-panel (`tools.output.figure`); align + letters; editable `.afig` + data folder; gallery of published archetypes (cube, CEC series, stacked slices, k_z, data vs calc, crystal + BZ) |
+| Pub figure | Journal presets, multi-panel layout (`tools.output.figure`), editable `.afig`; gallery of published figure types |
 | Backend | `pyarpes` \| `arpes_viewer` \| confirmed **user-map**; missing fn → ask A/B/C/D |
 
 ## 60-second try

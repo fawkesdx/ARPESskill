@@ -56,8 +56,10 @@ panels.append(trend)
 label, width_mm, font_pt = next(p for p in JOURNAL_PRESETS if "double" in p[0])
 fig = Figure(panels=panels, style=FigureStyle(width_mm=width_mm, font_pt=font_pt,
                                               shared_levels=True))
-for i, p in enumerate(fig.panels):                    # one row, then tidy
-    p.frame = (10 + 36 * i, 8, 32, 40)
+n, gap = len(fig.panels), 4                          # one row inside width_mm, then tidy
+w = (width_mm - 10 - 3 - gap * (n - 1)) / n           # 10 mm left (labels), 3 mm right
+for i, p in enumerate(fig.panels):
+    p.frame = (10 + (w + gap) * i, 8, w, 40)
 row = list(range(len(fig.panels)))
 fig.align_panels(row, "top"); fig.match_size(row, "height")
 fig.distribute_panels(row, "x")

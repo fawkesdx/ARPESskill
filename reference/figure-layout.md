@@ -44,7 +44,7 @@ Upstream units = **millimetres** (journal column). Echo preset name +
 
 ## Journal presets (cite package — do not invent)
 
-Use `tools.figure.JOURNAL_PRESETS` (label, width_mm, font_pt). Examples include
+Use `tools.output.figure.JOURNAL_PRESETS` (label, width_mm, font_pt). Examples include
 Nature single/double, APS/PRB, Science, Elsevier, slide — **read the tuple in
 the installed package**; do not hardcode different mm from memory.
 
@@ -149,7 +149,7 @@ panel is built from arrays so the original file is traced.
 ## Checklist
 
 1. User asked publication / journal layout (not default overview).  
-2. Backend: viewer `tools.figure` or simple matplotlib; no DIY composer invent.  
+2. Backend: viewer `tools.output.figure` or simple matplotlib; no DIY composer invent.  
 3. Preset / width_mm / font_pt echoed.  
 4. Shared clim/limits stated; panels lettered if multi.  
 5. PNG/PDF under `analysis/figures/` (+ `.afig` and data folder on viewer).  
