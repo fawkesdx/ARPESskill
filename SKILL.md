@@ -27,7 +27,9 @@ description: >
   circular dichroism, degrid, MCP grid, figure layout, journal figure,
   ANTARES, CASSIOPEE, MAESTRO or NeXus/HDF5 ARPES files,
   angle-to-momentum conversion, hv/kz scans, spatial maps, nanoARPES,
-  pseudogap, PyARPES, or ARPES-data-browser.
+  pseudogap, temperature series, temperature dependence, linewidth vs T,
+  electron-phonon lambda, Eliashberg, marginal Fermi liquid, Debye-Waller,
+  spectral-weight transfer, PyARPES, or ARPES-data-browser.
 ---
 
 # ARPES
@@ -41,7 +43,9 @@ pump–probe ARPES (trARPES), self-energy / Σ, band enhance (curvature /
 minimum gradient), FS pocket, smooth / deconvolution, resolution estimates,
 background subtraction, BZ / high-symmetry path overlay, axis prep (rebin /
 symmetrize / normalize), masks (boolean / polygon), spectrum alignment,
-PCA/NMF/ICA decomposition, stack / false-color / ToF±σ plots, forward-k
+PCA/NMF/ICA decomposition, temperature series (constrained multi-band
+tracking, weight transfer, linewidth → λ, Debye–Waller), stack / false-color /
+ToF±σ plots, forward-k
 point/pair cuts, CP/CM dichroism, detector de-grid (MCP/mesh), MAESTRO/ANTARES/NeXus/HDF5/Igor ARPES
 files, or PyARPES.
 
@@ -115,6 +119,13 @@ volumes, etc.
 - **Self-energy / Σ (user-asked):** single-band cut → `reference/self-energy.md`
   (path C: reuse MDC broadcast if present, else `fit_for_self_energy`; bare band
   default `ransac_linear`; lifetime only if asked).
+- **Temperature series (same k-line at several T):** `reference/temperature-series.md`
+  — metadata first (T from comment / contact sensor, exposure = sweeps×frames from
+  raw headers, common crop); one model per T stated; constrained tracking
+  (width cap per pair → shared-slope lines, X crossing) as **user-map**;
+  weights per sweep×frame validated by a control pair + deep reference, FD⊗ΔE;
+  λ(E) from dΓ/dT with one stated v; Debye–Waller with photoelectron |G|.
+  Never comment-time or sensor-T normalisation; never λ / MFL from one energy.
 - **Band enhance (user-asked):** 2D cut → `reference/band-enhance.md` (both
   `curvature` + `minimum_gradient` side by side; not intensity; no centers/EF
   from these alone).
