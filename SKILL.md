@@ -160,6 +160,11 @@ volumes, etc.
   viewer `loader`/`tools`, or confirmed user-map) + matplotlib over launching
   Qt/Bokeh GUIs. Launch ARPES_viewer / PyARPES Qt **only if the user asks**
   (or for an interactive Γ/ROI handoff they accept).
+- **Hot paths are scripts, not fresh codegen.** Load + axis QC, default
+  overview, one-peak EDC fit, in-plane k, and folder manifest go through
+  `scripts/` (`reference/hot-paths.md`). Optional `mcp_arpes` tools call those
+  same functions. This file stays the policy: scripts do not override a hard
+  rule.
 - **Package-first:** use active-backend / confirmed user-map callables /
   existing project APIs; do **not** write a new loader or reimplement package
   features without asking — offer A/B/C/**D** (`reference/package-first.md`,
@@ -231,6 +236,11 @@ volumes, etc.
 - **Folder first:** for multi-file folders, build/refresh `analysis/manifest.json`
   with **header-only peek** (astropy/h5py — not full `load_data`); later
   **recall** from it (`reference/folder-manifest.md`).
+- **MAESTRO measurement log (user-asked):** triggers like “log the maestro data
+  in …” → `reference/maestro-measurement-log.md` — write
+  `MAESTRO_Measurement_Log.csv` **in the data folder**, then Pass A merge into
+  `analysis/manifest.json`; no graphify; CSV **Measurement Type** ≠ manifest
+  `kind` (store in `maestro_log.meas_type_log` only).
 
 ## Package-first (important)
 
@@ -264,8 +274,13 @@ chat). Details: `reference/token-usage.md`.
 
 1. If the user points at a **folder** / many files: build or refresh
    `analysis/manifest.json` (+ optional `manifest.md`) **first** — listing +
-   **peek** with per-row `backend` (`folder-manifest.md`). Do **not**
-   full-load every spectrum. Later turns **recall** from the manifest.
+   **peek** with per-row `backend` (`folder-manifest.md`). Prefer
+   `scripts/folder_manifest.py` for Pass B. Do **not** full-load every spectrum.
+   Later turns **recall** from the manifest.
+   **MAESTRO log trigger** (“log the maestro data in …” / refresh measurement
+   log): run `scripts/maestro_measurement_log.py` then
+   `scripts/merge_maestro_log_to_manifest.py` per
+   `maestro-measurement-log.md`; report counts — never paste full CSV.
 2. Identify artifact (file type, shape); **resolve backend** (override or
    Route B — `arpes-viewer-backend.md`); prefer manifest rows when present.
 3. Ensure env for that backend (Stack policy). If declined → propose
@@ -276,24 +291,28 @@ chat). Details: `reference/token-usage.md`.
    fails or needs new code — **ask** A/B/C/**D**.
 5. Lock coordinates — names + units (° vs Å⁻¹, eV, hν; binding vs kinetic;
    kinetic-until-EF for some MBS spin).
-6. Sanity print — shape, ranges, one mid-cut summary; state backend.
+6. Sanity print — prefer `scripts/load_qc.py`. Shape, ranges, energy label
+   (Ek / Eb / E−EF / ambiguous), angle-as-k flag. State backend. Do not
+   relabel a momentum-like dim as Å⁻¹.
 7. Reduce — cut / FS / EDC / MDC (see `reference/safe-reduction.md`).
-8. **Quick report:** stop at angle-space overviews
+8. **Quick report:** `scripts/overview_plots.py`. Angle-space only
    (`default-overview-plots.md`). **Do not** convert to k/kz here.
    If spatial (`x`,`y` n>1) → `spatial-xy-scans.md` set. Update manifest
    `overview_paths` when PNGs are written.
-9. **Analysis / user-requested momentum:** convert to k / kz
-   (`reference/k-and-kz-conversion.md`) — state energy axis; EF finder +
-   report EF_fit/deviation (charging warn if >50 meV on E−EF/Eb); for **hv
-   stacks**: backend path (PyARPES angle-summed edge **or** viewer
-   `process_kz_map` box) + per-hv QC + post-shift verify + `ef_fit_per_hv`
-   in npz; Γ per cut vs Fermi rules; stated V₀ for kz; save
-   `analysis/kspace/*.npz`; link `product_paths` on the manifest row.
-   Spatial hypercubes: reduce ROI / hot spot first (`spatial-xy-scans.md`).
+9. **Analysis / user-requested in-plane k:** `scripts/convert_k.py --mode analysis`
+   (`reference/k-and-kz-conversion.md`, `reference/hot-paths.md`). State energy
+   axis. Pass package `EF_fit` (charging warn if claimed E−EF/Eb and
+   `|EF_fit| > 50 meV`). Γ: user offsets on Fermi maps; provisional nearest-0
+   only on a cut when 0° is in range. The script calls `convert_to_kspace` and
+   does not contain a k formula. **hv→kz** stays on the reference (per-hv EF,
+   `ef_fit_per_hv`, stated V₀) — not this script. Save
+   `analysis/kspace/*.npz`; link `product_paths`. Spatial hypercubes: reduce
+   ROI / hot spot first (`spatial-xy-scans.md`).
 10. If line / core analysis — fit (`reference/edc-mdc-fitting.md`: **core first**,
-   then EDC/MDC; package models only). When N>1 bands → multi-band path (propose
-   N → confirm; per-prefix broadcast + plots). At a spatial hot spot / ROI, pick
-   the recipe that matches the spectroscopic kind.
+   then EDC/MDC; package models only). One EDC: `scripts/fit_edc.py` with a
+   named lineshape. When N>1 bands → multi-band path (propose N → confirm;
+   per-prefix broadcast + plots) — not the single-peak script. At a spatial
+   hot spot / ROI, pick the recipe that matches the spectroscopic kind.
 11. If user asks near-EF / metal EF / FD / **gap** / **pseudogap** on a cut —
     `reference/near-ef-gap.md` (metal fit → shift; optional resolution-broadened
     FD divide; symmetrize when gap/pseudogap).
@@ -377,10 +396,13 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/package-first.md` — package APIs; ask A/B/C/**D** before new code
 - `reference/backend-capability-map.md` — capability IDs; PyARPES + Browser; user-map
 - `reference/folder-manifest.md` — folder inventory; peek + backend per row
+- `reference/hot-paths.md` — scripts + MCP for load, overview, EDC fit, k, manifest
+- `reference/maestro-measurement-log.md` — MAESTRO CSV logger + Pass A manifest merge
 
 ## Examples
 
 - `examples/maestro_pyarpes.md`
+- `examples/maestro_measurement_log.md`
 - `examples/dual_backend_load.md`
 - `examples/fit_edc_mdc.md`
 - `examples/near_ef_gap.md`
@@ -407,6 +429,7 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `examples/figure_gallery.md`
 - `examples/backend_user_map.md`
 - `examples/convert_k_kz.md`
+- `examples/golden_prompts.md`
 
 ## Requires (full analysis)
 

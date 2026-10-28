@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "arpes",
+  "version": "0.2.0",
+  "description": "ARPES reduction skill. SKILL.md is policy. Hot paths are scripts plus an optional MCP. Drives PyARPES or ARPES-data-browser.",
+  "license": "MIT",
+  "keywords": ["arpes", "pyarpes", "photoemission"],
+  "repository": "https://github.com/fawkesdx/ARPESskill",
+  "author": {"name": "Sandy Adhitia Ekahana"}
+}

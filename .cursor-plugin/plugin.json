@@ -1,0 +1,9 @@
+{
+  "name": "arpes",
+  "version": "0.2.0",
+  "description": "ARPES reduction skill. Policy in SKILL.md. Hot paths are scripts and the optional arpes MCP.",
+  "license": "MIT",
+  "keywords": ["arpes", "pyarpes", "photoemission"],
+  "repository": "https://github.com/fawkesdx/ARPESskill",
+  "author": {"name": "Sandy Adhitia Ekahana"}
+}

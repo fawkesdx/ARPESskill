@@ -1,0 +1,5 @@
+#!/bin/sh
+# Launch the CLIO HDF5 attr / partial-read MCP.
+ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+cd "$ROOT" || exit 1
+exec python3 -m mcp_clio_hdf5

@@ -66,6 +66,7 @@ Top level:
 | `mtime_utc` | string | yes | File mtime ISO-8601 |
 | `content_sha256` | string \| null | no | Optional; recompute on refresh if cheap |
 | `log_comment` | string \| null | no | From measurement log if matched; comment only |
+| `maestro_log` | object \| null | no | MAESTRO Pass A: structured log columns (`meas_type_log`, cryo, pol, SMU, …) — see below |
 | `kind` | string | yes | See kind enum below |
 | `kind_confidence` | string | no | `high` \| `medium` \| `low` |
 | `kind_clues` | string[] | no | e.g. `["swept","span_12eV"]` |
@@ -88,13 +89,43 @@ Use these strings (extend only if needed; document in `notes`):
 `cut` · `core_level_2d` · `fermi` · `hv` · `xy` · `unknown` · `load_error`
 
 Classify with existing rules: dims first; core-as-2D heuristics; log is comment
-only (`reference/default-overview-plots.md`).
+only (`reference/default-overview-plots.md`). CSV **Measurement Type** /
+`maestro_log.meas_type_log` is a **log label** — never substitute for `kind`.
+
+### Optional `maestro_log` object (MAESTRO Pass A)
+
+Set by `scripts/merge_maestro_log_to_manifest.py` when
+`MAESTRO_Measurement_Log.csv` is merged. Keys (strings unless noted):
+
+| Key | CSV column |
+|-----|------------|
+| `meas_type_log` | Measurement Type |
+| `photon_energy` | Photon Energy (eV) |
+| `polarization` | Polarization |
+| `cryostat_A_K` … `cryostat_D_K` | Cryostat A–D (K) |
+| `manipulator` | Manipulator Position |
+| `deflection` | Deflection Settings |
+| `smu` | SMU 1 & 2 Settings |
+| `analyzer` | Analyzer Settings |
+| `energy_resolution` | Energy Resolution |
+
+Recipe and triggers: `reference/maestro-measurement-log.md`.
 
 ## Build / refresh algorithm
 
 1. Enumerate data files under `data_root` (prefer `.fits` when sibling `.h5`
    exists — record both; set `path` to preferred).
-2. Match measurement log by stem if a log is available → `log_comment`.
+2. **Pass A — MAESTRO measurement log** (when user asks to log, or CSV missing /
+   stale, or manifest needs log fields):
+   - Run `scripts/maestro_measurement_log.py` on `data_root` →
+     `data_root/MAESTRO_Measurement_Log.csv` (FITS-first `File Name`, H5 meta).
+   - Run `scripts/merge_maestro_log_to_manifest.py` → fill `log_comment`,
+     `maestro_log`, paths, `backend=pyarpes`, `kind=unknown` (keep existing
+     real `kind` from a prior Pass B if present).
+   - **Pass A ≠ Pass B:** logging does **not** header peek, does **not** set
+     `kind` from Measurement Type, does **not** run overview loads.
+   - Non-MAESTRO logs: match by stem if another log format exists →
+     `log_comment` only.
 3. Cheap row: stem, paths, ext, size, mtime (and hash if enabled).
 4. **Header-only / structure peek** (default Pass B) — fill shape / hv /
    energy clues / kind guess / `backend`. **Do not** full-load spectra here
