@@ -106,6 +106,17 @@ Point the agent at this repo, or inject `SKILL.md` plus needed files under
 
 Sandy Adhitia Ekahana
 
+## Contributors
+
+- **Maintainer:** Sandy Ekahana ([@fawkesdx](https://github.com/fawkesdx))
+- **Pei Ding** ([@DingPei1995](https://github.com/DingPei1995)) —
+  [PR #28](https://github.com/fawkesdx/ARPESskill/pull/28): figure gallery
+  (`reference/figure-gallery.md`, a material-agnostic catalogue of common published ARPES figure types);
+  figure composer layout guide (`reference/figure-layout.md`: align/distribute, panel letters,
+  colour bars, dashed guides, markers, error bars; saving PDF plus an editable `.afig`
+  with a per-panel data folder); worked k_z band-crossing example
+  (`examples/figure_gallery.md`); `tools.output.figure` path updates across the docs.
+
 ## Privacy guard
 
 `scripts/privacy_check.sh` blocks personal paths, logins, e-mails and credentials at commit and push time. Enable once per clone: `git config core.hooksPath .githooks`
