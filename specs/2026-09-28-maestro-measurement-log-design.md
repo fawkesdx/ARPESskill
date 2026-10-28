@@ -39,7 +39,7 @@ on-disk metadata without dumping catalogs or loading spectra.
 Sibling MAESTRO exports are the **same scan in different containers**, not a
 guaranteed 1:1 attribute clone.
 
-- Evidence (`20260603_01003`): spectrum counts **bit-identical** after axis
+- Evidence (one FITS/H5 pair of the same scan): spectrum counts **bit-identical** after axis
   reorder; H5 uses `2D_Data/…`, FITS uses binary-table columns + primary cards.
 - Rich lab fields (`Headers`, `Comments`, `0D_Data`) are what the existing
   logger parses — native to **H5**.

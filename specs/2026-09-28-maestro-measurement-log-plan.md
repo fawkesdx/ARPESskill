@@ -54,7 +54,7 @@
 **Interfaces:**
 - Produces: `extract_maestro_metadata(folder_path: str) -> str` (returns CSV path written)
 - Produces: CLI `python scripts/maestro_measurement_log.py <folder>` exit 0 on success
-- Consumes: original logic from `/Volumes/MAESTROdata/uARPES/2026/2026_06/Katoch_Jyoti - 045552/maestro_logger.py` (copy helpers: `clean_string`, `deep_clean`, `find_value`, H5 Headers/Comments/0D extract)
+- Consumes: original logic from the beamline's `maestro_logger.py` (user-supplied; copy helpers: `clean_string`, `deep_clean`, `find_value`, H5 Headers/Comments/0D extract)
 
 - [ ] **Step 1: Create `scripts/` and port script with FITS-first stem logic**
 
