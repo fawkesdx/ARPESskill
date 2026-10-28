@@ -6,8 +6,8 @@ smearing of a cut, or asks for `⟨u²⟩(T)` / an effective Debye temperature f
 ARPES. Upstream: the temperature-series workflow (`temperature-series.md`:
 metadata, exposure, one model per T). Capability: `debye_waller_fit`.
 
-The routine below was built for a MAESTRO near-Γ series (30–500 K, eight scans,
-hv 81.85 eV); the numbers are examples of what to check, not defaults.
+Material-, beamline- and theory-agnostic. Every number below (energies, windows,
+masses, hν) is a placeholder the user replaces; provenance is in `specs/`.
 
 ---
 
@@ -17,7 +17,8 @@ hv 81.85 eV); the numbers are examples of what to check, not defaults.
   k-averaged, DOS-like incoherent part that grows as the coherent part falls.
 - **|G| is the photoelectron momentum** at the emission geometry, not the in-plane
   band momentum: near normal emission `|G| ≈ k_f = 0.5123·√(hν − φ + V₀)` Å⁻¹
-  (≈ 4.8 Å⁻¹ at 82 eV). With the band k (~0.1 Å⁻¹) 2W would be < 10⁻³ at any T.
+  (a few Å⁻¹ at VUV / soft-X-ray hν). With the band k (~0.1 Å⁻¹) 2W would be
+  negligible at any T.
   State φ and V₀ (± uncertainty; V₀ from `k-and-kz-conversion.md` rules — never a
   silent guess) and propagate `δ|G| = 0.5123·δV₀ / (2√(hν−φ+V₀))`.
 - A DW factor is **uniform in in-plane k and E** and conserves nothing locally: it
@@ -27,7 +28,7 @@ hv 81.85 eV); the numbers are examples of what to check, not defaults.
   `⟨u²⟩(T) = 3ħ²/(M k_B Θ_D) · [¼ + (T/Θ_D)² ∫₀^{Θ_D/T} x/(eˣ−1) dx]`;
   high-T limit `⟨u²⟩ ≈ 3ħ² T /(M k_B Θ_D²)` → `Θ_D = √(3ħ²/(M k_B · d⟨u²⟩/dT))`
   with `ħ²/(amu·k_B) = 48.51 Å²·K`. The DW factor is atom-resolved: quote Θ_D for
-  **each** sublattice mass that contributes to the initial state (e.g. Te and V).
+  **each** sublattice (element) mass that contributes to the initial state.
 
 ---
 
@@ -48,9 +49,9 @@ hv 81.85 eV); the numbers are examples of what to check, not defaults.
 
 | | model | why |
 |---|---|---|
-| **(A)** MDC peaks of the band that exists at every T, at several energies in a window where **only** that band is present (e.g. the outer pair at −90..−120 meV) | 2 Lorentzians + linear bg, bounded centres/widths | area per side and L+R; mean over the energies |
-| **(B)** one sharp **EDC** feature far from E_F and from any T-dependent new band (e.g. the band-crossing peak at −0.22 eV, \|k\| ≤ 0.05) | Lorentzian + linear bg over a stated window | the cleanest single coherent feature |
-| **(C)** deep window (e.g. −1.3..−0.9 eV, \|k\| ≤ 0.2) | window mean | DW-insensitive by the sum rule → flux / normalisation **control**; must be flat |
+| **(A)** MDC peaks of the band that exists at every T, at several energies in a window where **only** that band is present | 2 Lorentzians + linear bg, bounded centres/widths | area per side and L+R; mean over the energies |
+| **(B)** one sharp **EDC** feature far from E_F and from any T-dependent new band (e.g. a band-crossing peak a few hundred meV below E_F, in a narrow \|k\| window) | Lorentzian + linear bg over a stated window | the cleanest single coherent feature |
+| **(C)** a deep window with no T-dependent band (≈ 1 eV below E_F, small \|k\|) | window mean | DW-insensitive by the sum rule → flux / normalisation **control**; must be flat |
 | **(D)** the MDC background level under (A) | from the fit | DW predicts a k-independent background that **rises** as peaks lose weight — but a broadening tail does the same, so (D) is ambiguous on its own |
 
 Report **area and height separately** for (A) and (B). Area decay = weight loss

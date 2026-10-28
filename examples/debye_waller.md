@@ -8,8 +8,8 @@ from scipy.optimize import curve_fit
 from scipy.integrate import quad
 from scipy.ndimage import gaussian_filter1d
 KB, HB2_AMU_KB = 8.617e-5, 48.51           # eV/K ; hbar^2/(amu kB) in A^2 K
-HV, PHI, V0, V0E = 81.85, 4.5, 12.0, 4.0   # eV; V0 stated with its uncertainty
-M = {'Te': 127.60, 'V': 50.94}             # masses of the sublattices in the initial state
+HV, PHI, V0, V0E = 80.0, 4.5, 12.0, 4.0    # eV, EXAMPLE values: your photon energy, work function, inner potential +- uncertainty
+M = {'A': 100.0, 'B': 50.0}                # amu, EXAMPLE: one entry per sublattice (element) in the initial state
 NORM_FLOOR = 0.05
 G = 0.5123 * np.sqrt(HV - PHI + V0); Ge = 0.5123 * 0.5 * V0E / np.sqrt(HV - PHI + V0)   # photoelectron momentum, 1/A
 
@@ -21,11 +21,11 @@ mdc2 = lambda k, cL, wL, hL, cR, wR, hR, b0, b1: lor(k, cL, wL, hL) + lor(k, cR,
 edc1 = lambda E, c, w, h, b0, b1: lor(E, c, w, h) + b0 + b1 * (E - c)
 area = lambda w, h: np.pi * w * h / 2
 
-# per scan: v (E x k) per sweep x frame; (A) outer pair at E0 in the window where only it exists; (B) one EDC peak; (C) deep window
+# per scan: v (E x k) per sweep x frame; (A) the band present at every T, at E0 in its exclusive window; (B) one deep EDC peak; (C) deep window
 # y = v[i-2:i+3].mean(0) / fd(E[i], T); sig = sqrt(max(y,1)/5)/sqrt(expo) + 0.02*y.max()
 # p, C = curve_fit(mdc2, k, y, p0=..., sigma=sig, bounds=...); aL, aR = area(p[1], p[2]), area(p[4], p[5])
-# edc = v[:, |k|<=0.05].mean(1); p, C = curve_fit(edc1, E[sel], edc[sel], ...); a = area(p[1], p[2])
-# deep = v[(E>=-1.3)&(E<=-0.9)][:, |k|<=0.2].mean()
+# edc = v[:, |k|<=k_win].mean(1); p, C = curve_fit(edc1, E[sel], edc[sel], ...); a = area(p[1], p[2])
+# deep = v[(E>=E_deep_lo)&(E<=E_deep_hi)][:, |k|<=k_deep].mean()
 
 def lnfit(T, A, Ae):
     """weighted ln I vs T; returns slope, sigma, intercept, chi2_r (covariance scaled by max(chi2_r, 1))"""
