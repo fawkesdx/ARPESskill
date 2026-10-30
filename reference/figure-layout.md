@@ -130,6 +130,31 @@ panel is built from arrays so the original file is traced.
 
 ---
 
+## House style (ask once per paper set, then reuse)
+
+A journal preset fixes the column width and a default font size. It does **not**
+fix the user's own drawing conventions, and users have strong ones. Before the
+first paper figure of a set, ask for (or read from a stored `style_dict`) and
+then apply to every panel:
+
+| Item | Ask | Typical answers |
+|------|-----|-----------------|
+| Font family | "Which font?" | Arial, Helvetica, the journal's own |
+| Size range | "Smallest and largest text allowed?" | Nature: 6 pt min, 12 pt max; tick labels ≈ 7, axis labels ≈ 8, letters ≈ 9 |
+| Panel letters | "Letter format and position?" | `a.` (lowercase, period, no brackets, not bold, outside top-left) **or** `(a)` bold inside — never guess |
+| Colour names | "Which colour means which band / temperature?" | keep the mapping across the whole paper |
+
+Apply with `FigureStyle(font_pt=…)` on `arpes_viewer` (letters via
+`letter_panels(fmt=…)` where the installed version supports it; otherwise clear
+the auto letters and add text notes) or with matplotlib `rcParams`
+(`font.family`, `font.size`, `mathtext.fontset = "custom"` so maths uses the
+same face). Verify the font resolves (`font_manager.findfont`) and that **no**
+text falls outside the size range — check the smallest annotation, not only the
+axis labels. Save the answers in the set's `style_dict` so the next figure does
+not ask again.
+
+---
+
 ## Rules
 
 | Rule | Detail |
@@ -137,6 +162,7 @@ panel is built from arrays so the original file is traced.
 | Not overview | Quick report stays `default-overview-plots.md` |
 | Not stack recipe | Waterfall / false-color → `stack-plots.md` |
 | Ask size | Journal preset or user mm — never silent random width |
+| House style | Font family, min/max pt, letter format from the user (or stored `style_dict`) — never the matplotlib defaults |
 | Shared scales | Echo `shared_levels` / `shared_ranges` |
 | Edge labels | Default `edge_labels_only=True` — outer axes only |
 | Save | `analysis/figures/`; path in report; no huge arrays in chat |
@@ -150,7 +176,7 @@ panel is built from arrays so the original file is traced.
 
 1. User asked publication / journal layout (not default overview).  
 2. Backend: viewer `tools.output.figure` or simple matplotlib; no DIY composer invent.  
-3. Preset / width_mm / font_pt echoed.  
+3. Preset / width_mm / font_pt echoed; house style (font, size range, letter format) applied and echoed.  
 4. Shared clim/limits stated; panels lettered if multi.  
 5. PNG/PDF under `analysis/figures/` (+ `.afig` and data folder on viewer).  
 6. Panel content chosen from `figure-gallery.md` when the user asks for a
