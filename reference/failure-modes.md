@@ -141,7 +141,9 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Silent `degrid_cut_notch` without PE-loss warn | Warn; prefer map `[grid]` + `degrid_cut_with_grid` |
 | De-grid on `pyarpes` stem without ask | Stop; offer **D** / B / C (`degrid.md`) |
 | Use figure composer for default overview | Overview = `default-overview-plots.md`; composer = user-asked pub layout (`figure-layout.md`) |
-| Invent journal column mm / font | Use `JOURNAL_PRESETS` or ask (`figure-layout.md`) |
+| Invent journal column mm / font when package present | Read `JOURNAL_PRESETS`; if missing → ask or echo 89/183 fallback (`figure-layout.md`) |
+| Raster-composite publication PDF (PNG crops / imshow) | Vector place via PDF page/clip (`figure_vector_extend` / `figure-layout.md`) |
+| Overwrite sole figure PDF with no versioned snapshot | Copy to `*_vN.pdf` first; keep working name unversioned |
 | Comparable panels with silent mismatched clim | Set/echo `shared_levels` / `shared_ranges` |
 | DIY full journal composer on `pyarpes` | Simple GridSpec OK; full presets → A/B/C/**D** |
 | Ignore stale manifest after files change | Refresh rows when mtime/hash differs |

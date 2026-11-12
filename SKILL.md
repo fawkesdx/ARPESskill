@@ -224,8 +224,9 @@ volumes, etc.
   `tools.degrid`; pixel-locked only — **before** k / FS / kz-align; map or
   cut±grid; notch warns PE loss).
 - **Publication figure (user-asked):** `reference/figure-layout.md` (journal
-  mm presets / multi-panel via `tools.output.figure`; align / letters /
-  colour bars; save editable `.afig` + data folder; **not** default overview).
+  mm presets / multi-panel via `tools.output.figure`; vector PDF extend;
+  align / letters / colour bars; save editable `.afig` + data folder; **not**
+  default overview).
   Which panels → `reference/figure-gallery.md` (offer 2–3 archetypes that the
   data supports; state windows, clim, Z / shift, V₀; guides labelled
   fitted vs calculated; material-agnostic).
@@ -351,8 +352,9 @@ chat). Details: `reference/token-usage.md`.
 29. If user asks de-grid / MCP grid / detector mesh —
     `reference/degrid.md`.
 30. If user asks publication / journal multi-panel figure layout —
-    `reference/figure-layout.md` (not default overview); if they ask for a
-    figure *type* or "how is this usually shown" — `reference/figure-gallery.md`.
+    `reference/figure-layout.md` (vector extend; not default overview); if they
+    ask for a figure *type* or "how is this usually shown" —
+    `reference/figure-gallery.md`.
 31. Plot/report with labeled units; **list overview / conversion assumptions**.
 32. Before expensive batch work — token note (`reference/token-usage.md`).
 
@@ -383,7 +385,8 @@ If unsure: read the matching `reference/` file; ask the user one sharp question.
 - `reference/forward-k.md` — k-cut through angular point/pair; coord forward
 - `reference/dichroism.md` — CP/CM null-ROI scale; diff + asym; red/blue plot
 - `reference/degrid.md` — MCP/mesh de-grid (`tools.degrid`; pixel-locked; before k)
-- `reference/figure-layout.md` — publication multi-panel layout (`tools.output.figure`)
+- `reference/figure-layout.md` — publication multi-panel layout
+  (`tools.output.figure`; vector extend; preset fallback)
 - `reference/figure-gallery.md` — published ARPES figure archetypes (what panels to make)
 - `reference/k-and-kz-conversion.md` — analysis-mode k/kz + Γ + npz cache
 - `reference/beamline-geometry.md` — MAESTRO / ALBA LOREA 55°; SOLEIL ANTARES 45° + fixed H slit; SLS postponed
@@ -456,8 +459,8 @@ See `reference/` for recipes. Common entry points:
 - FS pocket: `pocket_parameters` / curves (`fs-pocket.md`)
 - Dichroism: null-ROI scale → D and A (`dichroism.md`)
 - De-grid: `not_pixel_locked` → `degrid_map` / `degrid_cut_*` (`degrid.md`)
-- Pub figure: `tools.output.figure` + `JOURNAL_PRESETS` (`figure-layout.md`);
-  panel archetypes (`figure-gallery.md`)
+- Pub figure: `tools.output.figure` + `JOURNAL_PRESETS` / fallback; vector
+  extend (`figure-layout.md`); panel archetypes (`figure-gallery.md`)
 - Decomposition: PyARPES `*_along` (viewer = N/A → offer **D**)
 - Smooth / deconvolve: mapped smooth / RL+PSF if asked (`smooth-deconvolve.md`)
 - Resolution / backgrounds / BZ / axis prep / masks / align / stack / forward-k:

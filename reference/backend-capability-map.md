@@ -166,7 +166,8 @@ before claiming exact names. Blank Browser cell = N/A on `arpes_viewer`.
 | `degrid_map` | Remove MCP/mesh grid from map / kz_map | | `tools.degrid.degrid_map` |  | `degrid.md` |
 | `degrid_cut` | Cut de-grid with map grid or notch | | `degrid_cut_with_grid` / `degrid_cut_notch` |  | `degrid.md` |
 | `figure_compose` | Multi-panel publication figure | matplotlib `GridSpec` (simple); full composer → D | `tools.output.figure.Figure` / `Panel` / `FigureStyle` + `ui.panels.figure.write_figure` (older: `tools.figure`) |  | `figure-layout.md` |
-| `figure_journal_preset` | Journal column width / font | N/A — user mm or D | `tools.output.figure.JOURNAL_PRESETS` |  | `figure-layout.md` |
+| `figure_journal_preset` | Journal column width / font | N/A — user mm or D; if viewer missing → ask / 89·183 fallback | `tools.output.figure.JOURNAL_PRESETS` |  | `figure-layout.md` |
+| `figure_vector_extend` | Keep vector PDF/AI export; add layer without raster bake | PyMuPDF `show_pdf_page` + matplotlib vector layer | same pattern; viewer export optional |  | `figure-layout.md` |
 | `figure_arrange` | Align / distribute / match panels; aligned letters | matplotlib `GridSpec` / manual axes positions | `Figure.align_panels` / `distribute_panels` / `match_size` / `letter_panels` |  | `figure-layout.md` |
 | `figure_save_editable` | Re-editable figure + per-panel data folder | N/A — save arrays + script next to PDF | `tools.output.figfile.save` / `write_data_folder` (`.afig`) |  | `figure-layout.md` |
 | `figure_gallery` | Choose panel archetypes for a paper figure | matplotlib per archetype | viewer builders per archetype |  | `figure-gallery.md` |
