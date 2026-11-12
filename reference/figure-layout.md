@@ -174,6 +174,8 @@ crops) then saving that as the publication PDF — lines and fonts pixelate.
 |----|--------|
 | Snapshot working PDF → `*_vN.pdf` before overwrite; keep working name unversioned | Overwrite the only copy |
 | Place existing PDF/AI-export pages with a PDF library (`pymupdf.show_pdf_page` + `clip`) | Redraw polished vector tiles in crude matplotlib unless asked |
+| **Keep aspect ratio** on every placed panel/clip (`keep_proportion=True` / equal scale on width and height) unless the user **explicitly** allows stretch | Stretch / squash to fill a frame (`keep_proportion=False`, unequal sx/sy) to “match heights” |
+| Fit equal column heights by **layout** (tighter tile grid, crop whitespace, scale uniformly, leave letterbox, or redraw the new layer at the target aspect) | Destroy geometry of stars, arrows, or data plots to force a box |
 | Author **new** layers as matplotlib **vector** PDF, then place into the master | Glue PNG panels into matplotlib and ship that PDF |
 | Audit: many `get_drawings()`, house fonts listed, images only for true bitmaps | Ship a PDF that is 1–2 full-page images |
 | PNG preview for chat only; judge sharpness on the **PDF** | Treat PNG aliasing as the deliverable |
@@ -212,6 +214,7 @@ out.save("Figure.pdf", garbage=4, deflate=True)
 | Ask size | Journal preset, fallback 89/183, or user mm — never silent random width |
 | House style | Font family, min/max pt, letter format from the user (or stored `style_dict`) — never the matplotlib defaults |
 | Vector first | Publication PDF = vector compose; PNG preview only |
+| Aspect ratio | Keep unless user explicitly allows stretch; equal heights via layout, not squash |
 | Shared scales | Echo `shared_levels` / `shared_ranges` |
 | Edge labels | Default `edge_labels_only=True` — outer axes only |
 | Save | `analysis/figures/` (or user figure folder); path in report; no huge arrays in chat |
@@ -228,6 +231,7 @@ out.save("Figure.pdf", garbage=4, deflate=True)
 3. Preset / fallback / user mm + `font_pt` echoed; house style applied and echoed.  
 4. Shared clim/limits stated; panels lettered if multi.  
 5. Working PDF versioned before overwrite; output audited (drawings/fonts/images).  
-6. PNG/PDF under `analysis/figures/` or user folder (+ `.afig` / data folder on viewer).  
-7. Panel content chosen from `figure-gallery.md` when the user asks for a
+6. Aspect ratios preserved unless user said stretch is OK.  
+7. PNG/PDF under `analysis/figures/` or user folder (+ `.afig` / data folder on viewer).  
+8. Panel content chosen from `figure-gallery.md` when the user asks for a
    figure *type*.
