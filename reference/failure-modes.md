@@ -143,6 +143,7 @@ Common agent mistakes in ARPES analysis and the correct behavior. Cross-check ag
 | Use figure composer for default overview | Overview = `default-overview-plots.md`; composer = user-asked pub layout (`figure-layout.md`) |
 | Invent journal column mm / font when package present | Read `JOURNAL_PRESETS`; if missing → ask or echo 89/183 fallback (`figure-layout.md`) |
 | Raster-composite publication PDF (PNG crops / imshow) | Vector place via PDF page/clip (`figure_vector_extend` / `figure-layout.md`) |
+| Stretch panels to match column height (`keep_proportion=False` / unequal scale) | Keep aspect; tighten layout or uniform scale (`figure-layout.md`) — stretch only if user allows |
 | Overwrite sole figure PDF with no versioned snapshot | Copy to `*_vN.pdf` first; keep working name unversioned |
 | Comparable panels with silent mismatched clim | Set/echo `shared_levels` / `shared_ranges` |
 | DIY full journal composer on `pyarpes` | Simple GridSpec OK; full presets → A/B/C/**D** |
