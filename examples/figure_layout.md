@@ -32,3 +32,23 @@ print(label, width_mm, font_pt, "shared_levels", style.shared_levels)
 On `pyarpes` only: simple `matplotlib` GridSpec OK; for full presets → A/B/C/**D**.
 
 **Report:** preset name, mm, font pt, shared clim/ranges, output path.
+
+## Vector extend (existing PDF + new layer)
+
+```python
+import pymupdf
+
+src = pymupdf.open("analysis/figures/Figure_vN.pdf")  # snapshot first
+# clips from get_text / get_drawings in source user space (pt)
+width_mm, font_pt = 183.0, 7.0  # only if JOURNAL_PRESETS missing; echo fallback
+page_w = width_mm * 72 / 25.4
+out = pymupdf.open()
+page = out.new_page(width=page_w, height=page_h)
+page.show_pdf_page(dest_left, src, 0, clip=left_clip)
+page.show_pdf_page(dest_right, src, 0, clip=right_clip)
+page.show_pdf_page(dest_new, new_layer_doc, 0)  # matplotlib vector PDF
+out.save("analysis/figures/Figure.pdf", garbage=4, deflate=True)
+# Audit: drawings >> 0; house fonts; images only true bitmaps
+```
+
+**Report:** also vector audit (drawings / fonts / images).
